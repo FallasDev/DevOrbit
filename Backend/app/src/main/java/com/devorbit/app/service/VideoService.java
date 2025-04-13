@@ -18,7 +18,15 @@ public class VideoService {
     private VideoRepository videoRepository;
     
     public Video saveVideo(Video video) {
-        return videoRepository.save(video);
+        try {
+            if (video.getTitle() == null || video.getUrl() == null) {
+                throw new IllegalArgumentException("Title and URL cannot be null");
+            }
+            return videoRepository.save(video);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
     public Video getVideoById(int id) {
