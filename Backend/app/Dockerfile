@@ -1,4 +1,4 @@
-FROM amazoncorretto:17-alpine
+FROM eclipse-temurin:23-jdk-alpine
 
 VOLUME /tmp
 
