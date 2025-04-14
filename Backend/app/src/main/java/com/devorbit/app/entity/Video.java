@@ -29,7 +29,7 @@ public class Video{
     @Column(name = "title", nullable = false, length = 100)
     private String title;
 
-    @Column(name = "url", nullable = false, length = 80)
+    @Column(name = "url", nullable = false, length = 200)
     private String url;
 
     @Column(name = "duration_seg", nullable = false)

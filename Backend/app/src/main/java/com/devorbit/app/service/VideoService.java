@@ -1,6 +1,7 @@
 package com.devorbit.app.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,16 +18,23 @@ public class VideoService {
     @Autowired
     private VideoRepository videoRepository;
     
-    public Video saveVideo(Video video) {
-        try {
-            if (video.getTitle() == null || video.getUrl() == null) {
-                throw new IllegalArgumentException("Title and URL cannot be null");
-            }
+    public Video saveVideo(Map<String, Object> uploadResult, String title) {
+
+        Video video = new Video();
+        video.setTitle(title);
+        video.setUrl(uploadResult.get("url").toString());
+
+        double duration = Double.parseDouble(uploadResult.get("duration").toString());
+        int duration_parsed = (int) Math.round(duration); 
+
+        video.setDuration_seg(duration_parsed);
+        
+        try{
             return videoRepository.save(video);
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     public Video getVideoById(int id) {
@@ -48,5 +56,6 @@ public class VideoService {
     public List<Video> getAllVideos() {
         return videoRepository.findAll();
     }
+
 
 }
