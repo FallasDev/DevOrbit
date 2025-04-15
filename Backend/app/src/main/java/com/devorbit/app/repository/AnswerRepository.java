@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.devorbit.app.entity.Answer;
 import com.devorbit.app.entity.Question;
-import com.devorbit.app.entity.Test;
 
 @Repository
-public interface QuestionRepository extends JpaRepository<Question, Integer> {
+public interface AnswerRepository extends JpaRepository<Answer, Integer> {
 
-    List<Question> findByTest(Test test);
+    List<Answer> findByQuestion(Question question);
 }

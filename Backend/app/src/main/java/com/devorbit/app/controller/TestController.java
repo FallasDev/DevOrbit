@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.devorbit.app.entity.Answer;
 import com.devorbit.app.entity.Test;
 import com.devorbit.app.service.TestService;
 
@@ -44,6 +46,13 @@ public class TestController {
     @PostMapping
     public Test saveTest(@RequestBody Test test) {
         return testService.saveTest(test);
+    }
+
+    @GetMapping("/{testId}/getScore")
+    public double getScore(@RequestBody List<Answer> userAnswers, @PathVariable int testId){
+        int countCorrectAnswers = testService.getCorrectAnswers(userAnswers);
+        System.out.println(countCorrectAnswers);
+        return testService.calculateScore(testId, countCorrectAnswers);
     }
 
 }

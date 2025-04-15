@@ -1,5 +1,6 @@
 package com.devorbit.app.entity;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,32 +15,40 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "questions")
+@Table(name = "answers")
 @Setter @Getter
 @AllArgsConstructor @NoArgsConstructor
-public class Question {
+public class Answer {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int question_id;
+    private int answer_id;
 
-    @Column(name = "prompt", nullable = false, length = 124)
-    private String prompt;
+    @Column(name = "title", nullable = false, length = 124)
+    private String title;
 
-    @Column(name = "type", nullable = false)
-    private int type;
+    @Column(name = "is_correct")
+    private boolean correct;
+
+    @Column(name = "short_answer", length = 54)
+    private String shortAnswer;
+
+    
 
     @ManyToOne
-    @JoinColumn(name = "test_id", nullable = false)
-    private Test test;
+    @JoinColumn(name = "question_id", nullable = false)
+    private Question question;
 
     @Override
     public String toString() {
-        return "Question{" +
-                "question_id=" + question_id +
-                ", prompt='" + prompt + '\'' +
-                ", test=" + test +
+        return "Answer{" +
+                "answer_id=" + answer_id +
+                ", title='" + title + '\'' +
+                ", isCorrect=" + correct +
+                ", shortAnswer='" + shortAnswer + '\'' +
+                ", question=" + question +
                 '}';
     }
-
+    
+    
 }
