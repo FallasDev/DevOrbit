@@ -1,0 +1,82 @@
+
+@host = http://localhost:8080
+@contentType = application/json
+@token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXNzdHVzZXIiLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNzQ1MjE0OTY5LCJpYXQiOjE3NDUyMTEzNjl9.9L3SrvtJ87X2cEcnM7fk5JPe7Ee5YQd7QXB5LgqOtDU
+
+
+POST {{host}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "username": "tesstuser",
+  "email": "users@test.com",
+  "password": "password123"
+}
+
+POST {{host}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "username": "tesstuser",
+  "password": "password123"
+}
+
+POST {{host}}/courses
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "title": "Curso de Spring Boot",
+  "description": "Aprende Spring Boot desde cero",
+  "price": 199.99,
+  "status": true
+}
+
+POST {{host}}/payments
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "user": {
+    "idUser": 9
+  },
+  "total": 200.00,
+  "methodPayment": "TARJETA_CREDITO"
+}
+
+POST {{host}}/api/inscriptions
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "user": {
+    "idUser": 9  
+  },
+  "course": {
+    "idCourse": 1  
+  }
+}
+
+GET {{host}}/api/inscriptions
+Authorization: Bearer {{token}}
+
+PUT {{host}}/api/inscriptions/1/progress?progress=25 
+Authorization: Bearer {{token}}
+
+POST {{host}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "username": "adminuser",
+  "email": "admin@test.com",
+  "password": "admin123",
+  "role": "ROLE_ADMIN"
+}
+
+POST {{host}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "username": "adminuser",
+  "password": "admin123"
+}
