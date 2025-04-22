@@ -1,4 +1,4 @@
-package com.devorbit.app.emtity;
+package com.devorbit.app.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,7 +23,7 @@ public class Module {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "id_curse")
-    private Curse curse;
+    @JoinColumn(name = "id_course")
+    private Course course;
 
 }

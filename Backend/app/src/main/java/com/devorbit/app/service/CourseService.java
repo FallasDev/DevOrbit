@@ -7,44 +7,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.devorbit.app.entity.Course;
-import com.devorbit.app.repository.RepositoryCourse;
-
-import lombok.AllArgsConstructor;
+import com.devorbit.app.repository.CourseRepository;
 
 @Service
-@AllArgsConstructor
 public class CourseService {
 
     @Autowired
-    private RepositoryCourse repositoryCourse;
+    private CourseRepository curseRepository;
 
-    public Course add(Course course) {
-        return repositoryCourse.save(course);
+    public List<Course> findAll() {//buscar la lista
+        return curseRepository.findAll();
     }
 
-    public List<Course> get() {
-        return repositoryCourse.findAll();
+    public Optional<Course> findById(int id){//buscar por id
+        return curseRepository.findById(id);
+    }
+    
+    public Course save(Course curse){//agregar guardar
+        return curseRepository.save(curse);
     }
 
-    public Optional<Course> getById(int id) {
-        return repositoryCourse.findById(id);
+    public void deleteById(int id) {//borrar por id
+        curseRepository.deleteById(id);
     }
 
-    public void delete(int id) {
-        repositoryCourse.deleteById(id);
-    }
+    public Course update(int id, Course curse){
+        Optional<Course> existCurse = curseRepository.findById(id);
+        if (existCurse.isPresent()) {
+            Course updaCurse = existCurse.get();
+            updaCurse.setDescription(curse.getDescription());
+            return curseRepository.save(updaCurse);
 
-    public Course update(int id, Course course) {
-        Optional<Course> existingCourse = repositoryCourse.findById(id);
-        if (existingCourse.isPresent()) {
-            Course updatedCourse = existingCourse.get();
-            updatedCourse.setTitle(course.getTitle());
-            updatedCourse.setDescription(course.getDescription());
-            updatedCourse.setPrice(course.getPrice());
-            updatedCourse.setStatus(course.isStatus());
-            return repositoryCourse.save(updatedCourse);
-        } else {
-            throw new RuntimeException("Curso no encontrado con ID: " + id);
+        }else{
+            throw new RuntimeException("Curso no encontrada con ID: " + id);
         }
     }
+
+
 }

@@ -2,55 +2,65 @@ package com.devorbit.app.controller;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 import com.devorbit.app.entity.Course;
 import com.devorbit.app.service.CourseService;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
-@Tag(name = "Courses", description = "API para gestionar cursos")
+@CrossOrigin(origins = "*") // Permitir acceso desde cualquier origen
+//@Tag(name = "Curses", description = "API para gestionar cursos") // Grupo en Swagger
+
 @RestController
-@RequestMapping("/courses")
+@RequestMapping("/curses")
 public class CourseController {
-    
+
     @Autowired
-    private CourseService courseService;
+    private CourseService curseService;
 
     @GetMapping
-    @Operation(summary = "Obtener todos los cursos")
-    public ResponseEntity<List<Course>> getAllCourses() {
-        return ResponseEntity.ok(courseService.get());
+    public List<Course> getAllCurses() {
+        return curseService.findAll();
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Obtener curso por ID")
-    public ResponseEntity<Course> getCourseById(@PathVariable int id) {
-        Optional<Course> course = courseService.getById(id);
-        return course.map(ResponseEntity::ok)
-                   .orElseGet(() -> ResponseEntity.notFound().build());
+    public Optional<Course> getCurseById(@PathVariable int id) {
+        return curseService.findById(id);
     }
 
     @PostMapping
-    @Operation(summary = "Crear nuevo curso")
-    public ResponseEntity<Course> createCourse(@RequestBody Course course) {
-        return ResponseEntity.ok(courseService.add(course));
+    public Course createCurse(@RequestBody Course curse) {
+        return curseService.save(curse);
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Actualizar curso")
-    public ResponseEntity<Course> updateCourse(@PathVariable int id, @RequestBody Course course) {
-        return ResponseEntity.ok(courseService.update(id, course));
+    public Course updateCurse(@PathVariable int id, @RequestBody Course updatedCurse) {
+        updatedCurse.setId_course(id);
+        return curseService.save(updatedCurse);
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Eliminar curso")
-    public ResponseEntity<Void> deleteCourse(@PathVariable int id) {
-        courseService.delete(id);
-        return ResponseEntity.noContent().build();
+    public void deletedCurse(@PathVariable int id) {
+        curseService.deleteById(id);
     }
+
+    @PutMapping("/{id}/status")//estado de activo o no
+    public Course updateStatus(@PathVariable int id, @RequestParam boolean status) {
+        Course curse = curseService.findById(id).orElseThrow();
+        curse.setStatus(status);
+        return curseService.save(curse);
+    }
+
 }

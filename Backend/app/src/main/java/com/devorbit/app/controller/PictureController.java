@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 //import io.swagger.v3.oas.annotations.tags.Tag;
 
-import com.devorbit.app.emtity.Picture;
+import com.devorbit.app.entity.Picture;
 import com.devorbit.app.service.PictureService;
 
 @CrossOrigin(origins = "*") // Permitir acceso desde cualquier origen
@@ -22,7 +22,7 @@ import com.devorbit.app.service.PictureService;
 
 @RestController
 @RequestMapping("/pictures")
-public class RestPictureController {
+public class PictureController {
     
     @Autowired
     private PictureService pictureService;

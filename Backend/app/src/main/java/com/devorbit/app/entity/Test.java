@@ -28,8 +28,7 @@ public class Test {
     
 
     // Relacion con el curso cuando se añada
-    // @OneToOne(mappedBy = "test")
-    // @JoinColumn(name = "course_id", nullable = false)
-    // private Course course;
-
+    @OneToOne(mappedBy = "test")
+    private Course course;
+    
 }

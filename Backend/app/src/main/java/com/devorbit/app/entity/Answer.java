@@ -33,7 +33,6 @@ public class Answer {
     @Column(name = "short_answer", length = 54)
     private String shortAnswer;
 
-    
 
     @ManyToOne
     @JoinColumn(name = "question_id", nullable = false)

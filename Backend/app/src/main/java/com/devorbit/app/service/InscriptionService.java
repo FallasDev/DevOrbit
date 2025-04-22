@@ -4,9 +4,13 @@ import com.devorbit.app.entity.*;
 import com.devorbit.app.repository.RepositoryInscription;
 import com.devorbit.app.repository.RepositoryPayment;
 import lombok.AllArgsConstructor;
-import com.devorbit.app.repository.RepositoryCourse;
+
+import com.devorbit.app.repository.CourseRepository;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +21,7 @@ public class InscriptionService {
 
     private final RepositoryInscription repositoryInscription;
     private final RepositoryPayment repositoryPayment;
-    private final RepositoryCourse repositoryCourse;
+    private final CourseRepository repositoryCourse;
 
     
     public List<Inscription> get() {
@@ -39,7 +43,7 @@ public class InscriptionService {
         User user = inscription.getUser();
         
     
-        Course existingCourse = repositoryCourse.findById(course.getIdCourse())
+        Course existingCourse = repositoryCourse.findById(course.getId_course())
                 .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
         
         if(!existingCourse.isStatus()) {
@@ -78,15 +82,15 @@ public class InscriptionService {
         return repositoryInscription.save(existing);
     }
 
-    private void validatePayment(User user, double requiredAmount) {
+    private void validatePayment(User user, BigDecimal requiredAmount) {
         List<Payment> userPayments = repositoryPayment.findByUser(user);
-        
+
         boolean hasValidPayment = userPayments.stream()
-                .anyMatch(p -> 
-                    p.getTotal() >= requiredAmount && 
-                    p.getInscription() == null); 
-        
-        if(!hasValidPayment) {
+                .anyMatch(p ->
+                        p.getTotal() >= requiredAmount.doubleValue() &&
+                        p.getInscription() == null);
+
+        if (!hasValidPayment) {
             throw new RuntimeException("El usuario no tiene un pago válido para esta inscripción");
         }
     }
