@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,28 +37,33 @@ public class VideoController {
     private CloudinaryService cloudinaryService;
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public List<Video> getAllVideos() {
         return videoService.getAllVideos();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public Video getVideoById(@PathVariable int id) {
         return videoService.getVideoById(id);
     }
 
     @PutMapping("/{id}")
-    public Video updateVideo(@PathVariable int id,@RequestBody Video video) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public Video updateVideo(@PathVariable int id, @RequestBody Video video) {
         return videoService.updateVideo(id, video);
     }
 
     @DeleteMapping("/{id}/delete")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteVideo(@PathVariable int id) {
         videoService.deleteVideo(id);
     }
 
     @PostMapping("/upload")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> uploadVideo(@RequestParam MultipartFile videoFile, @RequestParam String title) {
-        
+
         File tempFile = new File(System.getProperty("java.io.tmpdir") + "/" + videoFile.getOriginalFilename());
 
         try {
@@ -68,7 +74,7 @@ public class VideoController {
         }
 
         String publicId = UUID.randomUUID().toString();
-        
+
         try {
             Map<String, Object> uploadResult = cloudinaryService.uploadVideo(tempFile.getAbsolutePath(), publicId);
             if (uploadResult != null) {
@@ -85,7 +91,6 @@ public class VideoController {
             }
         }
 
-        
     }
 
 }

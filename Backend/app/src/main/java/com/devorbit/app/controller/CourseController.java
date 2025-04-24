@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -24,43 +25,49 @@ import org.springframework.web.bind.annotation.RequestBody;
 //@Tag(name = "Curses", description = "API para gestionar cursos") // Grupo en Swagger
 
 @RestController
-@RequestMapping("/curses")
+@RequestMapping("/api/admin/curses") 
 public class CourseController {
 
     @Autowired
-    private CourseService curseService;
+    private CourseService courseService;
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public List<Course> getAllCurses() {
-        return curseService.findAll();
+        return courseService.findAll();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')") 
     public Optional<Course> getCurseById(@PathVariable int id) {
-        return curseService.findById(id);
+        return courseService.findById(id);
     }
 
     @PostMapping
-    public Course createCurse(@RequestBody Course curse) {
-        return curseService.save(curse);
+    @PreAuthorize("hasRole('ADMIN')")
+    public Course createCourse(@RequestBody Course course) {
+        return courseService.save(course);
     }
 
     @PutMapping("/{id}")
-    public Course updateCurse(@PathVariable int id, @RequestBody Course updatedCurse) {
-        updatedCurse.setId_course(id);
-        return curseService.save(updatedCurse);
+    @PreAuthorize("hasRole('ADMIN')") 
+    public Course updateCourse(@PathVariable int id, @RequestBody Course updatedCourse) {
+        updatedCourse.setId_course(id);
+        return courseService.save(updatedCourse);
     }
 
     @DeleteMapping("/{id}")
-    public void deletedCurse(@PathVariable int id) {
-        curseService.deleteById(id);
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deletedCourse(@PathVariable int id) {
+        courseService.deleteById(id);
     }
 
-    @PutMapping("/{id}/status")//estado de activo o no
+    @PutMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')") 
     public Course updateStatus(@PathVariable int id, @RequestParam boolean status) {
-        Course curse = curseService.findById(id).orElseThrow();
-        curse.setStatus(status);
-        return curseService.save(curse);
+        Course course = courseService.findById(id).orElseThrow();
+        course.setStatus(status);
+        return courseService.save(course);
     }
 
 }

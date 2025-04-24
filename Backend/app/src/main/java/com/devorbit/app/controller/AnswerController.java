@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,16 +25,19 @@ public class AnswerController {
     private AnswerService answerService;
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public List<Answer> getAllAnswers() {
         return answerService.getAllAnswers();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public Answer getAnswerById(@PathVariable int id) {
         return answerService.getAnswerById(id);
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> saveAnswer(@RequestBody Answer answer) {
         try{
             return ResponseEntity.ok(answerService.saveAnswer(answer));
@@ -44,11 +48,13 @@ public class AnswerController {
     }
 
     @DeleteMapping("/{id}/delete")
+    @PreAuthorize("hasRole('ADMIN')") 
     public void deleteAnswer(@PathVariable int id) {
         answerService.deleteAnswer(id);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')") 
     public Answer updateAnswer(@PathVariable int id, @RequestBody Answer answer) {
         return answerService.updateAnswer(id, answer);
     }

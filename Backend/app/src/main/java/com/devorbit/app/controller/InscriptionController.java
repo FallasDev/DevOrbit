@@ -2,6 +2,7 @@ package com.devorbit.app.controller;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.devorbit.app.entity.*;
 import com.devorbit.app.service.InscriptionService;
@@ -22,12 +23,14 @@ public class InscriptionController {
     }
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Obtener todas las inscripciones")
     public ResponseEntity<List<Inscription>> getAllInscriptions() {
         return ResponseEntity.ok(inscriptionService.get());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Obtener inscripción por ID")
     public ResponseEntity<Inscription> getInscriptionById(@PathVariable int id) {
         return inscriptionService.getById(id)
@@ -36,6 +39,7 @@ public class InscriptionController {
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Crear nueva inscripción con validación de pago")
     public ResponseEntity<?> createInscription(@RequestBody InscriptionRequest request) {
         try {
@@ -47,6 +51,7 @@ public class InscriptionController {
     }
 
     @PutMapping("/{id}/progress")
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Actualizar progreso de inscripción")
     public ResponseEntity<Inscription> updateProgress(
             @PathVariable int id, 
@@ -57,6 +62,7 @@ public class InscriptionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Eliminar inscripción")
     public ResponseEntity<Void> deleteInscription(@PathVariable int id) {
         inscriptionService.delete(id);

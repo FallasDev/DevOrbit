@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,8 @@ import com.devorbit.app.entity.Module;
 import com.devorbit.app.service.ModuleService;
 
 @CrossOrigin(origins = "*") // Permitir acceso desde cualquier origen
-//Tag(name = "Modules", description = "API para gestionar modulos") // Grupo en Swagger
+// Tag(name = "Modules", description = "API para gestionar modulos") // Grupo en
+// Swagger
 
 @RestController
 @RequestMapping("/modules")
@@ -28,32 +30,41 @@ public class ControllerModule {
     private ModuleService moduleService;
 
     @GetMapping
-    public List<Module> getAllModules(){
+    @PreAuthorize("isAuthenticated()")
+    public List<Module> getAllModules() {
         return moduleService.findAll();
     }
 
-    /**@GetMapping("/curse/{curseId}")//optener cursos por curso, pero aun no tengo el metodo en service, es lo miso
-    public List<Module> getModulesByCurse(@PathVariable int curseId) {
-        return moduleService.findById(curseId);
-    }*/
+    /**
+     * @GetMapping("/curse/{curseId}")//optener cursos por curso, pero aun no tengo
+    @PreAuthorize("isAuthenticated()")
+     * el metodo en service, es lo miso
+     * public List<Module> getModulesByCurse(@PathVariable int curseId) {
+     * return moduleService.findById(curseId);
+     * }
+     */
 
-    @GetMapping("/{id}")//optener cursoooo
+    @GetMapping("/{id}") // optener cursoooo
+    @PreAuthorize("isAuthenticated()")
     public Optional<Module> getModuleById(@PathVariable int id) {
         return moduleService.findById(id);
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')") 
     public Module createModule(@RequestBody Module module) {
         return moduleService.save(module);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')") 
     public Module updateModule(@PathVariable int id, @RequestBody Module updatedModule) {
         updatedModule.setId_module(id);
         return moduleService.save(updatedModule);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')") 
     public void deleteModule(@PathVariable int id) {
         moduleService.deleteById(id);
     }

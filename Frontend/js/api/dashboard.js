@@ -1,11 +1,6 @@
 const API_URL = 'http://localhost:8080/api/user/me';
 let token = localStorage.getItem('jwtToken'); 
 
-if (!token) {
-    alert("No estás autenticado. Serás redirigido al login.");
-    window.location.href = "login.html";
-}
-
 const elements = {
     modal: document.getElementById('profileModal'),
     form: document.getElementById('profileForm'),
@@ -18,8 +13,70 @@ const elements = {
 };
 
 let profileModal;
-if (elements.modal) {
-    profileModal = new bootstrap.Modal(elements.modal);
+
+function initialize() {
+    checkAuthentication();
+    initializeModal();
+    setupEventListeners();
+    loadInitialData();
+}
+
+function checkAuthentication() {
+    if (!token) {
+        alert("No estás autenticado. Serás redirigido al login.");
+        window.location.href = "login.html";
+    }
+}
+
+function initializeModal() {
+    if (elements.modal) {
+        profileModal = new bootstrap.Modal(elements.modal);
+    }
+}
+
+function setupEventListeners() {
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!token) return;
+
+        if (elements.saveBtn) {
+            elements.saveBtn.addEventListener('click', actualizarPerfil);
+        }
+        
+        if (elements.form) {
+            elements.form.addEventListener('submit', actualizarPerfil);
+        }
+        
+        if (elements.deleteBtn) {
+            elements.deleteBtn.addEventListener('click', eliminarCuenta);
+        }
+
+        setupLogoutLink();
+        setupModalEvents();
+    });
+}
+
+function setupLogoutLink() {
+    const logoutLink = document.getElementById('logoutLink');
+    if (logoutLink) {
+        logoutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('jwtToken');
+            window.location.href = '../components/login.html';
+        });
+    }
+}
+
+function setupModalEvents() {
+    if (elements.modal) {
+        elements.modal.addEventListener('shown.bs.modal', cargarPerfil);
+        elements.modal.addEventListener('hidden.bs.modal', () => {
+            if (elements.successAlert) elements.successAlert.classList.add('d-none');
+            if (elements.errorAlert) elements.errorAlert.classList.add('d-none');
+        });
+    }
+}
+
+function loadInitialData() {
 }
 
 function showAlert(alertElement, message, isError = false) {
@@ -81,8 +138,7 @@ async function actualizarPerfil(event) {
         return;
     }
     
-    elements.saveBtn.disabled = true;
-    elements.saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...';
+    setButtonLoadingState(elements.saveBtn, true, 'Guardando...');
 
     try {
         const response = await fetch(API_URL, {
@@ -97,8 +153,7 @@ async function actualizarPerfil(event) {
             })
         });
 
-        elements.saveBtn.disabled = false;
-        elements.saveBtn.textContent = 'Guardar Cambios';
+        setButtonLoadingState(elements.saveBtn, false, 'Guardar Cambios');
 
         if (!response.ok) {
             if (response.status === 401 || response.status === 403) {
@@ -133,8 +188,7 @@ async function actualizarPerfil(event) {
 async function eliminarCuenta() {
     if (!confirm("¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no es reversible.")) return;
     
-    elements.deleteBtn.disabled = true;
-    elements.deleteBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Eliminando...';
+    setButtonLoadingState(elements.deleteBtn, true, 'Eliminando...');
     
     try {
         const response = await fetch(API_URL, {
@@ -144,10 +198,8 @@ async function eliminarCuenta() {
             }
         });
 
-        // Restaurar botón en caso de error
         if (!response.ok) {
-            elements.deleteBtn.disabled = false;
-            elements.deleteBtn.textContent = 'Eliminar Cuenta';
+            setButtonLoadingState(elements.deleteBtn, false, 'Eliminar Cuenta');
             
             if (response.status === 401 || response.status === 403) {
                 handleInvalidToken();
@@ -161,8 +213,7 @@ async function eliminarCuenta() {
         window.location.href = "login.html";
 
     } catch (error) {
-        elements.deleteBtn.disabled = false;
-        elements.deleteBtn.textContent = 'Eliminar Cuenta';
+        setButtonLoadingState(elements.deleteBtn, false, 'Eliminar Cuenta');
         
         if (error.name === 'TypeError' && error.message.includes('network')) {
             handleNetworkError(error);
@@ -170,47 +221,13 @@ async function eliminarCuenta() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    if (!token) return;
-
+function setButtonLoadingState(button, isLoading, text) {
+    if (!button) return;
     
+    button.disabled = isLoading;
+    button.innerHTML = isLoading 
+        ? '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ' + text 
+        : text;
+}
 
-    if (elements.saveBtn) {
-        elements.saveBtn.addEventListener('click', actualizarPerfil);
-    }
-    
-    if (elements.form) {
-        elements.form.addEventListener('submit', actualizarPerfil);
-    }
-    
-    if (elements.deleteBtn) {
-        elements.deleteBtn.addEventListener('click', eliminarCuenta);
-    }
-
-    const logoutLink = document.getElementById('logoutLink');
-    if (logoutLink) {
-        logoutLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            localStorage.removeItem('jwtToken');
-            window.location.href = 'login.html';
-        });
-    }
-    
-    if (elements.modal) {
-        elements.modal.addEventListener('show.bs.modal', cargarPerfil);
-        elements.modal.addEventListener('hidden.bs.modal', () => {
-            if (elements.successAlert) elements.successAlert.classList.add('d-none');
-            if (elements.errorAlert) elements.errorAlert.classList.add('d-none');
-        });
-
-        
-    }
-
-    
-    
-    const isProfilePage = document.querySelector('#profileModal, #profileForm');
-    if (isProfilePage) {
-        cargarPerfil();
-    }
-});
-
+initialize();
