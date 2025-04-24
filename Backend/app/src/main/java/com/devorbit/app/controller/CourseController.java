@@ -7,13 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.devorbit.app.emtity.Curse;
-import com.devorbit.app.service.CurseService;
+
+import com.devorbit.app.entity.Course;
+import com.devorbit.app.service.CourseService;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,29 +25,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/curses")
-public class RestCurseController {
+public class CourseController {
 
     @Autowired
-    private CurseService curseService;
+    private CourseService curseService;
 
     @GetMapping
-    public List<Curse> getAllCurses() {
+    public List<Course> getAllCurses() {
         return curseService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Optional<Curse> getCurseById(@PathVariable int id) {
+    public Optional<Course> getCurseById(@PathVariable int id) {
         return curseService.findById(id);
     }
 
-    @PutMapping("/{id}")
-    public Curse createCurse(@RequestBody Curse curse) {
+    @PostMapping
+    public Course createCurse(@RequestBody Course curse) {
         return curseService.save(curse);
     }
 
     @PutMapping("/{id}")
-    public Curse updateCurse(@PathVariable int id, @RequestBody Curse updatedCurse) {
-        updatedCurse.setId_curse(id);
+    public Course updateCurse(@PathVariable int id, @RequestBody Course updatedCurse) {
+        updatedCurse.setId_course(id);
         return curseService.save(updatedCurse);
     }
 
@@ -55,8 +57,8 @@ public class RestCurseController {
     }
 
     @PutMapping("/{id}/status")//estado de activo o no
-    public Curse updateStatus(@PathVariable int id, @RequestParam boolean status) {
-        Curse curse = curseService.findById(id).orElseThrow();
+    public Course updateStatus(@PathVariable int id, @RequestParam boolean status) {
+        Course curse = curseService.findById(id).orElseThrow();
         curse.setStatus(status);
         return curseService.save(curse);
     }

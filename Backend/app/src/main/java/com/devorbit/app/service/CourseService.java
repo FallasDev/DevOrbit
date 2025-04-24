@@ -6,24 +6,24 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.devorbit.app.emtity.Curse;
-import com.devorbit.app.repository.CurseRepository;
+import com.devorbit.app.entity.Course;
+import com.devorbit.app.repository.CourseRepository;
 
 @Service
-public class CurseService {
+public class CourseService {
 
     @Autowired
-    private CurseRepository curseRepository;
+    private CourseRepository curseRepository;
 
-    public List<Curse> findAll() {//buscar la lista
+    public List<Course> findAll() {//buscar la lista
         return curseRepository.findAll();
     }
 
-    public Optional<Curse> findById(int id){//buscar por id
+    public Optional<Course> findById(int id){//buscar por id
         return curseRepository.findById(id);
     }
     
-    public Curse save(Curse curse){//agregar guardar
+    public Course save(Course curse){//agregar guardar
         return curseRepository.save(curse);
     }
 
@@ -31,10 +31,10 @@ public class CurseService {
         curseRepository.deleteById(id);
     }
 
-    public Curse update(int id, Curse curse){
-        Optional<Curse> existCurse = curseRepository.findById(id);
+    public Course update(int id, Course curse){
+        Optional<Course> existCurse = curseRepository.findById(id);
         if (existCurse.isPresent()) {
-            Curse updaCurse = existCurse.get();
+            Course updaCurse = existCurse.get();
             updaCurse.setDescription(curse.getDescription());
             return curseRepository.save(updaCurse);
 

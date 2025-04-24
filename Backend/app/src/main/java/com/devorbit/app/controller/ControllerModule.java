@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.devorbit.app.emtity.Module;
+import com.devorbit.app.entity.Module;
 import com.devorbit.app.service.ModuleService;
 
 @CrossOrigin(origins = "*") // Permitir acceso desde cualquier origen
@@ -22,7 +22,7 @@ import com.devorbit.app.service.ModuleService;
 
 @RestController
 @RequestMapping("/modules")
-public class RestControllerModule {
+public class ControllerModule {
 
     @Autowired
     private ModuleService moduleService;

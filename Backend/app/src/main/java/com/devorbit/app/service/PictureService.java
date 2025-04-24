@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.devorbit.app.emtity.Picture;
+import com.devorbit.app.entity.Picture;
 import com.devorbit.app.repository.PictureRepository;
 
 @Service
