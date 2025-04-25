@@ -23,6 +23,10 @@ public class ModuleService {
         return moduleRepository.findById(id);
     }
     
+    public List<Module> findByCourseId(int courseId) {//buscar por curso
+        return moduleRepository.findByCourseId(courseId);
+    }
+
     public Module save(Module module){//agregar guardar
         return moduleRepository.save(module);
     }

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/Frontend/css/Video.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main class="p-5">
+      <div class="video-section container d-flex flex-column">
+        <div
+          class="video-container bg-black rounded shadow"
+          id="video-container"
+        >
+          <video id="video" preload="metadata">
+            Tu navegador no soporta HTML5 video.
+          </video>
+
+          <div class="controls position-relative z-3">
+            <button id="playPause" class="btn btn-sm btn-primary">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20px"
+                height="20px"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M21.4086 9.35258C23.5305 10.5065 23.5305 13.4935 21.4086 14.6474L8.59662 21.6145C6.53435 22.736 4 21.2763 4 18.9671L4 5.0329C4 2.72368 6.53435 1.26402 8.59661 2.38548L21.4086 9.35258Z"
+                  fill="#1C274C"
+                />
+              </svg>
+            </button>
+            <button id="mute" class="btn btn-sm btn-warning">
+              <input
+                id="vol-bar"
+                type="range"
+                class="position-absolute"
+                style="
+                  writing-mode: sideways-lr;
+                  top: -250%;
+                  visibility: hidden;
+                "
+                min="0"
+                max="1"
+                step="0.1"
+                value="1"
+              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20px"
+                height="20px"
+                viewBox="0 0 16 16"
+                fill="none"
+              >
+                <path d="M6 1H8V15H6L2 11H0V5H2L6 1Z" fill="#000000" />
+                <path
+                  d="M14 8C14 5.79086 12.2091 4 10 4V2C13.3137 2 16 4.68629 16 8C16 11.3137 13.3137 14 10 14V12C12.2091 12 14 10.2091 14 8Z"
+                  fill="#000000"
+                />
+                <path
+                  d="M12 8C12 9.10457 11.1046 10 10 10V6C11.1046 6 12 6.89543 12 8Z"
+                  fill="#000000"
+                />
+              </svg>
+            </button>
+            <input
+              type="range"
+              id="progress"
+              class="form-range progress"
+              value="0"
+              step="0.01"
+            />
+            <div class="time" id="currentTime">0:00</div>
+            <button class="btn btn-sm btn-info" id="full-screen">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20px"
+                height="20px"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M4 1.5C2.61929 1.5 1.5 2.61929 1.5 4V8.5C1.5 9.05228 1.94772 9.5 2.5 9.5H3.5C4.05228 9.5 4.5 9.05228 4.5 8.5V4.5H8.5C9.05228 4.5 9.5 4.05228 9.5 3.5V2.5C9.5 1.94772 9.05228 1.5 8.5 1.5H4Z"
+                  fill="#000000"
+                />
+                <path
+                  d="M20 1.5C21.3807 1.5 22.5 2.61929 22.5 4V8.5C22.5 9.05228 22.0523 9.5 21.5 9.5H20.5C19.9477 9.5 19.5 9.05228 19.5 8.5V4.5H15.5C14.9477 4.5 14.5 4.05228 14.5 3.5V2.5C14.5 1.94772 14.9477 1.5 15.5 1.5H20Z"
+                  fill="#000000"
+                />
+                <path
+                  d="M20 22.5C21.3807 22.5 22.5 21.3807 22.5 20V15.5C22.5 14.9477 22.0523 14.5 21.5 14.5H20.5C19.9477 14.5 19.5 14.9477 19.5 15.5V19.5H15.5C14.9477 19.5 14.5 19.9477 14.5 20.5V21.5C14.5 22.0523 14.9477 22.5 15.5 22.5H20Z"
+                  fill="#000000"
+                />
+                <path
+                  d="M1.5 20C1.5 21.3807 2.61929 22.5 4 22.5H8.5C9.05228 22.5 9.5 22.0523 9.5 21.5V20.5C9.5 19.9477 9.05228 19.5 8.5 19.5H4.5V15.5C4.5 14.9477 4.05228 14.5 3.5 14.5H2.5C1.94772 14.5 1.5 14.9477 1.5 15.5V20Z"
+                  fill="#000000"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="mt-4">
+          <h1 id="title" class="display-5 fw-bold mb-1">Bienvenida al curso</h1>
+          <p id="created-at" class="text-muted mb-0">
+            Publicado el 01 de abril, 2025
+          </p>
+        </div>
+      </div>
+
+      <div id="accordion-module" class="accordion-module container py-5">
+        <h2 class="display-5 fw-bold mb-4 text-primary-emphasis text-center">
+          Módulos del curso
+        </h2>
+
+        <div
+          class="accordion accordion-flush shadow-sm rounded"
+          id="accordionFlushExample"
+        ></div>
+      </div>
+      
+    </main>
+
+    <script src="/Frontend/js/api/Video.js"></script>
+    <script src="/Frontend/js/api/course.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

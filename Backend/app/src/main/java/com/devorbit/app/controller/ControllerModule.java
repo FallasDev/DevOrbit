@@ -32,10 +32,10 @@ public class ControllerModule {
         return moduleService.findAll();
     }
 
-    /**@GetMapping("/curse/{curseId}")//optener cursos por curso, pero aun no tengo el metodo en service, es lo miso
-    public List<Module> getModulesByCurse(@PathVariable int curseId) {
-        return moduleService.findById(curseId);
-    }*/
+    @GetMapping("/course/{courseId}")//optener cursos por curso, pero aun no tengo el metodo en service, es lo miso
+    public List<Module> getModulesByCurse(@PathVariable int courseId) {
+        return moduleService.findByCourseId(courseId);
+    }
 
     @GetMapping("/{id}")//optener cursoooo
     public Optional<Module> getModuleById(@PathVariable int id) {

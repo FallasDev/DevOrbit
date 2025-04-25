@@ -26,4 +26,7 @@ public class Module {
     @JoinColumn(name = "id_course")
     private Course course;
 
+    @Column(name = "module_order", nullable = false)
+    private int moduleOrder;
+
 }
