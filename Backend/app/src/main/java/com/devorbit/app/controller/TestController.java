@@ -25,13 +25,13 @@ public class TestController {
     private TestService testService;
 
     @GetMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<Test> getAllTests() {
         return testService.getAllTests();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Test getTestById(@PathVariable int id) {
         return testService.getTestById(id);
     }
@@ -55,7 +55,7 @@ public class TestController {
     }
 
     @PostMapping("/{testId}/getScore")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public double getScore(@RequestBody List<Answer> userAnswers, @PathVariable int testId) {
         int countCorrectAnswers = testService.getCorrectAnswers(userAnswers);
         System.out.println(countCorrectAnswers);

@@ -25,19 +25,19 @@ public class AnswerController {
     private AnswerService answerService;
 
     @GetMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<Answer> getAllAnswers() {
         return answerService.getAllAnswers();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Answer getAnswerById(@PathVariable int id) {
         return answerService.getAnswerById(id);
     }
 
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<?> saveAnswer(@RequestBody Answer answer) {
         try{
             return ResponseEntity.ok(answerService.saveAnswer(answer));

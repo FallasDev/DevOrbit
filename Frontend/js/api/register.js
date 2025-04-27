@@ -163,3 +163,43 @@ function handleRegistrationException(error) {
         alert(`Error: ${error.message || 'Error al registrar el usuario'}`);
     }
 }
+
+        $(document).ready(function() {
+            $('#togglePassword').click(function() {
+                const password = $('#password');
+                const icon = $(this).find('i');
+                
+                if (password.attr('type') === 'password') {
+                    password.attr('type', 'text');
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    password.attr('type', 'password');
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+            
+            
+            $('#password').on('input', function() {
+                const password = $(this).val();
+                const strengthBar = $('#passwordStrength');
+                let strength = 0;
+                
+                if (password.length > 0) strength += 1;
+                if (password.length >= 6) strength += 1;
+                if (password.match(/[a-z]/)) strength += 1;
+                if (password.match(/[A-Z]/)) strength += 1;
+                if (password.match(/[0-9]/)) strength += 1;
+                if (password.match(/[^a-zA-Z0-9]/)) strength += 1;
+                
+                const width = (strength / 6) * 100;
+                let color = '#ff3860'; 
+                
+                if (strength > 2) color = '#ffdd57'; 
+                if (strength > 4) color = '#23d160'; 
+                
+                strengthBar.css({
+                    'width': width + '%',
+                    'background': color
+                });
+            });
+        });

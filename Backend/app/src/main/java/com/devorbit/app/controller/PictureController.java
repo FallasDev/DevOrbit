@@ -30,13 +30,13 @@ public class PictureController {
     private PictureService pictureService;
 
     @GetMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<Picture> getAllPictures() {
         return pictureService.findAll();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Optional<Picture> getPictureById(@PathVariable int id) {
         return pictureService.findById(id);
     }

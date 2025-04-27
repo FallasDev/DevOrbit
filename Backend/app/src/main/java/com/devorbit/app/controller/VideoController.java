@@ -37,13 +37,13 @@ public class VideoController {
     private CloudinaryService cloudinaryService;
 
     @GetMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<Video> getAllVideos() {
         return videoService.getAllVideos();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Video getVideoById(@PathVariable int id) {
         return videoService.getVideoById(id);
     }

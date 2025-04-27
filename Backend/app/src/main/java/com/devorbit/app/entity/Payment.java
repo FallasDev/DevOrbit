@@ -2,6 +2,8 @@ package com.devorbit.app.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,7 +27,7 @@ public class Payment {
     private Inscription inscription;
 
     private LocalDateTime createAt;
-    private double total;
+    private BigDecimal total;
     private String methodPayment;
 
 

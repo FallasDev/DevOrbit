@@ -14,23 +14,22 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/api/inscriptions")
 public class InscriptionController {
-    
+
     private final InscriptionService inscriptionService;
 
-    
     public InscriptionController(InscriptionService inscriptionService) {
         this.inscriptionService = inscriptionService;
     }
 
     @GetMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "Obtener todas las inscripciones")
     public ResponseEntity<List<Inscription>> getAllInscriptions() {
         return ResponseEntity.ok(inscriptionService.get());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "Obtener inscripción por ID")
     public ResponseEntity<Inscription> getInscriptionById(@PathVariable int id) {
         return inscriptionService.getById(id)
@@ -39,7 +38,7 @@ public class InscriptionController {
     }
 
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "Crear nueva inscripción con validación de pago")
     public ResponseEntity<?> createInscription(@RequestBody InscriptionRequest request) {
         try {
@@ -51,10 +50,10 @@ public class InscriptionController {
     }
 
     @PutMapping("/{id}/progress")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "Actualizar progreso de inscripción")
     public ResponseEntity<Inscription> updateProgress(
-            @PathVariable int id, 
+            @PathVariable int id,
             @RequestParam int progress) {
         Inscription inscription = new Inscription();
         inscription.setProgress(progress);
@@ -62,24 +61,45 @@ public class InscriptionController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "Eliminar inscripción")
     public ResponseEntity<Void> deleteInscription(@PathVariable int id) {
         inscriptionService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    
     public static class InscriptionRequest {
-        private User user;
-        private Course course;
-        
-        
+        private int userId;
+        private int courseId;
+
+        public int getUserId() {
+            return userId;
+        }
+
+        public void setUserId(int userId) {
+            this.userId = userId;
+        }
+
+        public int getCourseId() {
+            return courseId;
+        }
+
+        public void setCourseId(int courseId) {
+            this.courseId = courseId;
+        }
+
         public Inscription toInscription() {
+            User user = new User();
+            user.setIdUser(this.userId);
+
+            Course course = new Course();
+            course.setId_course(this.courseId);
+
             Inscription inscription = new Inscription();
-            inscription.setUser(this.user);
-            inscription.setCourse(this.course);
+            inscription.setUser(user);
+            inscription.setCourse(course);
             return inscription;
         }
     }
+
 }

@@ -30,14 +30,14 @@ public class ControllerModule {
     private ModuleService moduleService;
 
     @GetMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<Module> getAllModules() {
         return moduleService.findAll();
     }
 
     /**
      * @GetMapping("/curse/{curseId}")//optener cursos por curso, pero aun no tengo
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
      * el metodo en service, es lo miso
      * public List<Module> getModulesByCurse(@PathVariable int curseId) {
      * return moduleService.findById(curseId);
@@ -45,7 +45,7 @@ public class ControllerModule {
      */
 
     @GetMapping("/{id}") // optener cursoooo
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Optional<Module> getModuleById(@PathVariable int id) {
         return moduleService.findById(id);
     }

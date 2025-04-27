@@ -94,6 +94,21 @@ function resetSubmitButton(submitBtn, originalBtnText) {
     setButtonLoadingState(submitBtn, false, originalBtnText);
 }
 
+$(document).ready(function () {
+    $('#togglePassword').click(function () {
+        const password = $('#password');
+        const icon = $(this).find('i');
+
+        if (password.attr('type') === 'password') {
+            password.attr('type', 'text');
+            icon.removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            password.attr('type', 'password');
+            icon.removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
+});
+
 function showLoginError(xhr, error) {
     let errorMsg = 'Error en el login';
     

@@ -31,7 +31,7 @@ public class QuestionController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Question getQuestionById(@PathVariable int id) {
         return questionService.getQuestionById(id);
     }

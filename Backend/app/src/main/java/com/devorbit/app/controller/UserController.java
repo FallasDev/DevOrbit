@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin(origins = "*") 
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
@@ -61,4 +61,5 @@ public class UserController {
         repositoryUser.delete(user);
         return ResponseEntity.ok("Usuario eliminado correctamente");
     }
+
 }
