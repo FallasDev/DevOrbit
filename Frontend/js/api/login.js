@@ -1,124 +1,122 @@
-$(document).ready(initializeLogin);
+$(document).ready(inicializarLogin);
 
-const AUTH_API_URL = 'http://localhost:8080/auth/login';
-const DASHBOARD_URL = '../components/dashboard.html';
+const URL_AUTENTICACION = 'http://localhost:8080/auth/login';
+const URL_PANEL = '../components/dashboard.html';
 
-function initializeLogin() {
-    checkExistingToken();
-    setupLoginForm();
+function inicializarLogin() {
+    verificarTokenExistente();
+    configurarFormularioLogin();
+    configurarMostrarClave();
 }
 
-function checkExistingToken() {
-    const existingToken = localStorage.getItem('jwtToken');
-    if (existingToken) {
-        window.location.href = DASHBOARD_URL;
+function verificarTokenExistente() {
+    const tokenExistente = localStorage.getItem('jwtToken');
+    if (tokenExistente) {
+        window.location.href = URL_PANEL;
     }
 }
 
-function setupLoginForm() {
-    $('#loginForm').submit(handleLoginSubmit);
+function configurarFormularioLogin() {
+    $('#loginForm').submit(manejarEnvioLogin);
 }
 
-function handleLoginSubmit(e) {
+function manejarEnvioLogin(e) {
     e.preventDefault();
-    
-    const credentials = getFormCredentials();
-    const submitBtn = getSubmitButton();
-    const originalBtnText = submitBtn.text();
-    
-    setButtonLoadingState(submitBtn, true, 'Iniciando sesión...');
-    
-    sendLoginRequest(credentials, submitBtn, originalBtnText);
+
+    const credenciales = obtenerCredencialesFormulario();
+    const botonEnviar = obtenerBotonEnvio();
+    const textoOriginal = botonEnviar.text();
+
+    establecerEstadoCargando(botonEnviar, true, 'Iniciando sesión...');
+    enviarSolicitudLogin(credenciales, botonEnviar, textoOriginal);
 }
 
-function getFormCredentials() {
+function obtenerCredencialesFormulario() {
     return {
         username: $('#username').val().trim(),
         password: $('#password').val()
     };
 }
 
-function getSubmitButton() {
+function obtenerBotonEnvio() {
     return $('#loginForm').find('button[type="submit"]');
 }
 
-function setButtonLoadingState(button, isLoading, loadingText) {
-    if (isLoading) {
-        button.prop('disabled', true)
-              .html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ${loadingText}`);
+function establecerEstadoCargando(boton, cargando, texto) {
+    if (cargando) {
+        boton.prop('disabled', true)
+             .html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ${texto}`);
     } else {
-        button.prop('disabled', false)
-              .text(loadingText);
+        boton.prop('disabled', false).text(texto);
     }
 }
 
-function sendLoginRequest(credentials, submitBtn, originalBtnText) {
+function enviarSolicitudLogin(credenciales, botonEnviar, textoOriginal) {
     $.ajax({
-        url: AUTH_API_URL,
+        url: URL_AUTENTICACION,
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify(credentials),
-        success: (response) => handleLoginSuccess(response, submitBtn, originalBtnText),
-        error: (xhr, status, error) => handleLoginError(xhr, status, error, submitBtn, originalBtnText)
+        data: JSON.stringify(credenciales),
+        success: (respuesta) => manejarExitoLogin(respuesta, botonEnviar, textoOriginal),
+        error: (xhr, estado, error) => manejarErrorLogin(xhr, estado, error, botonEnviar, textoOriginal)
     });
 }
 
-function handleLoginSuccess(response, submitBtn, originalBtnText) {
-    if (response && response.token) {
-        storeAuthData(response);
-        redirectToDashboard();
+function manejarExitoLogin(respuesta, botonEnviar, textoOriginal) {
+    if (respuesta && respuesta.token) {
+        guardarDatosAutenticacion(respuesta);
+        redirigirAlPanel();
     } else {
-        resetSubmitButton(submitBtn, originalBtnText);
+        restablecerBoton(botonEnviar, textoOriginal);
     }
 }
 
-function handleLoginError(xhr, status, error, submitBtn, originalBtnText) {
+function manejarErrorLogin(xhr, estado, error, botonEnviar, textoOriginal) {
     console.error('Error en login:', xhr.status, xhr.responseText);
-    showLoginError(xhr, error);
-    resetSubmitButton(submitBtn, originalBtnText);
+    mostrarMensajeErrorLogin(xhr, error);
+    restablecerBoton(botonEnviar, textoOriginal);
 }
 
-function storeAuthData(response) {
-    localStorage.setItem('jwtToken', response.token);
-    
-    if (response.user) {
-        localStorage.setItem('currentUser', JSON.stringify(response.user));
+function guardarDatosAutenticacion(respuesta) {
+    localStorage.setItem('jwtToken', respuesta.token);
+    if (respuesta.user) {
+        localStorage.setItem('usuarioActual', JSON.stringify(respuesta.user));
     }
 }
 
-function redirectToDashboard() {
-    window.location.replace(DASHBOARD_URL);
+function redirigirAlPanel() {
+    window.location.replace(URL_PANEL);
 }
 
-function resetSubmitButton(submitBtn, originalBtnText) {
-    setButtonLoadingState(submitBtn, false, originalBtnText);
+function restablecerBoton(botonEnviar, textoOriginal) {
+    establecerEstadoCargando(botonEnviar, false, textoOriginal);
 }
 
-$(document).ready(function () {
+function configurarMostrarClave() {
     $('#togglePassword').click(function () {
-        const password = $('#password');
-        const icon = $(this).find('i');
+        const campoClave = $('#password');
+        const icono = $(this).find('i');
 
-        if (password.attr('type') === 'password') {
-            password.attr('type', 'text');
-            icon.removeClass('fa-eye').addClass('fa-eye-slash');
+        if (campoClave.attr('type') === 'password') {
+            campoClave.attr('type', 'text');
+            icono.removeClass('fa-eye').addClass('fa-eye-slash');
         } else {
-            password.attr('type', 'password');
-            icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            campoClave.attr('type', 'password');
+            icono.removeClass('fa-eye-slash').addClass('fa-eye');
         }
     });
-});
+}
 
-function showLoginError(xhr, error) {
-    let errorMsg = 'Error en el login';
-    
+function mostrarMensajeErrorLogin(xhr, error) {
+    let mensaje = 'Error en el login';
+
     if (xhr.responseJSON && xhr.responseJSON.message) {
-        errorMsg += ': ' + xhr.responseJSON.message;
+        mensaje += ': ' + xhr.responseJSON.message;
     } else if (xhr.status === 0) {
-        errorMsg += ': No se pudo conectar con el servidor';
+        mensaje += ': No se pudo conectar con el servidor';
     } else {
-        errorMsg += ` (${xhr.status}): ${error || xhr.statusText}`;
+        mensaje += ` (${xhr.status}): ${error || xhr.statusText}`;
     }
-    
-    alert(errorMsg);
+
+    alert(mensaje);
 }

@@ -1,205 +1,125 @@
-document.addEventListener('DOMContentLoaded', initializeRegistrationForm);
+$(document).ready(function () {
+    const REGISTER_API_URL = 'http://localhost:8080/auth/register';
+    const LOGIN_URL = '../components/login.html';
+    const DEFAULT_ROLE = "ROLE_USER";
 
-const REGISTER_API_URL = 'http://localhost:8080/auth/register';
-const LOGIN_URL = '../components/login.html';
-const DEFAULT_ROLE = "ROLE_USER";
+    const $form = $('#registerForm');
+    const $username = $('#username');
+    const $email = $('#email');
+    const $password = $('#password');
+    const $confirmPassword = $('#confirmPassword');
 
-const formElements = {
-    form: document.getElementById('registerForm'),
-    fields: {
-        username: document.getElementById('username'),
-        email: document.getElementById('email'),
-        password: document.getElementById('password'),
-        confirmPassword: document.getElementById('confirmPassword')
+    if ($form.length) {
+        $username.on('input', validarUsername);
+        $email.on('input', validarEmail);
+        $password.on('input', function () {
+            validarPassword();
+            actualizarBarraFuerza();
+        });
+        $confirmPassword.on('input', validarConfirmPassword);
+        $form.on('submit', manejarEnvioRegistro);
     }
-};
 
-function initializeRegistrationForm() {
-    if (!formElements.form) return;
-    
-    setupEventListeners();
-}
-
-function setupEventListeners() {
-    formElements.fields.username.addEventListener('input', validateUsername);
-    formElements.fields.email.addEventListener('input', validateEmail);
-    formElements.fields.password.addEventListener('input', validatePassword);
-    formElements.fields.confirmPassword.addEventListener('input', validateConfirmPassword);
-    
-    formElements.form.addEventListener('submit', handleFormSubmit);
-}
-
-function validateUsername() {
-    const username = formElements.fields.username.value.trim();
-    if (!username) return showError('username', 'El nombre de usuario es requerido');
-    return clearError('username');
-}
-
-function validateEmail() {
-    const email = formElements.fields.email.value.trim();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    if (!email) return showError('email', 'El correo electrónico es necesario');
-    if (!emailRegex.test(email)) return showError('email', 'Ingrese un correo electrónico válido');
-    return clearError('email');
-}
-
-function validatePassword() {
-    const password = formElements.fields.password.value;
-    if (!password) return showError('password', 'La contraseña es necesaria');
-    if (password.length < 6) return showError('password', 'La contraseña debe tener al menos 6 caracteres');
-    return clearError('password');
-}
-
-function validateConfirmPassword() {
-    const confirmPassword = formElements.fields.confirmPassword.value;
-    if (!confirmPassword) return showError('confirmPassword', 'Confirme su contraseña');
-    if (formElements.fields.password.value !== confirmPassword) {
-        return showError('confirmPassword', 'Las contraseñas no coinciden');
-    }
-    return clearError('confirmPassword');
-}
-
-function validateForm() {
-    return [
-        validateUsername(),
-        validateEmail(),
-        validatePassword(),
-        validateConfirmPassword()
-    ].every(validation => validation === true);
-}
-
-async function handleFormSubmit(e) {
-    e.preventDefault();
-    
-    if (!validateForm()) return;
-    
-    try {
-        const userData = prepareUserData();
-        const response = await sendRegistrationRequest(userData);
-        
-        if (response.ok) {
-            handleRegistrationSuccess(response);
-        } else {
-            await handleRegistrationError(response);
-        }
-    } catch (error) {
-        handleRegistrationException(error);
-    }
-}
-
-function showError(fieldId, message) {
-    const field = document.getElementById(fieldId);
-    const errorElement = document.getElementById(`${fieldId}Error`);
-    
-    field.classList.add('is-invalid');
-    errorElement.textContent = message;
-    return false;
-}
-
-function clearError(fieldId) {
-    const field = document.getElementById(fieldId);
-    const errorElement = document.getElementById(`${fieldId}Error`);
-    
-    field.classList.remove('is-invalid');
-    errorElement.textContent = '';
-    return true;
-}
-
-function prepareUserData() {
-    return {
-        username: formElements.fields.username.value.trim(),
-        email: formElements.fields.email.value.trim(),
-        password: formElements.fields.password.value,
-        role: DEFAULT_ROLE
-    };
-}
-
-async function sendRegistrationRequest(userData) {
-    return await fetch(REGISTER_API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
+    $('#togglePassword').click(function () {
+        const $icon = $(this).find('i');
+        const esPassword = $password.attr('type') === 'password';
+        $password.attr('type', esPassword ? 'text' : 'password');
+        $icon.toggleClass('fa-eye fa-eye-slash');
     });
-}
 
-async function parseResponse(response) {
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-        return await response.json();
+    function mostrarError(idCampo, mensaje) {
+        $('#' + idCampo).addClass('is-invalid');
+        $('#' + idCampo + 'Error').text(mensaje);
+        return false;
     }
-    return { message: await response.text() };
-}
 
-async function handleRegistrationSuccess(response) {
-    const responseData = await parseResponse(response);
-    alert(responseData.message || '¡Registro exitoso! Ya puede iniciar sesión con su nueva cuenta');
-    window.location.href = LOGIN_URL;
-}
-
-async function handleRegistrationError(response) {
-    const responseData = await parseResponse(response);
-    
-    if (responseData.message) {
-        if (responseData.message.includes("username")) {
-            throw { errors: { username: "El usuario ya existe" } };
-        } else if (responseData.message.includes("email")) {
-            throw { errors: { email: "El email ya está registrado" } };
-        }
+    function limpiarError(idCampo) {
+        $('#' + idCampo).removeClass('is-invalid');
+        $('#' + idCampo + 'Error').text('');
+        return true;
     }
-    throw new Error(responseData.message || 'Error en el registro');
-}
 
-function handleRegistrationException(error) {
-    console.error('Error:', error);
-    
-    if (error.errors) {
-        Object.keys(error.errors).forEach(field => {
-            showError(field, error.errors[field]);
-        });
-    } else {
-        alert(`Error: ${error.message || 'Error al registrar el usuario'}`);
+    function validarUsername() {
+        const valor = $username.val().trim();
+        if (!valor) return mostrarError('username', 'El nombre de usuario es requerido');
+        return limpiarError('username');
     }
-}
 
-        $(document).ready(function() {
-            $('#togglePassword').click(function() {
-                const password = $('#password');
-                const icon = $(this).find('i');
-                
-                if (password.attr('type') === 'password') {
-                    password.attr('type', 'text');
-                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+    function validarEmail() {
+        const valor = $email.val().trim();
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!valor) return mostrarError('email', 'El correo electrónico es necesario');
+        if (!regex.test(valor)) return mostrarError('email', 'Ingrese un correo electrónico válido');
+        return limpiarError('email');
+    }
+
+    function validarPassword() {
+        const valor = $password.val();
+        if (!valor) return mostrarError('password', 'La contraseña es necesaria');
+        if (valor.length < 6) return mostrarError('password', 'La contraseña debe tener al menos 6 caracteres');
+        return limpiarError('password');
+    }
+
+    function validarConfirmPassword() {
+        const valor = $confirmPassword.val();
+        if (!valor) return mostrarError('confirmPassword', 'Confirme su contraseña');
+        if ($password.val() !== valor) return mostrarError('confirmPassword', 'Las contraseñas no coinciden');
+        return limpiarError('confirmPassword');
+    }
+
+    function validarFormulario() {
+        return validarUsername() & validarEmail() & validarPassword() & validarConfirmPassword();
+    }
+
+    function actualizarBarraFuerza() {
+        const password = $password.val();
+        let fuerza = 0;
+        if (password.length > 0) fuerza++;
+        if (password.length >= 6) fuerza++;
+        if (/[a-z]/.test(password)) fuerza++;
+        if (/[A-Z]/.test(password)) fuerza++;
+        if (/\d/.test(password)) fuerza++;
+        if (/[^a-zA-Z0-9]/.test(password)) fuerza++;
+
+        const porcentaje = (fuerza / 6) * 100;
+        const $barra = $('#passwordStrength');
+        let color = '#ff3860';
+        if (fuerza > 2) color = '#ffdd57';
+        if (fuerza > 4) color = '#23d160';
+
+        $barra.css({ width: porcentaje + '%', background: color });
+    }
+
+    function manejarEnvioRegistro(e) {
+        e.preventDefault();
+        if (!validarFormulario()) return;
+
+        const datos = {
+            username: $username.val().trim(),
+            email: $email.val().trim(),
+            password: $password.val(),
+            role: DEFAULT_ROLE
+        };
+
+        $.ajax({
+            url: REGISTER_API_URL,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(datos),
+            success: function (respuesta) {
+                alert(respuesta.message || '¡Registro exitoso! Ya puede iniciar sesión.');
+                window.location.href = LOGIN_URL;
+            },
+            error: function (xhr) {
+                const mensaje = xhr.responseJSON?.message || 'Error en el registro';
+                if (mensaje.includes('username')) {
+                    mostrarError('username', 'El usuario ya existe');
+                } else if (mensaje.includes('email')) {
+                    mostrarError('email', 'El email ya está registrado');
                 } else {
-                    password.attr('type', 'password');
-                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                    alert(`Error: ${mensaje}`);
                 }
-            });
-            
-            
-            $('#password').on('input', function() {
-                const password = $(this).val();
-                const strengthBar = $('#passwordStrength');
-                let strength = 0;
-                
-                if (password.length > 0) strength += 1;
-                if (password.length >= 6) strength += 1;
-                if (password.match(/[a-z]/)) strength += 1;
-                if (password.match(/[A-Z]/)) strength += 1;
-                if (password.match(/[0-9]/)) strength += 1;
-                if (password.match(/[^a-zA-Z0-9]/)) strength += 1;
-                
-                const width = (strength / 6) * 100;
-                let color = '#ff3860'; 
-                
-                if (strength > 2) color = '#ffdd57'; 
-                if (strength > 4) color = '#23d160'; 
-                
-                strengthBar.css({
-                    'width': width + '%',
-                    'background': color
-                });
-            });
+            }
         });
+    }
+});

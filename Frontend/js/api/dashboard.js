@@ -1,64 +1,64 @@
-const API_URL = 'http://localhost:8080/api/user/me';
-let token = localStorage.getItem('jwtToken'); 
+const URL_API = 'http://localhost:8080/api/user/me';
+let tokenUsuario = localStorage.getItem('jwtToken');
 
-const elements = {
-    modal: document.getElementById('profileModal'),
-    form: document.getElementById('profileForm'),
-    usernameInput: document.getElementById('username'),
-    emailInput: document.getElementById('email'),
-    saveBtn: document.getElementById('saveProfileBtn'),
-    deleteBtn: document.getElementById('deleteAccountBtn'),
-    successAlert: document.getElementById('successAlert'),
-    errorAlert: document.getElementById('errorAlert')
+const elementos = {
+    modalPerfil: document.getElementById('profileModal'),
+    formularioPerfil: document.getElementById('profileForm'),
+    campoUsuario: document.getElementById('username'),
+    campoCorreo: document.getElementById('email'),
+    botonGuardar: document.getElementById('saveProfileBtn'),
+    botonEliminar: document.getElementById('deleteAccountBtn'),
+    alertaExito: document.getElementById('successAlert'),
+    alertaError: document.getElementById('errorAlert')
 };
 
-let profileModal;
+let modalBootstrapPerfil;
 
-function initialize() {
-    checkAuthentication();
-    initializeModal();
-    setupEventListeners();
-    loadInitialData();
+function iniciarAplicacion() {
+    verificarAutenticacion();
+    inicializarModal();
+    configurarEventos();
+    cargarDatosIniciales();
 }
 
-function checkAuthentication() {
-    if (!token) {
+function verificarAutenticacion() {
+    if (!tokenUsuario) {
         alert("No estás autenticado. Serás redirigido al login.");
         window.location.href = "login.html";
     }
 }
 
-function initializeModal() {
-    if (elements.modal) {
-        profileModal = new bootstrap.Modal(elements.modal);
+function inicializarModal() {
+    if (elementos.modalPerfil) {
+        modalBootstrapPerfil = new bootstrap.Modal(elementos.modalPerfil);
     }
 }
 
-function setupEventListeners() {
+function configurarEventos() {
     document.addEventListener('DOMContentLoaded', () => {
-        if (!token) return;
+        if (!tokenUsuario) return;
 
-        if (elements.saveBtn) {
-            elements.saveBtn.addEventListener('click', actualizarPerfil);
-        }
-        
-        if (elements.form) {
-            elements.form.addEventListener('submit', actualizarPerfil);
-        }
-        
-        if (elements.deleteBtn) {
-            elements.deleteBtn.addEventListener('click', eliminarCuenta);
+        if (elementos.botonGuardar) {
+            elementos.botonGuardar.addEventListener('click', guardarPerfil);
         }
 
-        setupLogoutLink();
-        setupModalEvents();
+        if (elementos.formularioPerfil) {
+            elementos.formularioPerfil.addEventListener('submit', guardarPerfil);
+        }
+
+        if (elementos.botonEliminar) {
+            elementos.botonEliminar.addEventListener('click', eliminarCuenta);
+        }
+
+        configurarCerrarSesion();
+        configurarEventosModal();
     });
 }
 
-function setupLogoutLink() {
-    const logoutLink = document.getElementById('logoutLink');
-    if (logoutLink) {
-        logoutLink.addEventListener('click', (e) => {
+function configurarCerrarSesion() {
+    const enlaceCerrarSesion = document.getElementById('logoutLink');
+    if (enlaceCerrarSesion) {
+        enlaceCerrarSesion.addEventListener('click', (e) => {
             e.preventDefault();
             localStorage.removeItem('jwtToken');
             window.location.href = '../components/login.html';
@@ -66,113 +66,109 @@ function setupLogoutLink() {
     }
 }
 
-function setupModalEvents() {
-    if (elements.modal) {
-        elements.modal.addEventListener('shown.bs.modal', cargarPerfil);
-        elements.modal.addEventListener('hidden.bs.modal', () => {
-            if (elements.successAlert) elements.successAlert.classList.add('d-none');
-            if (elements.errorAlert) elements.errorAlert.classList.add('d-none');
+function configurarEventosModal() {
+    if (elementos.modalPerfil) {
+        elementos.modalPerfil.addEventListener('shown.bs.modal', cargarPerfil);
+        elementos.modalPerfil.addEventListener('hidden.bs.modal', () => {
+            if (elementos.alertaExito) elementos.alertaExito.classList.add('d-none');
+            if (elementos.alertaError) elementos.alertaError.classList.add('d-none');
         });
     }
 }
 
-function loadInitialData() {
+function cargarDatosIniciales() {}
+
+function mostrarAlerta(alerta, mensaje, esError = false) {
+    if (!alerta) return;
+
+    alerta.textContent = mensaje;
+    alerta.className = `alert ${esError ? 'alert-danger' : 'alert-success'}`;
+    alerta.classList.remove('d-none');
+    setTimeout(() => alerta.classList.add('d-none'), 3000);
 }
 
-function showAlert(alertElement, message, isError = false) {
-    if (!alertElement) return;
-    
-    alertElement.textContent = message;
-    alertElement.className = `alert ${isError ? 'alert-danger' : 'alert-success'}`;
-    alertElement.classList.remove('d-none');
-    setTimeout(() => alertElement.classList.add('d-none'), 3000);
-}
-
-function handleInvalidToken() {
+function tokenInvalido() {
     localStorage.removeItem('jwtToken');
     window.location.href = "login.html";
 }
 
-function handleNetworkError(error) {
+function errorDeRed(error) {
     console.error("Error de red:", error);
 }
 
 async function cargarPerfil() {
     try {
-        const response = await fetch(API_URL, {
+        const respuesta = await fetch(URL_API, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${tokenUsuario}`,
                 'Content-Type': 'application/json'
             }
         });
 
-        if (!response.ok) {
-            if (response.status === 401 || response.status === 403) {
-                handleInvalidToken();
+        if (!respuesta.ok) {
+            if (respuesta.status === 401 || respuesta.status === 403) {
+                tokenInvalido();
                 return;
             }
-            const errorData = await response.text();
-            throw new Error(errorData || `Error HTTP: ${response.status}`);
+            const mensajeError = await respuesta.text();
+            throw new Error(mensajeError || `Error HTTP: ${respuesta.status}`);
         }
 
-        const userData = await response.json();
-        elements.usernameInput.value = userData.username || '';
-        elements.emailInput.value = userData.email || '';
+        const datosUsuario = await respuesta.json();
+        elementos.campoUsuario.value = datosUsuario.username || '';
+        elementos.campoCorreo.value = datosUsuario.email || '';
 
     } catch (error) {
         console.error("Error al cargar perfil:", error);
         if (error.name === 'TypeError' && error.message.includes('network')) {
-            handleNetworkError(error);
-        } 
+            errorDeRed(error);
+        }
     }
 }
 
-async function actualizarPerfil(event) {
-    if (event) {
-        event.preventDefault();
-    }
-    
-    if (elements.form && !elements.form.checkValidity()) {
-        elements.form.reportValidity();
+async function guardarPerfil(evento) {
+    if (evento) evento.preventDefault();
+
+    if (elementos.formularioPerfil && !elementos.formularioPerfil.checkValidity()) {
+        elementos.formularioPerfil.reportValidity();
         return;
     }
-    
-    setButtonLoadingState(elements.saveBtn, true, 'Guardando...');
+
+    cambiarEstadoBoton(elementos.botonGuardar, true, 'Guardando...');
 
     try {
-        const response = await fetch(API_URL, {
+        const respuesta = await fetch(URL_API, {
             method: 'PUT',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${tokenUsuario}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                username: elements.usernameInput.value.trim(),
-                email: elements.emailInput.value.trim()
+                username: elementos.campoUsuario.value.trim(),
+                email: elementos.campoCorreo.value.trim()
             })
         });
 
-        setButtonLoadingState(elements.saveBtn, false, 'Guardar Cambios');
+        cambiarEstadoBoton(elementos.botonGuardar, false, 'Guardar Cambios');
 
-        if (!response.ok) {
-            if (response.status === 401 || response.status === 403) {
-                handleInvalidToken();
+        if (!respuesta.ok) {
+            if (respuesta.status === 401 || respuesta.status === 403) {
+                tokenInvalido();
                 return;
             }
-            const errorData = await response.text();
-            throw new Error(errorData || `Error HTTP: ${response.status}`);
+            const mensajeError = await respuesta.text();
+            throw new Error(mensajeError || `Error HTTP: ${respuesta.status}`);
         }
 
-        const result = await response.json();
-        
-        if (result.token) {
-            token = result.token;
-            localStorage.setItem('jwtToken', result.token); 
+        const resultado = await respuesta.json();
+
+        if (resultado.token) {
+            tokenUsuario = resultado.token;
+            localStorage.setItem('jwtToken', resultado.token);
         }
 
-        showAlert(elements.successAlert, "Perfil actualizado correctamente. Por motivos de seguridad, es necesario iniciar sesión nuevamente.");
-        
+        mostrarAlerta(elementos.alertaExito, "Perfil actualizado correctamente. Por seguridad, vuelve a iniciar sesión.");
         setTimeout(() => {
             localStorage.removeItem('jwtToken');
             window.location.href = "login.html";
@@ -180,54 +176,51 @@ async function actualizarPerfil(event) {
 
     } catch (error) {
         if (error.name === 'TypeError' && error.message.includes('network')) {
-            handleNetworkError(error);
+            errorDeRed(error);
         }
     }
 }
 
 async function eliminarCuenta() {
     if (!confirm("¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no es reversible.")) return;
-    
-    setButtonLoadingState(elements.deleteBtn, true, 'Eliminando...');
-    
+
+    cambiarEstadoBoton(elementos.botonEliminar, true, 'Eliminando...');
+
     try {
-        const response = await fetch(API_URL, {
+        const respuesta = await fetch(URL_API, {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${tokenUsuario}`
             }
         });
 
-        if (!response.ok) {
-            setButtonLoadingState(elements.deleteBtn, false, 'Eliminar Cuenta');
-            
-            if (response.status === 401 || response.status === 403) {
-                handleInvalidToken();
+        if (!respuesta.ok) {
+            cambiarEstadoBoton(elementos.botonEliminar, false, 'Eliminar Cuenta');
+            if (respuesta.status === 401 || respuesta.status === 403) {
+                tokenInvalido();
                 return;
             }
-            const errorData = await response.text();
-            throw new Error(errorData || `Error HTTP: ${response.status}`);
+            const mensajeError = await respuesta.text();
+            throw new Error(mensajeError || `Error HTTP: ${respuesta.status}`);
         }
 
         localStorage.removeItem('jwtToken');
         window.location.href = "login.html";
 
     } catch (error) {
-        setButtonLoadingState(elements.deleteBtn, false, 'Eliminar Cuenta');
-        
+        cambiarEstadoBoton(elementos.botonEliminar, false, 'Eliminar Cuenta');
         if (error.name === 'TypeError' && error.message.includes('network')) {
-            handleNetworkError(error);
+            errorDeRed(error);
         }
     }
 }
 
-function setButtonLoadingState(button, isLoading, text) {
-    if (!button) return;
-    
-    button.disabled = isLoading;
-    button.innerHTML = isLoading 
-        ? '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ' + text 
-        : text;
+function cambiarEstadoBoton(boton, cargando, texto) {
+    if (!boton) return;
+    boton.disabled = cargando;
+    boton.innerHTML = cargando
+        ? '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ' + texto
+        : texto;
 }
 
-initialize();
+iniciarAplicacion();
