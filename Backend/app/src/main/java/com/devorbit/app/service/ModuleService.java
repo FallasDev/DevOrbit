@@ -15,6 +15,7 @@ public class ModuleService {
     @Autowired
     private ModuleRepository moduleRepository;
 
+
     public List<Module> findAll() {//buscar la lista
         return moduleRepository.findAll();
     }
@@ -23,16 +24,16 @@ public class ModuleService {
         return moduleRepository.findById(id);
     }
     
-    public List<Module> findByCourseId(int courseId) {//buscar por curso
-        return moduleRepository.findByCourseId(courseId);
-    }
-
     public Module save(Module module){//agregar guardar
         return moduleRepository.save(module);
     }
 
     public void deleteById(int id) {//borrar por id
         moduleRepository.deleteById(id);
+    }
+
+    public List<Module> findModulesByCurse(int courseId){
+        return moduleRepository.findByCourse(courseId);
     }
 
     public Module update(int id, Module module){

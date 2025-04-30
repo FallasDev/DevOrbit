@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.devorbit.app.entity.Module;
 import com.devorbit.app.service.ModuleService;
 
-@CrossOrigin(origins = "*") // Permitir acceso desde cualquier origen
 //Tag(name = "Modules", description = "API para gestionar modulos") // Grupo en Swagger
 
 @RestController
+@CrossOrigin(origins = "*") // Permitir acceso desde cualquier origen
 @RequestMapping("/modules")
 public class ControllerModule {
 
@@ -34,7 +34,7 @@ public class ControllerModule {
 
     @GetMapping("/course/{courseId}")//optener cursos por curso, pero aun no tengo el metodo en service, es lo miso
     public List<Module> getModulesByCurse(@PathVariable int courseId) {
-        return moduleService.findByCourseId(courseId);
+        return moduleService.findModulesByCurse(courseId);
     }
 
     @GetMapping("/{id}")//optener cursoooo

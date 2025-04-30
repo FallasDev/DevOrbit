@@ -1,15 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-    fetch("components/uploadVideo.html")
-        .then((response) => response.text())
-        .then((html) => {
-          document.body.innerHTML += html;
-    })
-    .catch((error) => {
-      console.error("Error loading HTML:", error);
-    });
-})
-
-
 function previewVideo(event) {
     const file = event.target.files[0];
     const video = document.getElementById("videoPreview");

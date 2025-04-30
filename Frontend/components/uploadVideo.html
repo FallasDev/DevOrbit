@@ -1,14 +1,42 @@
 <style>
-  .upload-area {
-    border: 2px dashed #ced4da;
-    border-radius: 10px;
-    padding: 40px;
-    text-align: center;
+  .centered-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2rem;
+    border-radius: 15px;
     background-color: #f8f9fa;
+    /* border: 2px solid #0fd26b;
+    box-shadow: 0 6px 18px rgba(15, 210, 107, 0.4); */
+    color: #6c63ff;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  .upload-area {
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
     cursor: pointer;
-    transition: background-color 0.3s ease;
     position: relative;
     overflow: hidden;
+    border: 2px dashed #4d44db;
+    background-color: #f8f9fa;
+    color: #c0c0c0;
+    transition: background-color 0.3s ease;
+  }
+
+  .upload-video-h1 {
+    color: #4d44db;
+    font-weight: bold;
+    font-size: 2rem;
   }
 
   .upload-area video {
@@ -29,113 +57,239 @@
   }
 
   .upload-area:hover {
-    background-color: #f1f3f5;
+    background-color: rgb(180, 176, 176);
   }
 
-  .remove-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 3;
+  .upload-content svg {
+    stroke: #4d44db;
+  }
+
+  .upload-content p {
+    color: #4d44db;
+    font-weight: bold;
+  }
+
+  .form-control {
+    background-color: #f8f9fa;
+    border: 1px solid #4d44db;
+    color: #c0c0c0;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #6a63ce, #4d44db);
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .btn-primary:hover {
+    transform: scale(1.05);
+  }
+
+  .progress-bar {
+    background-color: #0fd26b;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.9rem;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #000000;
+    cursor: pointer;
+    transition: color 0.3s, transform 0.3s;
+  }
+  .btn-danger:hover {
+    background: linear-gradient(135deg, #ff5252, #d32f2f);
+    transform: scale(1.05);
+  }
+
+  .sortable-list {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    max-height: 100px;
+    overflow-y: auto;
+    margin: auto;
+
+    border-radius: 10px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .sortable-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    margin: 8px 0;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    font-size: 0.8em;
+    color: #333;
+    font-weight: bold;
+    max-height: 40px;
+    cursor: grab;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background 0.2s, transform 0.2s;
+  }
+  .sortable-item:hover {
+    background: #e8f0ff;
+  }
+  .dragging {
+    opacity: 0.7;
+    transform: rotate(-2deg);
+  }
+  .over {
+    border: 2px dashed #ff8c42;
+    background: #fff3e0;
+  }
+
+  .sortable-list::-webkit-scrollbar {
+    width: 8px; /* Tamaño del scroll en vertical */
+    height: 8px; /* Tamaño del scroll en horizontal */
+  }
+
+  .sortable-list::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
+
+  .sortable-list::-webkit-scrollbar-thumb:hover {
+    background: #b3b3b3;
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
   }
 </style>
 
-<div class="d-flex flex-column mb-3 w-25 gap-3">
-  <h1 class="text-center">Sube tu video</h1>
-
-  <form
-    class="d-flex flex-column gap-3"
-    id="uploadForm-video"
-    enctype="multipart/form-data"
-  >
-    <div
-      class="upload-area"
-      id="uploadArea"
-      onclick="document.getElementById('fileInput').click()"
-    >
-      <video
-        id="videoPreview"
-        style="display: none"
-        autoplay
-        muted
-        loop
-      ></video>
-
-      <div class="upload-content">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="80px"
-          height="80px"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <path
-            d="M16 10L18.5768 8.45392C19.3699 7.97803 19.7665 7.74009 20.0928 7.77051C20.3773 7.79703 20.6369 7.944 20.806 8.17433C21 8.43848 21 8.90095 21 9.8259V14.1741C21 15.099 21 15.5615 20.806 15.8257C20.6369 16.056 20.3773 16.203 20.0928 16.2295C19.7665 16.2599 19.3699 16.022 18.5768 15.5461L16 14M6.2 18H12.8C13.9201 18 14.4802 18 14.908 17.782C15.2843 17.5903 15.5903 17.2843 15.782 16.908C16 16.4802 16 15.9201 16 14.8V9.2C16 8.0799 16 7.51984 15.782 7.09202C15.5903 6.71569 15.2843 6.40973 14.908 6.21799C14.4802 6 13.9201 6 12.8 6H6.2C5.0799 6 4.51984 6 4.09202 6.21799C3.71569 6.40973 3.40973 6.71569 3.21799 7.09202C3 7.51984 3 8.07989 3 9.2V14.8C3 15.9201 3 16.4802 3.21799 16.908C3.40973 17.2843 3.71569 17.5903 4.09202 17.782C4.51984 18 5.07989 18 6.2 18Z"
-            stroke="#000000"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-        <p class="mb-1 text-muted">
-          Arrastre y suelte o <b>elija el archivo</b> para cargar
-        </p>
-        <small class="text-secondary">Video</small>
-      </div>
-
+<div class="centered-box" style="visibility: hidden" id="upload-video-box">
+  <div class="d-flex flex-column mb-3 w-75 gap-3">
+    <div class="d-flex justify-content-center align-items-center gap-4">
+      <h1 class="text-center display-6 upload-video-h1">Publicar video</h1>
       <button
-        type="button"
-        class="btn btn-sm btn-danger remove-btn"
-        onclick="removeVideo(event)"
-        style="display: none"
-        id="removeBtn"
+        class="close-button"
+        id="close-upload-btn"
+        onclick="closeUploadVideo()"
       >
-        Quitar video
+        &times;
       </button>
     </div>
-
-    <input
-      id="fileInput"
-      type="file"
-      hidden
-      accept="video/*"
-      name="video"
-      onchange="previewVideo(event)"
-    />
-
-    <div class="form-group">
-      <label for="title" class="form-label">Titulo</label>
-      <input
-        type="text"
-        class="form-control"
-        id="title"
-        name="title"
-        required
-      />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Publicar</button>
-  </form>
-  <div
-    id="progressContainer"
-    class="progress mt-3"
-    style="height: 25px; display: none"
-  >
-    <div
-      id="progressBar"
-      class="progress-bar progress-bar-striped progress-bar-animated"
-      role="progressbar"
-      style="width: 0%"
+    <form
+      class="d-flex flex-column gap-3"
+      id="uploadForm-video"
+      enctype="multipart/form-data"
     >
-      Subiendo...
-    </div>
-  </div>
-  <span
-    id="spinner"
-    class="spinner-border spinner-border-sm"
-    role="status"
-    style="display: none"
-  ></span>
+      <div
+        class="upload-area"
+        id="uploadArea"
+        onclick="document.getElementById('fileInput').click()"
+      >
+        <video
+          id="videoPreview"
+          style="display: none"
+          autoplay
+          muted
+          loop
+        ></video>
 
-  <div id="message"></div>
+        <div class="upload-content">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="80px"
+            height="80px"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M16 10L18.5768 8.45392C19.3699 7.97803 19.7665 7.74009 20.0928 7.77051C20.3773 7.79703 20.6369 7.944 20.806 8.17433C21 8.43848 21 8.90095 21 9.8259V14.1741C21 15.099 21 15.5615 20.806 15.8257C20.6369 16.056 20.3773 16.203 20.0928 16.2295C19.7665 16.2599 19.3699 16.022 18.5768 15.5461L16 14M6.2 18H12.8C13.9201 18 14.4802 18 14.908 17.782C15.2843 17.5903 15.5903 17.2843 15.782 16.908C16 16.4802 16 15.9201 16 14.8V9.2C16 8.0799 16 7.51984 15.782 7.09202C15.5903 6.71569 15.2843 6.40973 14.908 6.21799C14.4802 6 13.9201 6 12.8 6H6.2C5.0799 6 4.51984 6 4.09202 6.21799C3.71569 6.40973 3.40973 6.71569 3.21799 7.09202C3 7.51984 3 8.07989 3 9.2V14.8C3 15.9201 3 16.4802 3.21799 16.908C3.40973 17.2843 3.71569 17.5903 4.09202 17.782C4.51984 18 5.07989 18 6.2 18Z"
+              stroke="#000000"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <p class="mb-1 text-muted">
+            Arrastre y suelte o <b>elija el archivo</b> para cargar
+          </p>
+          <small class="text-secondary">Video</small>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-sm btn-danger remove-btn"
+          onclick="removeVideo(event)"
+          style="display: none"
+          id="removeBtn"
+        >
+          Quitar video
+        </button>
+      </div>
+
+      <input
+        id="fileInput"
+        type="file"
+        hidden
+        accept="video/*"
+        name="video"
+        onchange="previewVideo(event)"
+      />
+
+      <div class="form-group">
+        <label for="title" class="form-label">Titulo</label>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          name="title"
+          required
+        />
+      </div>
+
+      <input type="text" hidden id="idModule" name="idModule" />
+
+      <div class="form-group">
+        <label for="title" class="form-label">Orden</label>
+        <ul class="sortable-list" id="sortable-list-videos">
+          <li class="sortable-item" id="now-element" draggable="true">
+            Video Actual
+          </li>
+        </ul>
+        <!-- <input
+          type="number"
+          class="form-control"
+          id="orderVideo"
+          name="orderVideo"
+          min="1"
+          required
+        /> -->
+        <ul id="list" class="menu-list"></ul>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Publicar</button>
+    </form>
+    <div
+      id="progressContainer"
+      class="progress mt-3"
+      style="height: 25px; display: none"
+    >
+      <div
+        id="progressBar"
+        class="progress-bar progress-bar-striped progress-bar-animated"
+        role="progressbar"
+        style="width: 0%"
+      >
+        Subiendo...
+      </div>
+    </div>
+    <span
+      id="spinner"
+      class="spinner-border spinner-border-sm"
+      role="status"
+      style="display: none"
+    ></span>
+
+    <div id="message"></div>
+  </div>
 </div>

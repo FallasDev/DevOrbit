@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.devorbit.app.entity.Video;
+import com.devorbit.app.repository.ModuleRepository;
 import com.devorbit.app.repository.VideoRepository;
+
+import com.devorbit.app.entity.Module;
 
 import lombok.AllArgsConstructor;
 
@@ -17,13 +20,39 @@ public class VideoService {
     
     @Autowired
     private VideoRepository videoRepository;
-    
-    public Video saveVideo(Map<String, Object> uploadResult, String title) {
 
+    @Autowired
+    private ModuleRepository moduleRepository;
+    
+    public Video saveVideo(Map<String, Object> uploadResult, String title, int idModule, List<Integer> videoOrder) {
+
+        Module module = moduleRepository.findById(idModule).orElse(null);
+
+        if (module == null) {
+            return null; 
+        }
+
+        // Me llega una lista de ids de videos con el orden que quiere el usuario y debo ordenar los videos con ese orden
+        
+        int ID_VIDEO_NUEVO = 0;
         Video video = new Video();
         video.setTitle(title);
         video.setUrl(uploadResult.get("url").toString());
+        video.setModule(module);
 
+        for (int i = 0; i < videoOrder.size(); i++) {
+
+            int nuevo_orden = i + 1;
+
+            if (videoOrder.get(i) == ID_VIDEO_NUEVO){
+                video.setVideoOrder(nuevo_orden);
+            }
+
+            Video nowVideo = videoRepository.findById(videoOrder.get(i)).orElse(null);
+            if (nowVideo == null) continue;
+            nowVideo.setVideoOrder(nuevo_orden);
+        }
+    
         double duration = Double.parseDouble(uploadResult.get("duration").toString());
         int duration_parsed = (int) Math.round(duration); 
 
@@ -57,5 +86,8 @@ public class VideoService {
         return videoRepository.findAll();
     }
 
+    public List<Video> getVideosByModule(int idModule){
+        return videoRepository.findByIdModule(idModule);
+    }
 
 }

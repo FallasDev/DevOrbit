@@ -7,7 +7,9 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +47,11 @@ public class VideoController {
         return videoService.getVideoById(id);
     }
 
+    @GetMapping("/module/{idModule}")
+    public List<Video> getVideosByModule(@PathVariable int idModule){
+        return videoService.getVideosByModule(idModule);
+    } 
+
     @PutMapping("/{id}")
     public Video updateVideo(@PathVariable int id,@RequestBody Video video) {
         return videoService.updateVideo(id, video);
@@ -56,7 +63,7 @@ public class VideoController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadVideo(@RequestParam MultipartFile videoFile, @RequestParam String title) {
+    public ResponseEntity<?> uploadVideo(@RequestParam MultipartFile videoFile, @RequestParam String title,@RequestParam int idModule, @RequestParam List<Integer> videoOrder) {
         
         File tempFile = new File(System.getProperty("java.io.tmpdir") + "/" + videoFile.getOriginalFilename());
 
@@ -67,12 +74,15 @@ public class VideoController {
             return ResponseEntity.status(400).body("File upload failed");
         }
 
+        System.out.println(videoOrder);
         String publicId = UUID.randomUUID().toString();
+
+
         
         try {
             Map<String, Object> uploadResult = cloudinaryService.uploadVideo(tempFile.getAbsolutePath(), publicId);
             if (uploadResult != null) {
-                videoService.saveVideo(uploadResult, title);
+                videoService.saveVideo(uploadResult, title, idModule, videoOrder);
                 return ResponseEntity.ok(uploadResult);
             }
             throw new Exception("Upload failed");
@@ -84,8 +94,15 @@ public class VideoController {
                 tempFile.delete();
             }
         }
+    
+    }
 
-        
+   
+
+    @GetMapping("/admin/check")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Boolean> checkUserIsAdmin() {
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
 }

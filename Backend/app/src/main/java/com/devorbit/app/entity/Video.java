@@ -51,5 +51,21 @@ public class Video{
     @JoinColumn(name = "module_id", nullable = false)
     private Module module;
 
+    @Column(name = "video_order", nullable = false)
+    private int videoOrder;
     
+
+    @Override
+    public String toString() {
+        return "Video{" +
+                "video_id=" + video_id +
+                ", title='" + title + '\'' +
+                ", url='" + url + '\'' +
+                ", duration_seg=" + duration_seg +
+                ", createdAt=" + createdAt +
+                ", module=" + module +
+                ", videoOrder=" + videoOrder +
+                '}';
+    }
+
 }

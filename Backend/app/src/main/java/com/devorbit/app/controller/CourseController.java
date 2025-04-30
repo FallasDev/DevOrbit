@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 //@Tag(name = "Curses", description = "API para gestionar cursos") // Grupo en Swagger
 
 @RestController
-@RequestMapping("/curses")
+@RequestMapping("/courses")
 public class CourseController {
 
     @Autowired

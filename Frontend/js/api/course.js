@@ -5,7 +5,7 @@
 // import { getVideosByCourseId } from "./Video";
 
 document.addEventListener("DOMContentLoaded", () => {
-  getCourse(1, TOKEN);
+  getCourse(8, TOKEN);
 });
 
 const getCourse = (id, token) => {
@@ -33,18 +33,31 @@ const getCourse = (id, token) => {
         if (Array.isArray(data)) {
           for (const item of data) {
             const videos = await getVideosByModuleId(token, item.id_module);
-            console.log(item);
+            if (JSON.parse(sessionStorage.getItem("videos")) === null) {
+              sessionStorage.setItem("videos", JSON.stringify([]));
+            }
+            // if (JSON.parse(sessionStorage.getItem("videos")).contains()) {
+
+            for (const video of videos) {
+              if (JSON.parse(sessionStorage.getItem("videos")).find(v => v.video_id === video.video_id)) {
+                continue;
+              }
+              sessionStorage.setItem("videos", JSON.stringify([...JSON.parse(sessionStorage.getItem("videos")),video]));
+            }
+            
             accordionFlushExample.innerHTML += `
               <div class="accordion-item border-0 mb-2 rounded shadow-sm">
-                <h2 class="accordion-header">
-                  <button class="accordion-button collapsed bg-white fw-semibold text-dark"
+                <h2 class="accordion-header d-flex gap-4 justify-content-center align-items-center p-2">
+                  <button class="accordion-button collapsed bg-white d fw-semibold text-dark display-6"
                           type="button"
                           data-bs-toggle="collapse"
                           data-bs-target="#flush-collapse-${item.id_module}"
                           aria-expanded="false"
-                          aria-controls="flush-collapse-${item.id_module}">
+                          aria-controls="flush-collapse-${item.id_module}"
+                      style='font-family: "JetBrains Mono", monospace;'>
                     ${item.title}
                   </button>
+                  ${await checkUserIsAdmin(token) && `<button onclick='addVideoEvent(${item.id_module})' class='btn-add-video fw-semibold' style='max-height: 40px;'>Agregar</button>`}
                 </h2>
                 <div id="flush-collapse-${item.id_module}" class="accordion-collapse collapse"
                     data-bs-parent="#accordionFlushExample">
@@ -67,12 +80,39 @@ const getCourse = (id, token) => {
                         : "No hay videos"
                     }
                   </div>
+                
                 </div>
               </div>
             `;
+            
           }
         }
+
+        
         
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      console.error(err);
+      if (err.message === "No autorizado") {
+        window.location.href = "login.html";
+      }
+    });
 };
+
+const checkUserIsAdmin = async (token) => {
+
+  try {
+    const response = await fetch(`${HOST}/api/videos/admin/check`,{
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return await response.json();
+  } catch (error){
+    console.log(error);
+    return "";
+  }
+
+}
+

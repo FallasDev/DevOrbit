@@ -17,15 +17,34 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <main class="p-5">
-      <div class="video-section container d-flex flex-column">
+    <header id="header">
+      <script>
+        fetch("components/uploadVideo.html")
+          .then((res) => res.text())
+          .then((data) => {
+            document.getElementById("header").innerHTML += data;
+            
+            const script = document.createElement('script');
+            script.src = "/Frontend/js/scripts/DragAndDrop.js";
+            script.type = "text/javascript";
+            document.body.appendChild(script); 
+            loadVideosSortableList();
+          });
+      </script>
+    </header>
+    <main class="p-5" id="main-content">
+      <div class="video-section container d-flex flex-column text-white">
         <div
           class="video-container bg-black rounded shadow"
           id="video-container"
         >
-          <video id="video" preload="metadata">
+          <video id="video" class="not-full-screen" preload="metadata">
             Tu navegador no soporta HTML5 video.
           </video>
 
@@ -114,15 +133,60 @@
           </div>
         </div>
         <div class="mt-4">
-          <h1 id="title" class="display-5 fw-bold mb-1">Bienvenida al curso</h1>
-          <p id="created-at" class="text-muted mb-0">
-            Publicado el 01 de abril, 2025
+          <h1 id="videoTitle" class="display-5 fw-bold mb-1">
+            
+          </h1>
+          <p id="video-created-at" class="mb-0">
+            
           </p>
+        </div>
+        <div class="mt-3 d-flex gap-3">
+          <button
+            class="btn btn-success custom-nav-btn"
+            id="btn-previous-video"
+            onclick="previousVideo()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20px"
+              height="20px"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M3 5.8A1.8 1.8 0 0 1 4.8 4h1.4A1.8 1.8 0 0 1 8 5.8v12.4A1.8 1.8 0 0 1 6.2 20H4.8A1.8 1.8 0 0 1 3 18.2V5.8ZM21.462 4.113A1 1 0 0 1 22 5v14a1 1 0 0 1-1.573.82l-10-7a1 1 0 0 1 0-1.64l10-7a1 1 0 0 1 1.035-.067Z"
+                fill="#fff"
+              />
+            </svg>
+            Anterior
+          </button>
+          <button
+            class="btn btn-success custom-nav-btn"
+            id="btn-next-video"
+            onclick="nextVideo()"
+          >
+            Siguiente
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20px"
+              height="20px"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M2.538 4.113a1 1 0 0 1 1.035.068l10 7a1 1 0 0 1 0 1.638l-10 7A1 1 0 0 1 2 19V5a1 1 0 0 1 .538-.887ZM16 5.8A1.8 1.8 0 0 1 17.8 4h1.4A1.8 1.8 0 0 1 21 5.8v12.4a1.8 1.8 0 0 1-1.8 1.8h-1.4a1.8 1.8 0 0 1-1.8-1.8V5.8Z"
+                fill="#fff"
+              />
+            </svg>
+          </button>
         </div>
       </div>
 
-      <div id="accordion-module" class="accordion-module container py-5">
-        <h2 class="display-5 fw-bold mb-4 text-primary-emphasis text-center">
+
+      <div id="accordion-module" class="accordion-module container py-5 ">
+        <h2 class="h2-module-course">
           Módulos del curso
         </h2>
 
@@ -131,11 +195,11 @@
           id="accordionFlushExample"
         ></div>
       </div>
-      
     </main>
 
     <script src="/Frontend/js/api/Video.js"></script>
     <script src="/Frontend/js/api/course.js"></script>
+    <script src="/Frontend/js/scripts/FileInputScript.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       crossorigin="anonymous"
