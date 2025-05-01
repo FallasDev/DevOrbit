@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 import com.devorbit.app.entity.Course;
 import com.devorbit.app.service.CourseService;
 
@@ -21,10 +20,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @CrossOrigin(origins = "*") // Permitir acceso desde cualquier origen
-//@Tag(name = "Curses", description = "API para gestionar cursos") // Grupo en Swagger
+// @Tag(name = "Curses", description = "API para gestionar cursos") // Grupo en
+// Swagger
 
 @RestController
-@RequestMapping("/curses")
+@RequestMapping("/api/curses")
 public class CourseController {
 
     @Autowired
@@ -56,7 +56,7 @@ public class CourseController {
         curseService.deleteById(id);
     }
 
-    @PutMapping("/{id}/status")//estado de activo o no
+    @PutMapping("/{id}/status") // estado de activo o no
     public Course updateStatus(@PathVariable int id, @RequestParam boolean status) {
         Course curse = curseService.findById(id).orElseThrow();
         curse.setStatus(status);

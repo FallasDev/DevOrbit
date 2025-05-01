@@ -21,7 +21,7 @@ import com.devorbit.app.service.PictureService;
 //@Tag(name = "Pictures", description = "API para gestionar fotos") // Grupo en Swagger
 
 @RestController
-@RequestMapping("/pictures")
+@RequestMapping("/api/pictures")
 public class PictureController {
     
     @Autowired

@@ -21,7 +21,7 @@ import com.devorbit.app.service.ModuleService;
 //Tag(name = "Modules", description = "API para gestionar modulos") // Grupo en Swagger
 
 @RestController
-@RequestMapping("/modules")
+@RequestMapping("/api/modules")
 public class ControllerModule {
 
     @Autowired

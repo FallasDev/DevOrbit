@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "courses") 
+@Table(name = "courses")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,6 +20,9 @@ public class Course {
 
     @Column(nullable = false, length = 200)
     private String title;
+
+    @Column(name = "video_url", length = 500)
+    private String videoUrl;
 
     @Column(nullable = false, length = 500)
     private String description;
