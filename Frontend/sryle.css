@@ -1,0 +1,19 @@
+.nav-link {
+    position: relative; /* Esto es necesario para que el ::after se posicione correctamente */
+  }
+  
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: black;
+    transition: width 0.3s;
+  }
+  
+  .nav-link:hover::after {
+    width: 100%;
+  }
+  
