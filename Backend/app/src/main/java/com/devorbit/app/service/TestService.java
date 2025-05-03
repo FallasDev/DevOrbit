@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.devorbit.app.entity.Answer;
+import com.devorbit.app.entity.Course;
 import com.devorbit.app.entity.Question;
 import com.devorbit.app.entity.Test;
 import com.devorbit.app.repository.QuestionRepository;
@@ -22,6 +23,9 @@ public class TestService {
 
     @Autowired
     private AnswerService answerService;
+
+    @Autowired
+    private CourseService courseService;
 
     public Test saveTest(Test test) {
         try {
@@ -67,7 +71,7 @@ public class TestService {
             item.setQuestion(nowQuestion);
 
             if(item.getQuestion().getType() == 1){
-                System.out.println("Validando...");
+                System.out.println(item.getQuestion());
                 if(answerService.checkIsCorrect(item.getQuestion().getQuestion_id(), item)) countCorrects++;
             }
 
@@ -86,6 +90,17 @@ public class TestService {
         return question_value * countCorrectAnswers;
     }
 
+    public Test getTestByCourseId(int courseId) {
+
+        Course course = courseService.findById(courseId).get();
+
+        if (course == null) {
+            return null;
+        }
+        
+
+        return testRepository.findByCourse(course).get(0);
+    }
 
 
 }

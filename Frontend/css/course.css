@@ -1,0 +1,49 @@
+
+.accordion {
+    background-color: #f8f9fa;
+    border: 1px solid #0ca5b0;
+    border-radius: 8px;
+    padding: 8px;
+    margin-top: 40px;
+}
+
+.accordion-item {
+    background-color: #a5b3aa;
+    border: none;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    transition: all 0.3s ease-in-out;
+}
+
+.accordion-item:hover {
+    background-color: #b7c2bb;
+}
+
+.accordion-header {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 1rem;
+    color: #0ca5b0;
+    padding: 8px;
+}
+
+.accordion-button {
+    background-color: transparent;
+    color: #0ca5b0;
+    font-size: 0.9rem;
+    font-weight: normal;
+    border: none;
+    padding: 10px;
+    transition: all 0.2s ease-in-out;
+}
+
+.accordion-button:hover {
+    background-color: #cdd6cf;
+}
+
+.accordion-body {
+    background-color: #f8f4e4;
+    color: #4e3f30;
+    font-family: "JetBrains Mono", monospace;
+    padding: 12px;
+    border-left: 2px solid #0ca5b0;
+}

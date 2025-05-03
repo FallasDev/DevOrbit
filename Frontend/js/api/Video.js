@@ -1,12 +1,11 @@
 const HOST = "http://localhost:8080";
 const TOKEN =
-  "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzQ1OTg0MDIyLCJpYXQiOjE3NDU5ODA0MjJ9.xvHU87Bj6Nt4iDrtpnMVJ60Bunf_0j77Y_RM_L67TRM";
-let SELECTED_MODULE = 1;
+  "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTc0NjI0MTg0OCwiaWF0IjoxNzQ2MjM4MjQ4fQ.C5b3Kzk_c6Lr3h_iumxNWmxlU9huO6ev8aUAu_la22c";
 
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
   const id = parseInt(params.get("videoId"));
-
+  console.log(id);
   if (!id) {
     window.location.href = "video.html?videoId=1";
   }

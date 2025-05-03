@@ -51,4 +51,19 @@ public class QuestionService {
         return questionRepository.findAll();
     }
 
+    public List<Question> getQuestionsByTestId(int id){
+
+        Test test;
+        try {
+            test = testRepository.findById(id).orElseThrow(() -> new Exception("El test no existe"));
+            return questionRepository.findByTest(test);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    
+
+    }
+
 }

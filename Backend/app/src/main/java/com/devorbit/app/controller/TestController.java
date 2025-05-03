@@ -48,11 +48,17 @@ public class TestController {
         return testService.saveTest(test);
     }
 
-    @GetMapping("/{testId}/getScore")
+    @PostMapping("/{testId}/getScore")
     public double getScore(@RequestBody List<Answer> userAnswers, @PathVariable int testId){
+        
         int countCorrectAnswers = testService.getCorrectAnswers(userAnswers);
         System.out.println(countCorrectAnswers);
         return testService.calculateScore(testId, countCorrectAnswers);
+    }
+
+    @GetMapping("/course/{courseId}")
+    public Test getTestsByCourse(@PathVariable int courseId) {
+        return testService.getTestByCourseId(courseId);
     }
 
 }

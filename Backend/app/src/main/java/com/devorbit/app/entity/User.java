@@ -1,6 +1,10 @@
 package com.devorbit.app.entity;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,4 +27,7 @@ public class User {
     private LocalDateTime createdAt;
     private String role;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<TestAttemp> testAttemps;
 }

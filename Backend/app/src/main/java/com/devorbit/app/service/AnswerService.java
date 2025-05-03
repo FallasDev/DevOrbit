@@ -67,6 +67,19 @@ public class AnswerService {
         return answerRepository.findAll();
     }
 
+    public List<Answer> getAnswersByQuestionId(int id){
+
+
+        try {
+            Question question = questionRepository.findById(id).orElseThrow(() -> new Exception("No existe la pregunta!"));
+            return answerRepository.findByQuestion(question);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
     public boolean checkIsCorrect(int questionId, Answer userAnswer) {
         Question question = questionRepository.findById(questionId).orElseThrow(null);
 
@@ -99,5 +112,7 @@ public class AnswerService {
         return answer.getShortAnswer().equals(userAnswer.getShortAnswer());
 
     }
+
+    
 
 }
