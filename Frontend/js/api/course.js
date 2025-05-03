@@ -1,6 +1,5 @@
 const HOST = "http://localhost:8080";
-const TOKEN =
-  "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTc0NjI0MTg0OCwiaWF0IjoxNzQ2MjM4MjQ4fQ.C5b3Kzk_c6Lr3h_iumxNWmxlU9huO6ev8aUAu_la22c";
+const TOKEN = localStorage.getItem("jwtToken");
 const btnFinalTest = document.getElementById("btn-final-test");
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -39,6 +38,12 @@ const getCourse = async (id) => {
       Authorization: `Bearer ${TOKEN}`,
     },
   });
+
+  if (!res.ok && res.status === 403) {
+    // Token expirado o no válido
+    localStorage.removeItem("jwtToken");
+    window.location.href = "/Frontend/components/login.html";
+  }
 
   console.log(res);
   const data = await res.json();
@@ -97,6 +102,7 @@ const loadModules = async (data) => {
   console.log(data);
 
   for (const item of data) {
+    console.log(item);
     const videos = await getVideosByModuleId(TOKEN, item.id_module);
     if (JSON.parse(sessionStorage.getItem("videos")) === null) {
       sessionStorage.setItem("videos", JSON.stringify([]));
@@ -128,9 +134,21 @@ const loadModules = async (data) => {
                       style='font-family: "JetBrains Mono", monospace;'>
                     ${item.title}
                   </button>
-                  ${await checkUserIsAdmin(TOKEN) ? `<button style='min-width: 110px' onclick='addVideoEvent(${item.id_module})' class='btn btn-success btn-sm btn-add-video fw-semibold'>Agregar Video</button>` : ''}
-                  ${await checkUserIsAdmin(TOKEN) ? `<button style='background-color: #ff7f0e; color: white; min-width: 110px' onclick='addTestEvent(${item.id_module})' class='btn btn-sm btn-add-video fw-semibold'>Editar Modulo</button>` : ''}
-                  ${await checkUserIsAdmin(TOKEN) ? `<button style='min-width: 125px;' onclick='addTestEvent(${item.id_module})' class='btn btn-danger btn-sm btn-add-video fw-semibold'>Eliminar Modulo</button>` : ''}
+                  ${
+                    (await checkUserIsAdmin(TOKEN))
+                      ? `<button style='min-width: 110px' onclick='addVideoEvent(${item.id_module})' class='btn btn-success btn-sm btn-add-video fw-semibold'>Agregar Video</button>`
+                      : ""
+                  }
+                  ${
+                    (await checkUserIsAdmin(TOKEN))
+                      ? `<button style='background-color: #ff7f0e; color: white; min-width: 110px' onclick='addTestEvent(${item.id_module})' class='btn btn-sm btn-add-video fw-semibold'>Editar Modulo</button>`
+                      : ""
+                  }
+                  ${
+                    (await checkUserIsAdmin(TOKEN))
+                      ? `<button style='min-width: 125px;' onclick='addTestEvent(${item.id_module})' class='btn btn-danger btn-sm btn-add-video fw-semibold'>Eliminar Modulo</button>`
+                      : ""
+                  }
                 </h2>
                 <div id="flush-collapse-${
                   item.id_module
@@ -144,7 +162,7 @@ const loadModules = async (data) => {
                               (video) => `
                           <a class='text-reset text-decoration-none' href='/Frontend/video.html?videoId=${
                             video.video_id
-                          }'>
+                          }&courseId=${item.course.id_course}'>
                             <div class="mb-3 d-flex align-items-center gap-3 p-2 border rounded bg-light shadow-sm">
                             <div class="d-flex align-items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24" fill="None">
@@ -152,8 +170,10 @@ const loadModules = async (data) => {
                             </svg>
                             <p class="text-muted mb-0">
                             ${String(
-                                Math.floor(video.duration_seg / 60)
-                            ).padStart(2, "0")}:${String(video.duration_seg % 60).padStart(2, "0")}
+                              Math.floor(video.duration_seg / 60)
+                            ).padStart(2, "0")}:${String(
+                                video.duration_seg % 60
+                              ).padStart(2, "0")}
                             </p>
                             </div>
                             <h3 class="h6 fw-bold mt-2">${video.title}</h3>
@@ -191,20 +211,18 @@ const getVideosByModuleId = async (token, id) => {
   }
 };
 
-
 const checkUserIsAdmin = async (token) => {
-
-    try {
-      const response = await fetch(`${HOST}/api/videos/admin/check`,{
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return await response.json();
-    } catch (error){
-      console.log(error);
-      return "";
-    }
+  try {
+    const response = await fetch(`${HOST}/api/videos/user/data`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response);
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+    return "";
   }
-  
+};

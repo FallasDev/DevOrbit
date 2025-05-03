@@ -5,7 +5,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.devorbit.app.entity.Payment;
+import com.devorbit.app.entity.User;
 import com.devorbit.app.repository.RepositoryPayment;
+import com.devorbit.app.repository.RepositoryUser;
+
 import lombok.AllArgsConstructor;
 
 @Service
@@ -15,7 +18,14 @@ public class PaymentService {
     @Autowired
     private RepositoryPayment repositoryPayment;
 
+    @Autowired
+    private RepositoryUser userRepository;
+
     public Payment add(Payment payment) {
+        User user = userRepository.findById(payment.getUser().getIdUser())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        payment.setUser(user);
         return repositoryPayment.save(payment);
     }
 
@@ -35,15 +45,19 @@ public class PaymentService {
         Optional<Payment> existingPayment = repositoryPayment.findById(id);
         if (existingPayment.isPresent()) {
             Payment updatedPayment = existingPayment.get();
+
             updatedPayment.setInscription(payment.getInscription());
             updatedPayment.setMethodPayment(payment.getMethodPayment());
             updatedPayment.setCreateAt(payment.getCreateAt());
             updatedPayment.setTotal(payment.getTotal());
-            updatedPayment.setUser(payment.getUser());
+
+            User user = userRepository.findById(payment.getUser().getIdUser())
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            updatedPayment.setUser(user);
+
             return repositoryPayment.save(updatedPayment);
         } else {
             throw new RuntimeException("Pago no encontrado con ID: " + id);
         }
     }
-
 }

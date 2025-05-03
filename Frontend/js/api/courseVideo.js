@@ -5,12 +5,17 @@
 //   "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTc0NjE0NTMyMywiaWF0IjoxNzQ2MTQxNzIzfQ.1XNuIulV8Rd0_6wAZcRzrwo4Q4xElpChCnVhBLvdSyk";
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM fully loaded and parsed");
-  console.log(getCourse(8, TOKEN));
+  const urlParams = new URLSearchParams(window.location.search);
+  const courseId = parseInt(urlParams.get("courseId"));
+
+  console.log(courseId);
+
+  getCourse(courseId, TOKEN)
 });
 
 const getCourse = (id, token) => {
-  fetch(`${HOST}/modules/course/${id}`, {
+  console.log(id);
+  fetch(`${HOST}/api/modules/course/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -18,21 +23,19 @@ const getCourse = (id, token) => {
     },
   })
     .then((response) => {
-      
-      if (!response.ok) {
-        throw new Error("No autorizado");
-      }
+      console.log(response);
       return response.json();
     })
     .then(async (data) => {
+      console.log("asd");
       const accordionFlushExample = document.getElementById(
         "accordionFlushExample"
       );
 
-        console.log(data);
 
         if (Array.isArray(data)) {
           for (const item of data) {
+            console.log(item);
             const videos = await getVideosByModuleId(token, item.id_module);
             if (JSON.parse(sessionStorage.getItem("videos")) === null) {
               sessionStorage.setItem("videos", JSON.stringify([]));
@@ -94,21 +97,22 @@ const getCourse = (id, token) => {
     })
     .catch((err) => {
       console.error(err);
-      if (err.message === "No autorizado") {
-        window.location.href = "login.html";
-      }
+      // if (err.message === "No autorizado") {
+      //   window.location.href = "login.html";
+      // }
     });
 };
 
 const checkUserIsAdmin = async (token) => {
 
   try {
-    const response = await fetch(`${HOST}/api/videos/admin/check`,{
+    const response = await fetch(`${HOST}/api/videos/user/data`,{
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log(response);
     return await response.json();
   } catch (error){
     console.log(error);

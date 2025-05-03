@@ -1,7 +1,6 @@
 // url api cursos
 const apiUrl = 'http://localhost:8080/api/courses'; 
-const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTc0NjI0MTg0OCwiaWF0IjoxNzQ2MjM4MjQ4fQ.C5b3Kzk_c6Lr3h_iumxNWmxlU9huO6ev8aUAu_la22c";
-
+const token = localStorage.getItem('jwtToken');
 const container = document.getElementById('course-container');
 const carouselContainer = document.getElementById('carousel-container');
 const carouselIndicators = document.getElementById('carousel-indicators');
@@ -14,7 +13,14 @@ fetch(apiUrl, {
       Authorization: `Bearer ${token}`,
     },
 })
-  .then(response => response.json())
+  .then(response => {
+
+    if (!response.ok) {
+      throw new Error('Error autorizando el token');
+    }
+
+    return response.json()
+  })
   .then(courses => {
     // vrea tarjetas de cursos
     courses.forEach((course, index) => {
@@ -62,5 +68,11 @@ fetch(apiUrl, {
     });
   })
   .catch(error => {
+    console.log(error);
+    if (error.message === 'Error autorizando el token') {
+      // Token expirado o no válido
+      localStorage.removeItem('jwtToken');
+      window.location.href = '/Frontend/components/login.html';
+    }
     container.innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
   });

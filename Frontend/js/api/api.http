@@ -1,0 +1,96 @@
+@token = eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9BRE1JTiIsInN1YiI6ImFkbWluIiwiaWF0IjoxNzQ1NzI5ODgwLCJleHAiOjE3NDU3MzM0ODB9.pwbcEQeVXml6H6QOmuycYKwXYsr3O_LQjUc0bImC0hc
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+
+
+
+###
+
+GET http://localhost:8080/api/curses
+Authorization: Bearer {{token}}
+
+###
+
+GET http://localhost:8080/api/curses/2
+Authorization: Bearer {{token}}
+
+###
+
+POST http://localhost:8080/api/curses
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Curso prueba",
+  "description": "Descripción",
+  "price": 2000,
+  "status": true
+}
+
+###
+
+PUT http://localhost:8080/api/curses/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Curso de Java",
+  "description": "Conceptos avanzados de Java",
+  "price": 149.99,
+  "status": true
+}
+
+###
+
+PUT http://localhost:8080/api/curses/1/status?status=false
+Authorization: Bearer {{token}}
+
+###
+
+DELETE http://localhost:8080/api/curses/1
+Authorization: Bearer {{token}}
+
+### pago de curso
+
+POST http://localhost:8080/api/payments
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "user": { "idUser": 1 },
+  "total": 2000,
+  "methodPayment": "efectivo",
+  "createAt": "2025-04-27T12:00:00"
+}
+
+
+
+### inscripcion de curso
+
+POST http://localhost:8080/api/inscriptions
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 2,
+  "courseId": 1
+}
+
+###  actualiza el pago para  completar la inscripcion
+
+
+PUT http://localhost:8080/api/payments/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "idInscription": 1,
+  "user": { "idUser": 1 },
+  "total": 2000,
+  "methodPayment": "efectivo",
+  "createAt": "2025-04-27T12:00:00"
+}

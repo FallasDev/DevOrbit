@@ -32,7 +32,7 @@ public class ModuleService {
         moduleRepository.deleteById(id);
     }
 
-    public List<Module> findModulesByCurse(int courseId){
+    public List<Module> findByCourseId(int courseId){
         return moduleRepository.findByCourse(courseId);
     }
 
@@ -47,5 +47,6 @@ public class ModuleService {
             throw new RuntimeException("Curso no encontrada con ID: " + id);
         }
     }
+
 
 }

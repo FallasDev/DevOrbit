@@ -2,7 +2,6 @@ package com.devorbit.app.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import com.cloudinary.*;
 import com.cloudinary.utils.ObjectUtils;
 
@@ -31,6 +30,21 @@ public class CloudinaryService {
             return uploadResult;
         } catch (Exception e) {
             e.printStackTrace(); 
+            return null;
+        }
+    }
+
+    public Map<String, Object> uploadImage(String filePath, String publicId) {
+        try {
+            Map<String, Object> uploadResult = cloudinary.uploader().upload(filePath,
+                ObjectUtils.asMap(
+                    "resource_type", "image",
+                    "public_id", publicId
+                )
+            );
+            return uploadResult;
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

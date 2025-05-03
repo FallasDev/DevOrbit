@@ -16,7 +16,7 @@ import com.devorbit.app.repository.RepositoryUser;
 public class DataLoader implements CommandLineRunner {
 
     @Autowired
-    private RepositoryUser repositoryUser; // Corregí el nombre para seguir convenciones
+    private RepositoryUser repositoryUser; 
 
     @Autowired
     private PasswordEncoder passwordEncoder;

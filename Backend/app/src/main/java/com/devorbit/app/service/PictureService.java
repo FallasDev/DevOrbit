@@ -1,12 +1,14 @@
 package com.devorbit.app.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.devorbit.app.entity.Picture;
+import com.devorbit.app.entity.Video;
 import com.devorbit.app.repository.PictureRepository;
 
 @Service
@@ -39,6 +41,20 @@ public class PictureService {
             return pictureRepository.save(updatedPicture);
         } else {
             throw new RuntimeException("Picture no encontrada con ID: " + id);
+        }
+    }
+
+    public Picture savePicture(Map<String, Object> uploadResult) {
+
+        Picture picture = new Picture();
+    
+        picture.setUrl(uploadResult.get("url").toString());
+    
+        try{
+            return pictureRepository.save(picture);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

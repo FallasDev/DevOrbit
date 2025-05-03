@@ -38,11 +38,13 @@ public class VideoController {
     private CloudinaryService cloudinaryService;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<Video> getAllVideos() {
         return videoService.getAllVideos();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Video getVideoById(@PathVariable int id) {
         return videoService.getVideoById(id);
     }
@@ -53,18 +55,21 @@ public class VideoController {
     } 
 
     @PutMapping("/{id}")
-    public Video updateVideo(@PathVariable int id,@RequestBody Video video) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public Video updateVideo(@PathVariable int id, @RequestBody Video video) {
         return videoService.updateVideo(id, video);
     }
 
     @DeleteMapping("/{id}/delete")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteVideo(@PathVariable int id) {
         videoService.deleteVideo(id);
     }
 
     @PostMapping("/upload")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> uploadVideo(@RequestParam MultipartFile videoFile, @RequestParam String title,@RequestParam int idModule, @RequestParam List<Integer> videoOrder) {
-        
+
         File tempFile = new File(System.getProperty("java.io.tmpdir") + "/" + videoFile.getOriginalFilename());
 
         try {
@@ -76,8 +81,6 @@ public class VideoController {
 
         System.out.println(videoOrder);
         String publicId = UUID.randomUUID().toString();
-
-
         
         try {
             Map<String, Object> uploadResult = cloudinaryService.uploadVideo(tempFile.getAbsolutePath(), publicId);
@@ -94,15 +97,15 @@ public class VideoController {
                 tempFile.delete();
             }
         }
-    
+
     }
 
-   
-
-    @GetMapping("/admin/check")
+    @GetMapping("/user/data")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Boolean> checkUserIsAdmin() {
-        return new ResponseEntity<>(true, HttpStatus.OK);
+    public boolean checkUserAdmin() {
+        return true;
     }
+
+
 
 }
