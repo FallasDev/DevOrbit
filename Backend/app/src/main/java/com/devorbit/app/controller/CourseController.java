@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 // Swagger
 
 @RestController
-@RequestMapping("/curses")
+@RequestMapping("/api/courses")
 public class CourseController {
 
     @Autowired
