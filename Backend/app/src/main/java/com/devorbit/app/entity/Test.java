@@ -52,6 +52,5 @@ public class Test {
                 ", instruction='" + instruction + '\'' +
                 ", maxAttemps=" + maxAttemps +
                 '}';
-    }
-    
+    }   
 }

@@ -4,7 +4,9 @@ const TOKEN =
 const btnFinalTest = document.getElementById("btn-final-test");
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const courseId = 8; // Cambia esto por el ID del curso que deseas obtener
+  const urlParams = new URLSearchParams(window.location.search);
+  const courseId = urlParams.get("courseId");
+
   const courseData = await getCourse(courseId);
   const testData = await getTestByCourse(courseId);
   const modulesData = await getModulesByCourse(courseId);
@@ -31,7 +33,7 @@ const getTestByCourse = async (id) => {
 };
 
 const getCourse = async (id) => {
-  const res = await fetch(`${HOST}/courses/${id}`, {
+  const res = await fetch(`${HOST}/api/courses/${id}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${TOKEN}`,
@@ -75,13 +77,13 @@ const getCurrentUser = async () => {
 };
 
 const getModulesByCourse = async (id) => {
-  const res = await fetch(`${HOST}/modules/course/${id}`, {
+  const res = await fetch(`${HOST}/api/modules/course/${id}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${TOKEN}`,
     },
   });
-
+  console.log(res);
   const data = await res.json();
   console.log(data);
   return data;

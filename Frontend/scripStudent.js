@@ -1,16 +1,24 @@
 // url api cursos
-const apiUrl = 'http://localhost:8080/curses'; 
+const apiUrl = 'http://localhost:8080/api/courses'; 
+const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTc0NjI0MTg0OCwiaWF0IjoxNzQ2MjM4MjQ4fQ.C5b3Kzk_c6Lr3h_iumxNWmxlU9huO6ev8aUAu_la22c";
 
 const container = document.getElementById('course-container');
 const carouselContainer = document.getElementById('carousel-container');
 const carouselIndicators = document.getElementById('carousel-indicators');
 
 // muestra los cursos
-fetch(apiUrl)
+fetch(apiUrl, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+})
   .then(response => response.json())
   .then(courses => {
     // vrea tarjetas de cursos
     courses.forEach((course, index) => {
+      console.log(course);
       // creatarjeta del curso
       const col = document.createElement('div');
       col.className = 'col-md-4 mb-4';
@@ -22,7 +30,7 @@ fetch(apiUrl)
             <h5 class="card-title">${course.title}</h5>
             <p class="card-text">${course.description}</p>
             <p class="text-muted">Precio: $${course.price}</p>
-            <a href="${course.videoUrl}" class="btn btn-primary">Ver curso</a>
+            <a href="/Frontend/course.html?courseId=${course.id_course}" class="btn btn-primary">Ver curso</a>
           </div>
         </div>
       `;
