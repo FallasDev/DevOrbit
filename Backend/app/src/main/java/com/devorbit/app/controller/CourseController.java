@@ -57,10 +57,10 @@ public class CourseController {
     @PostMapping(consumes = "multipart/form-data")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Course> createCourse(
-            @RequestParam("title") String title,
-            @RequestParam("description") String description,
-            @RequestParam("price") BigDecimal price,
-            @RequestParam("status") boolean status,
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam BigDecimal price,
+            @RequestParam boolean status,
             @RequestParam(value = "picture", required = true) MultipartFile pictureFile) {
 
         Picture picture = null;
