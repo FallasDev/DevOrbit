@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.devorbit.app.entity.Module;
 import com.devorbit.app.service.ModuleService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-
 @CrossOrigin(origins = "*") // Permitir acceso desde cualquier origen
 // Tag(name = "Modules", description = "API para gestionar modulos") // Grupo en
 // Swagger

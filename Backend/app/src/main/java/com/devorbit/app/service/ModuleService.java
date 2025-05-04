@@ -5,11 +5,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.devorbit.app.entity.Course;
 import com.devorbit.app.entity.Module;
-import com.devorbit.app.entity.Video;
 import com.devorbit.app.repository.ModuleRepository;
 
 @Service

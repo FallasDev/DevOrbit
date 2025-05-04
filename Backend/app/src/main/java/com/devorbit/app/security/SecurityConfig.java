@@ -33,7 +33,7 @@ public class SecurityConfig {
         .cors(Customizer.withDefaults()) 
         .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/auth/**").permitAll()
+            .requestMatchers("/auth/**", "/api/payments/**").permitAll()
                 .anyRequest().authenticated()            
             )
             .sessionManagement(sess -> sess

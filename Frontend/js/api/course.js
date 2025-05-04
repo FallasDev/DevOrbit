@@ -244,6 +244,50 @@ const checkUserIsAdmin = async (token) => {
   }
 };
 
+document.addEventListener("DOMContentLoaded", async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const courseId = urlParams.get("courseId");
+
+  const btnBuyCourse = document.getElementById("btn-buy-course-or-");
+
+  btnBuyCourse.addEventListener("click", async () => {
+    try {
+      console.log(`Intentando crear un pago para el curso con ID: ${courseId}`);
+      
+      const response = await fetch(`${HOST}/api/payments/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          courseId: courseId,
+          currency: "USD",
+        }),
+      });
+
+      if (!response.ok) {
+        console.error(`Error en la respuesta del servidor: ${response.status}`);
+        alert("Error al intentar crear el pago. Por favor, inténtalo nuevamente.");
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.status === "success") {
+        console.log("Pago creado exitosamente. Redirigiendo a PayPal...");
+        // Redirige al usuario a la página de PayPal para aprobar el pago
+        window.location.href = data.redirect_url;
+      } else {
+        console.error(`Error al crear el pago: ${data.message}`);
+        alert("Error al crear el pago: " + data.message);
+      }
+    } catch (error) {
+      console.error("Error al intentar crear el pago:", error);
+      alert("Ocurrió un error al intentar realizar el pago. Por favor, verifica tu conexión e inténtalo nuevamente.");
+    }
+  });
+});
+
 btnEditCourse.addEventListener("click", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const courseId = urlParams.get("courseId");
