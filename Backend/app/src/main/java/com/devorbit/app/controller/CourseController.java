@@ -2,6 +2,7 @@ package com.devorbit.app.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,16 +14,18 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 import com.devorbit.app.entity.Course;
 import com.devorbit.app.entity.Picture;
 import com.devorbit.app.service.CloudinaryService;
 import com.devorbit.app.service.CourseService;
 import com.devorbit.app.service.PictureService;
 
+import io.swagger.v3.oas.models.media.MediaType;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,7 +56,6 @@ public class CourseController {
         return courseService.findAll();
     }
 
-    
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Optional<Course> getCurseById(@PathVariable int id) {
@@ -79,46 +81,44 @@ public class CourseController {
         courseService.deleteById(id);
     }
 
-    @PutMapping("/{id}/status")//estado de activo o no
+    @PutMapping("/{id}/status") // estado de activo o no
     public Course updateStatus(@PathVariable int id, @RequestParam boolean status) {
         Course course = courseService.findById(id).orElseThrow();
         course.setStatus(status);
         return courseService.save(course);
     }
 
-    @PostMapping("/upload")
+    /* 
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> uploadVideo(@RequestParam MultipartFile videoFile, @RequestParam String title,@RequestParam int idModule, @RequestParam List<Integer> videoOrder) {
+    public ResponseEntity<Course> createCourse(
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            @RequestParam("price") BigDecimal price,
+            @RequestParam("videoUrl") String videoUrl,
+            @RequestParam("status") boolean status,
+            @RequestParam("picture") MultipartFile pictureFile) throws Exception {
 
-        File tempFile = new File(System.getProperty("java.io.tmpdir") + "/" + videoFile.getOriginalFilename());
-
-        try {
-            videoFile.transferTo(tempFile);
-        } catch (IllegalStateException | IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(400).body("File upload failed");
-        }
-
-        System.out.println(videoOrder);
         String publicId = UUID.randomUUID().toString();
-        
-        try {
-            Map<String, Object> uploadResult = cloudinaryService.uploadVideo(tempFile.getAbsolutePath(), publicId);
-            if (uploadResult != null) {
-                pictureService.savePicture(uploadResult);
-                return ResponseEntity.ok(uploadResult);
-            }
-            throw new Exception("Upload failed");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Upload failed");
-        } finally {
-            if (tempFile.exists()) {
-                tempFile.delete();
-            }
-        }
+        Map<String, Object> uploadResult = cloudinaryService.uploadImage(
+                pictureFile.getBytes(), publicId);
+        String secureUrl = uploadResult.get("secure_url").toString();
 
-        
-    }
+        Picture picture = new Picture();
+        picture.setUrl(secureUrl);
+        picture = pictureService.save(picture);
+
+        Course course = new Course();
+        course.setTitle(title);
+        course.setDescription(description);
+        course.setPrice(price);
+        course.setVideoUrl(videoUrl);
+        course.setStatus(status);
+        course.setPicture(picture);
+
+        Course savedCourse = courseService.save(course);
+
+        return ResponseEntity.ok(savedCourse);
+    }*/
 
 }

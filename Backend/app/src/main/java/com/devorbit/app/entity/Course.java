@@ -1,6 +1,7 @@
 package com.devorbit.app.entity;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -40,5 +41,8 @@ public class Course {
     @OneToOne
     @JoinColumn(name = "test_id")
     private Test test;
+
+    @OneToOne(mappedBy = "course")
+    private Picture pictures;
 
 }
