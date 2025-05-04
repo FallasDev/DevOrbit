@@ -189,6 +189,7 @@
           if (response.ok) {
             console.log("Respuesta exitosa:", result);
             alert("Curso creado exitosamente");
+            location.href = "/Frontend/generalCursesStudent.html";
           } else {
             console.log("Error al crear el curso:", result); 
             alert("Error al crear el curso: " + result.message);
