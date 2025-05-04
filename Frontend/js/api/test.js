@@ -1,5 +1,4 @@
-const TOKEN =
-  "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTc0NjI0MTg0OCwiaWF0IjoxNzQ2MjM4MjQ4fQ.C5b3Kzk_c6Lr3h_iumxNWmxlU9huO6ev8aUAu_la22c";
+const TOKEN = localStorage.getItem("jwtToken");
 const HOST = "http://localhost:8080";
 
 const btnAnswers = document.getElementById("btn-answers");
@@ -19,7 +18,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 btnAnswers.addEventListener("click", async () => {
-  const data = await sendAnswers(1);
+  const urlParams = new URLSearchParams(window.location.search);
+  const testId = urlParams.get("id");
+  const data = await sendAnswers(testId);
   showResult(data);
 });
 
@@ -30,6 +31,7 @@ const getTestById = async (id) => {
       Authorization: `Bearer ${TOKEN}`,
     },
   });
+  console.log(res);
   const data = await res.json();
   return data;
 };
@@ -115,6 +117,8 @@ const sendAnswers = async (id) => {
     userAnswers.push(answer);
   });
 
+  console.log(id);
+
   const res = await fetch(`${HOST}/api/tests/${id}/getScore`, {
     method: "POST",
 
@@ -150,7 +154,7 @@ const saveTestAttemp = async (score) => {
       "idUser": sessionStorage.getItem("idUser")
     },
     "test": {
-      "test_id": testId
+      "test_id": new URLSearchParams(window.location.search).get("id")
     },
     "score": score
   }
@@ -170,7 +174,8 @@ const saveTestAttemp = async (score) => {
     const errorText = await res.text();
     console.log(errorText);
     if (errorText == "Max attemps reached"){
-      alert(errorText);
+      alert("Has alcanzado el maximo de intentos para este test");
+      location.href = `/Frontend/course.html?courseId=${new URLSearchParams(window.location.search).get("courseId")}`;
     }
   }
 

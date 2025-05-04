@@ -158,7 +158,7 @@ const loadModules = async (data) => {
 
                   ${
                     (await checkUserIsAdmin(TOKEN))
-                      ? `<button style='min-width: 110px' onclick='updateModule(${item.course.id_course},${item.id_module})' class='btn btn-warning btn-sm btn-add-video fw-semibold'>Editar Modulo</button>`
+                      ? `<button style='min-width: 110px; background-color: rgb(255, 127, 14); color: white;' onclick='updateModule(${item.course.id_course},${item.id_module})' class='btn btn-sm btn-add-video fw-semibold'>Editar Modulo</button>`
                       : ""
                   }
                   

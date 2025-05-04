@@ -13,6 +13,27 @@
 </head>
 <body>
     <header id="header">
+      <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="generalCursesStudent.html">
+                <img src="assets/icons/devorbitLogo.png" alt="DevOrbit Logo" width="180"
+                    class="d-inline-block align-text-top">
+            </a>
+
+          <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                  <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#profileModal">
+                      <i class="bi bi-person"></i> Perfil
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="#" id="logoutLink">
+                      <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                  </a>
+              </li>
+          </ul>
+        </div>
+    </nav>
       <script>
         fetch("components/uploadVideo.html")
           .then((res) => res.text())

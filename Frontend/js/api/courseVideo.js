@@ -40,7 +40,6 @@ const getCourse = (id, token) => {
             if (JSON.parse(sessionStorage.getItem("videos")) === null) {
               sessionStorage.setItem("videos", JSON.stringify([]));
             }
-            // if (JSON.parse(sessionStorage.getItem("videos")).contains()) {
 
             for (const video of videos) {
               if (JSON.parse(sessionStorage.getItem("videos")).find(v => v.video_id === video.video_id)) {
@@ -69,7 +68,7 @@ const getCourse = (id, token) => {
                     ${
                       videos && videos.length > 0 
                         ? videos.map(video => `
-                          <a class='text-reset text-decoration-none' href='video.html?videoId=${video.video_id}'>
+                          <a class='text-reset text-decoration-none' href='video.html?videoId=${video.video_id}&courseId=${item.course.id_course}'>
                             <div class="mb-3 p-2 border rounded bg-light shadow-sm">
                               <video muted autoplay class="w-100 rounded" style="max-height: 200px; object-fit: cover;">
                                 <source src="${video.url}" type="video/mp4">

@@ -3,8 +3,25 @@ const TOKEN = localStorage.getItem('jwtToken');
 
 
 document.addEventListener("DOMContentLoaded", async () => {
+
   const params = new URLSearchParams(window.location.search);
+  const videos = JSON.parse(sessionStorage.getItem("videos"));
   const id = parseInt(params.get("videoId"));
+  const nowVideo = videos.find((video) => video.video_id === id);
+
+  if (videos.indexOf(nowVideo) === 0) {
+    const previousVideoButton = document.getElementById("btn-previous-video");
+    previousVideoButton.disabled = true;
+  }
+
+  if (videos.indexOf(nowVideo) === videos.length - 1) {
+    const nextVideoButton = document.getElementById("btn-next-video");
+    nextVideoButton.disabled = true;
+  }
+
+
+  if (videos)
+
   if (!id) {
     window.location.href = "video.html?videoId=1";
   }
@@ -308,12 +325,15 @@ const previousVideo = () => {
   const params = new URLSearchParams(window.location.search);
   const id = parseInt(params.get("videoId"));
   const videos = JSON.parse(sessionStorage.getItem("videos"));
+  const courseId = params.get("courseId");
   const nowVideo = videos.find((video) => video.video_id === id);
 
   const previousVideo = videos[videos.indexOf(nowVideo) - 1];
 
+  console.log(previousVideo);
+
   if (previousVideo) {
-    window.location.href = `video.html?videoId=${previousVideo.video_id}`;
+    window.location.href = `video.html?videoId=${previousVideo.video_id}&courseId=${courseId}`;
   } else {
     const previousVideoButton = document.getElementById("btn-previous-video");
     previousVideoButton.disabled = true;
@@ -324,12 +344,14 @@ const nextVideo = () => {
   const params = new URLSearchParams(window.location.search);
   const id = parseInt(params.get("videoId"));
   const videos = JSON.parse(sessionStorage.getItem("videos"));
+  const courseId = params.get("courseId");
   const nowVideo = videos.find((video) => video.video_id === id);
 
+  
   const nextVideo = videos[videos.indexOf(nowVideo) + 1];
-
+  
   if (nextVideo) {
-    window.location.href = `video.html?videoId=${nextVideo.video_id}`;
+    window.location.href = `video.html?videoId=${nextVideo.video_id}&courseId=${courseId}`;
   } else {
     const nextVideoButton = document.getElementById("btn-next-video");
     nextVideoButton.disabled = true;

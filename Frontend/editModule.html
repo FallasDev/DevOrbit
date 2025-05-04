@@ -197,6 +197,9 @@
             </p>
           </div>
           <ul class="sortable-list" id="sortable-list-modules">
+            <li class="sortable-item" style="border: solid 1px #007bff;" id="now-element">
+              <span>Modulo Actual</span>
+            </li>
           </ul>
         </div>
         <button type="submit">Guardar Cambios</button>
@@ -263,6 +266,8 @@
         const modules = await getModulesByCourse();
 
         console.log(modules);
+
+        console.log(nowModule);
 
         nowModule.item = {
           id_module: 0,

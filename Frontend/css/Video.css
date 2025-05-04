@@ -227,6 +227,17 @@ video::-webkit-media-controls {
     color: #6c63ff;
 }
 
+.link-back {
+    color: #4b4a58;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-family: "poppins", sans-serif;
+}
+
+
+
 @media (max-width: 792px) {
     main {
         flex-direction: column;
