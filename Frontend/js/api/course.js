@@ -7,6 +7,11 @@ const confirmDelete = document.getElementById("confirmDelete");
 const cancelDelete = document.getElementById("cancelDelete");
 const formUpdateCourse = document.getElementById("form-update-course");
 const addModule = document.getElementById("btn-add-module");
+let memoryList = [];
+
+document.addEventListener("DOMContentLoaded", async () => {
+  memoryList = await getVideosByModuleId(TOKEN,sessionStorage.getItem("idModule")) || [];
+})
 
 document.addEventListener("submit", (ev) => {
   ev.preventDefault();
@@ -36,7 +41,6 @@ btnFinalTest.addEventListener("click", async () => {
 });
 
 const getTestByCourse = async (id) => {
-  console.log(id);
   const res = await fetch(`${HOST}/api/tests/course/${id}`, {
     method: "GET",
     headers: {
@@ -62,7 +66,6 @@ const getCourse = async (id) => {
     window.location.href = "/Frontend/components/login.html";
   }
 
-  console.log(res);
   const data = await res.json();
   return data;
 };
@@ -79,7 +82,6 @@ const loadHeader = async (data) => {
   const currentUser = await getCurrentUser();
 
   if (currentUser.role === "ROLE_ADMIN") {
-    console.log(currentUser);
     document.getElementById("btn-edit-course").style.display = "block";
     document.getElementById("btn-delete-course").style.display = "block";
     document.getElementById("btn-add-module").style.display = "block";
@@ -105,9 +107,7 @@ const getModulesByCourse = async (id) => {
       Authorization: `Bearer ${TOKEN}`,
     },
   });
-  console.log(res);
   const data = await res.json();
-  console.log(data);
   return data;
 };
 
@@ -116,10 +116,8 @@ const loadModules = async (data) => {
     "accordionFlushExample"
   );
 
-  console.log(data);
 
   for (const item of data) {
-    console.log(item);
     const videos = await getVideosByModuleId(TOKEN, item.id_module);
     if (JSON.parse(sessionStorage.getItem("videos")) === null) {
       sessionStorage.setItem("videos", JSON.stringify([]));
@@ -139,6 +137,7 @@ const loadModules = async (data) => {
       );
     }
 
+
     accordionFlushExample.innerHTML += `
               <div class="accordion-item border-0 mb-2 rounded shadow-sm">
                 <h2 class="accordion-header d-flex gap-4 justify-content-center align-items-center p-2">
@@ -157,6 +156,18 @@ const loadModules = async (data) => {
                       : ""
                   }
 
+                  ${
+                    (await checkUserIsAdmin(TOKEN))
+                      ? `<button style='min-width: 110px' onclick='updateModule(${item.course.id_course},${item.id_module})' class='btn btn-warning btn-sm btn-add-video fw-semibold'>Editar Modulo</button>`
+                      : ""
+                  }
+                  
+                  ${
+                    (await checkUserIsAdmin(TOKEN))
+                      ? `<button style='min-width: 110px' onclick='deleteModule(${item.id_module})'  class='btn btn-danger btn-sm btn-add-video fw-semibold'>Eliminar</button>`
+                      : ""
+                  }
+                  
                 </h2>
                 <div id="flush-collapse-${
                   item.id_module
@@ -211,7 +222,6 @@ const getVideosByModuleId = async (token, id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(response);
     return await response.json();
   } catch (error) {
     console.log(error);
@@ -227,7 +237,6 @@ const checkUserIsAdmin = async (token) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(response);
     return await response.json();
   } catch (error) {
     console.log(error);
@@ -258,6 +267,8 @@ confirmDelete.addEventListener("click", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const courseId = urlParams.get("courseId");
 
+  const courseModalMessage = document.getElementById("course-modal-message");
+
   const res = await fetch(`${HOST}/api/courses/${courseId}`, {
     method: "DELETE",
     headers: {
@@ -269,16 +280,12 @@ confirmDelete.addEventListener("click", async () => {
     alert("Curso eliminado correctamente");
     window.location.href = "/Frontend/generalCursesStudent.html"; // Cambia esto por la URL de la página que desees redirigir
   } else {
-    alert("Error al eliminar el curso");
+    courseModalMessage.textContent = "El curso no se puede eliminar porque tiene modulos asociados";
   }
-
-  deleteModal.style.display = "none";
+  // Ocultar el modal después de confirmar la eliminación
+  
 });
 
-const addVideoEvent = (idModule) => {
-  sessionStorage.setItem("idModule", idModule);
-  document.getElementById("upload-video-box").style.visibility = "visible";
-};
 
 addModule.addEventListener("click", async () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -295,16 +302,16 @@ function upload_video(title, video, idModule) {
   formData.append(
     "videoOrder",
     memoryList.map((item) => item.video_id)
-  );
+    );
 
-  const xhr = new XMLHttpRequest();
-
-  const progressContainer = document.getElementById("progressContainer");
-  const progressBar = document.getElementById("progressBar");
-  progressContainer.style.display = "block";
-  progressBar.style.width = "0%";
+    const xhr = new XMLHttpRequest();
+    
+    const progressContainer = document.getElementById("progressContainer");
+    const progressBar = document.getElementById("progressBar");
+    progressContainer.style.display = "block";
+    progressBar.style.width = "0%";
   progressBar.innerText = "Subiendo...";
-
+  
   xhr.upload.addEventListener("progress", (event) => {
     if (event.lengthComputable) {
       const percent = Math.round((event.loaded / event.total) * 100);
@@ -312,7 +319,7 @@ function upload_video(title, video, idModule) {
       changeProgressPercent(percent, progressBar);
     }
   });
-
+  
   xhr.addEventListener("load", () => {
     if (xhr.status >= 200 && xhr.status < 300) {
       videoUploadSuccesfully(progressBar);
@@ -320,7 +327,7 @@ function upload_video(title, video, idModule) {
       videoUploadFailed(progressBar);
     }
   });
-
+  
   xhr.addEventListener("error", () => {
     progressBar.classList.add("bg-danger");
     progressBar.innerText = "Error de red";
@@ -328,10 +335,12 @@ function upload_video(title, video, idModule) {
   });
 
   xhr.open("POST", `${HOST}/api/videos/upload`);
-
+  
   xhr.setRequestHeader("Authorization", `Bearer ${TOKEN}`);
-
+  
   xhr.send(formData);
+
+  
 }
 
 const videoUploadSuccesfully = (progressBar) => {
@@ -340,12 +349,19 @@ const videoUploadSuccesfully = (progressBar) => {
   progressBar.classList.add("bg-success");
   progressBar.innerText = "¡Subido!";
   alert("Video subido exitosamente");
+  location.reload();
 };
 
 const videoUploadFailed = (progressBar) => {
   progressBar.classList.add("bg-danger");
   progressBar.innerText = "Error al subir";
   alert("Error al subir el video.");
+};
+
+const addVideoEvent = async (idModule) => {
+  sessionStorage.setItem("idModule", idModule);
+  await loadVideosSortableList();
+  document.getElementById("upload-video-box").style.visibility = "visible";
 };
 
 const closeUploadVideo = () => {
@@ -363,15 +379,22 @@ const changeProgressPercent = (percent, progressBar) => {
 const loadVideosSortableList = async () => {
 
   const list = document.getElementById("sortable-list-videos");
-  const nowVideo = document.getElementById("now-element");
+  let draggingItem = null;
+  list.innerHTML = ""; // Limpiar la lista antes de cargar los videos
+
+  const nowVideo = document.createElement("li");
+
+  nowVideo.classList.add("sortable-item");
+  nowVideo.setAttribute("draggable",true);
+  nowVideo.textContent = "Video actual";
 
   const videos = await getVideosByModuleId(TOKEN,sessionStorage.getItem("idModule"));
-
   
   nowVideo.item = {
     "video_id": 0
   }
 
+  list.appendChild(nowVideo);
 
   videos.forEach((item,index)=> {
 
@@ -380,9 +403,88 @@ const loadVideosSortableList = async () => {
     li.textContent = item.title;
     li.setAttribute("draggable",true);
     li.classList.add("sortable-item");
-    console.log(item);
     list.appendChild(li);    
 
   })
 
+  list.addEventListener("dragstart", (e) => {
+    draggingItem = e.target;
+    e.target.classList.add("dragging");
+  });
+
+  list.addEventListener("dragend", (e) => {
+    e.target.classList.remove("dragging");
+    document
+      .querySelectorAll(".sortable-item")
+      .forEach((item) => item.classList.remove("over"));
+
+    updateMemoryList();
+    draggingItem = null;
+  });
+
+  list.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    const draggingOverItem = getDragAfterElement(list, e.clientY);
+
+    // Remove .over from all items
+    document
+      .querySelectorAll(".sortable-item")
+      .forEach((item) => item.classList.remove("over"));
+
+    if (draggingOverItem) {
+      draggingOverItem.classList.add("over"); // Add .over to the hovered item
+      list.insertBefore(draggingItem, draggingOverItem);
+    } else {
+      list.appendChild(draggingItem); // Append to the end if no item below
+    }
+  });
+
+  function getDragAfterElement(container, y) {
+    const draggableElements = [
+      ...container.querySelectorAll(".sortable-item:not(.dragging)"),
+    ];
+
+    return draggableElements.reduce(
+      (closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      },
+      { offset: Number.NEGATIVE_INFINITY }
+    ).element;
+  }
+
+  function updateMemoryList() {
+    memoryList.length = 0;
+    console.log(memoryList);
+    document.querySelectorAll(".sortable-item").forEach((element) => {
+      memoryList.push(element.item);
+    });
+  }
 }
+
+const updateModule = async (idCourse,idModule) => {
+  window.location.href = `/Frontend/editModule.html?idCourse=${idCourse}&idModule=${idModule}`;
+}
+
+const deleteModule = async (idModule) => {
+
+  const res = await fetch(`${HOST}/api/modules/${idModule}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
+
+  if (res.ok) {
+    alert("Modulo eliminado correctamente");
+    location.reload();
+  } else {
+    alert("Error al eliminar el modulo");
+  }
+}
+

@@ -24,7 +24,7 @@
 
             const script = document.createElement("script");
             script.setAttribute("id", "drag-and-drop-script");
-            script.src = "/Frontend/js/scripts/DragAndDropV2.js";
+            script.src = "/Frontend/js/scripts/DragAndDrop.js";
             document.body.appendChild(script);
 
             
@@ -39,12 +39,11 @@
       <p>
         <b>¿Estás seguro de que deseas eliminar este curso?</b> <br> <br>
         Esta acción no se puede deshacer.
-        Si eliminas este curso, se eliminarán todos los módulos y videos asociados a él. 
-        Si el curso tiene estudiantes inscritos, también se eliminarán sus inscripciones.
     </p>
       </p>
       <button id="confirmDelete">Sí, eliminar</button>
       <button id="cancelDelete">Cancelar</button>
+      <p id="course-modal-message" class="mt-2"></p>
     </div>
   </div>
         <div class="d-flex gap-5">

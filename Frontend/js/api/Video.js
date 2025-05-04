@@ -1,10 +1,10 @@
 const HOST = "http://localhost:8080";
 const TOKEN = localStorage.getItem('jwtToken');
 
-document.addEventListener("DOMContentLoaded", () => {
+
+document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const id = parseInt(params.get("videoId"));
-  console.log(id);
   if (!id) {
     window.location.href = "video.html?videoId=1";
   }
@@ -296,6 +296,7 @@ const getVideosByModuleId = async (token, id) => {
 
 const addVideoEvent = (idModule) => {
   sessionStorage.setItem("idModule", idModule);
+  loadVideosSortableList
   document.getElementById("upload-video-box").style.visibility = "visible";
 };
 
@@ -343,29 +344,3 @@ window.addEventListener("keydown", function (e) {
     e.preventDefault();
   }
 });
-
-const loadVideosSortableList = async () => {
-
-  const list = document.getElementById("sortable-list-videos");
-  const nowVideo = document.getElementById("now-element");
-
-  const videos = await getVideosByModuleId(TOKEN,sessionStorage.getItem("idModule"));
-
-  nowVideo.item = {
-    "video_id": 0
-  }
-
-
-  videos.forEach((item,index)=> {
-
-    const li = document.createElement("li");
-    li.item = item;
-    li.textContent = item.title;
-    li.setAttribute("draggable",true);
-    li.classList.add("sortable-item");
-    console.log(item);
-    list.appendChild(li);    
-
-  })
-
-}

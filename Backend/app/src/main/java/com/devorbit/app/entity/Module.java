@@ -1,7 +1,11 @@
 package com.devorbit.app.entity;
 
+import java.util.List;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,12 +29,15 @@ public class Module {
     @Column(name = "description", nullable = false, length = 500)
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "id_course")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Course course;
 
     @Column(name = "module_order", nullable = false)
     private int moduleOrder;
 
+    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE) // Elimina videos al eliminar un módulo
+    @JsonIgnore
+    private List<Video> videos;
 }

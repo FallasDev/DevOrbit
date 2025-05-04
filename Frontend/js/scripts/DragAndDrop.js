@@ -1,13 +1,13 @@
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   
   const list = document.querySelector(".sortable-list");
   let draggingItem = null;
   
   console.log(list);
   
-  let memoryList = [];
-  
+  let memoryList = await getVideosByModuleId(sessionStorage.getItem("idModule")) || [];
+
   console.log(memoryList);
   
   list.addEventListener("dragstart", (e) => {

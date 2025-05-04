@@ -11,12 +11,15 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devorbit.app.entity.Module;
 import com.devorbit.app.service.ModuleService;
+
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @CrossOrigin(origins = "*") // Permitir acceso desde cualquier origen
 // Tag(name = "Modules", description = "API para gestionar modulos") // Grupo en
@@ -54,21 +57,20 @@ public class ControllerModule {
             @RequestParam int courseId,
             @RequestParam List<Integer> moduleOrder) {
 
-        System.out.println("Title: " + title);
-        System.out.println("Descripcion: " + descripcion);
-        System.out.println("CourseId: " + courseId);
-        System.out.println("ModuleOrder: " + moduleOrder);
-
         return moduleService.save(title, descripcion, courseId, moduleOrder);
     }
 
-    // @PutMapping("/{id}")
-    // @PreAuthorize("hasRole('ADMIN')")
-    // public Module updateModule(@PathVariable int id, @RequestBody Module
-    // updatedModule) {
-    // updatedModule.setId_module(id);
-    // return moduleService.save(updatedModule,);
-    // }
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Module updateModule(
+            @PathVariable int id,
+            @RequestParam String title,
+            @RequestParam String descripcion,
+            @RequestParam int courseId,
+            @RequestParam List<Integer> moduleOrder) {
+                
+        return moduleService.update(id,title, descripcion, courseId, moduleOrder);
+    }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")

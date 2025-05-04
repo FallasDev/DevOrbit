@@ -1,9 +1,12 @@
 package com.devorbit.app.entity;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -46,8 +49,9 @@ public class Course {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Test test;
 
-
-
-
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private List<Module> modules;
 
 }
