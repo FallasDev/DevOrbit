@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.devorbit.app.entity.Video;
 import java.util.List;
 
-import com.devorbit.app.entity.Module;
 
 @Repository
 public interface VideoRepository extends JpaRepository<Video, Integer> {

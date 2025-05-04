@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.devorbit.app.entity.Picture;
-import com.devorbit.app.entity.Video;
 import com.devorbit.app.repository.PictureRepository;
 
 @Service
