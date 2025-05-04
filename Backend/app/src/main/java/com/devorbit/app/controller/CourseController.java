@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 import com.devorbit.app.entity.Course;
-import com.devorbit.app.entity.Picture;
 import com.devorbit.app.service.CloudinaryService;
 import com.devorbit.app.service.CourseService;
 import com.devorbit.app.service.PictureService;

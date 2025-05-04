@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.devorbit.app.entity.Course;
 import com.devorbit.app.entity.Module;
 import java.util.List;
 
