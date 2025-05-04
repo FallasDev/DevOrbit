@@ -1,6 +1,22 @@
 const HOST = "http://localhost:8080";
 const TOKEN = localStorage.getItem("jwtToken");
 const btnFinalTest = document.getElementById("btn-final-test");
+const btnEditCourse = document.getElementById("btn-edit-course");
+const btnDeleteCourse = document.getElementById("btn-delete-course");
+const confirmDelete = document.getElementById("confirmDelete");
+const cancelDelete = document.getElementById("cancelDelete");
+const formUpdateCourse = document.getElementById("form-update-course");
+const addModule = document.getElementById("btn-add-module");
+
+document.addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  const formData = new FormData(ev.target);
+  const title = formData.get("title");
+  const video = formData.get("video");
+  const idModule = sessionStorage.getItem("idModule");
+
+  upload_video(title, video, idModule);
+});
 
 document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -20,6 +36,7 @@ btnFinalTest.addEventListener("click", async () => {
 });
 
 const getTestByCourse = async (id) => {
+  console.log(id);
   const res = await fetch(`${HOST}/api/tests/course/${id}`, {
     method: "GET",
     headers: {
@@ -139,16 +156,7 @@ const loadModules = async (data) => {
                       ? `<button style='min-width: 110px' onclick='addVideoEvent(${item.id_module})' class='btn btn-success btn-sm btn-add-video fw-semibold'>Agregar Video</button>`
                       : ""
                   }
-                  ${
-                    (await checkUserIsAdmin(TOKEN))
-                      ? `<button style='background-color: #ff7f0e; color: white; min-width: 110px' onclick='addTestEvent(${item.id_module})' class='btn btn-sm btn-add-video fw-semibold'>Editar Modulo</button>`
-                      : ""
-                  }
-                  ${
-                    (await checkUserIsAdmin(TOKEN))
-                      ? `<button style='min-width: 125px;' onclick='addTestEvent(${item.id_module})' class='btn btn-danger btn-sm btn-add-video fw-semibold'>Eliminar Modulo</button>`
-                      : ""
-                  }
+
                 </h2>
                 <div id="flush-collapse-${
                   item.id_module
@@ -226,3 +234,155 @@ const checkUserIsAdmin = async (token) => {
     return "";
   }
 };
+
+btnEditCourse.addEventListener("click", async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const courseId = urlParams.get("courseId");
+
+  const course = await getCourse(courseId);
+
+  window.location.href = `/Frontend/editCourse.html?courseId=${course.id_course}`;
+});
+
+btnDeleteCourse.addEventListener("click", () => {
+  // Mostrar el modal
+  deleteModal.style.display = "flex";
+});
+
+cancelDelete.addEventListener("click", () => {
+  // Ocultar el modal si se cancela
+  deleteModal.style.display = "none";
+});
+
+confirmDelete.addEventListener("click", async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const courseId = urlParams.get("courseId");
+
+  const res = await fetch(`${HOST}/api/courses/${courseId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
+
+  if (res.ok) {
+    alert("Curso eliminado correctamente");
+    window.location.href = "/Frontend/generalCursesStudent.html"; // Cambia esto por la URL de la página que desees redirigir
+  } else {
+    alert("Error al eliminar el curso");
+  }
+
+  deleteModal.style.display = "none";
+});
+
+const addVideoEvent = (idModule) => {
+  sessionStorage.setItem("idModule", idModule);
+  document.getElementById("upload-video-box").style.visibility = "visible";
+};
+
+addModule.addEventListener("click", async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const courseId = urlParams.get("courseId");
+
+  window.location.href = `/Frontend/addModule.html?courseId=${courseId}`;
+});
+
+function upload_video(title, video, idModule) {
+  const formData = new FormData();
+  formData.append("title", title);
+  formData.append("videoFile", video);
+  formData.append("idModule", idModule);
+  formData.append(
+    "videoOrder",
+    memoryList.map((item) => item.video_id)
+  );
+
+  const xhr = new XMLHttpRequest();
+
+  const progressContainer = document.getElementById("progressContainer");
+  const progressBar = document.getElementById("progressBar");
+  progressContainer.style.display = "block";
+  progressBar.style.width = "0%";
+  progressBar.innerText = "Subiendo...";
+
+  xhr.upload.addEventListener("progress", (event) => {
+    if (event.lengthComputable) {
+      const percent = Math.round((event.loaded / event.total) * 100);
+      progressBar.style.width = percent + "%";
+      changeProgressPercent(percent, progressBar);
+    }
+  });
+
+  xhr.addEventListener("load", () => {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      videoUploadSuccesfully(progressBar);
+    } else {
+      videoUploadFailed(progressBar);
+    }
+  });
+
+  xhr.addEventListener("error", () => {
+    progressBar.classList.add("bg-danger");
+    progressBar.innerText = "Error de red";
+    alert("Error de red.");
+  });
+
+  xhr.open("POST", `${HOST}/api/videos/upload`);
+
+  xhr.setRequestHeader("Authorization", `Bearer ${TOKEN}`);
+
+  xhr.send(formData);
+}
+
+const videoUploadSuccesfully = (progressBar) => {
+  progressBar.style.width = "100%";
+  progressBar.classList.remove("bg-danger");
+  progressBar.classList.add("bg-success");
+  progressBar.innerText = "¡Subido!";
+  alert("Video subido exitosamente");
+};
+
+const videoUploadFailed = (progressBar) => {
+  progressBar.classList.add("bg-danger");
+  progressBar.innerText = "Error al subir";
+  alert("Error al subir el video.");
+};
+
+const closeUploadVideo = () => {
+  document.getElementById("upload-video-box").style.visibility = "hidden";
+};
+
+const changeProgressPercent = (percent, progressBar) => {
+  if (percent < 100) {
+    progressBar.innerText = percent + "%";
+  } else {
+    progressBar.innerText = "Procesando...";
+  }
+};
+
+const loadVideosSortableList = async () => {
+
+  const list = document.getElementById("sortable-list-videos");
+  const nowVideo = document.getElementById("now-element");
+
+  const videos = await getVideosByModuleId(TOKEN,sessionStorage.getItem("idModule"));
+
+  
+  nowVideo.item = {
+    "video_id": 0
+  }
+
+
+  videos.forEach((item,index)=> {
+
+    const li = document.createElement("li");
+    li.item = item;
+    li.textContent = item.title;
+    li.setAttribute("draggable",true);
+    li.classList.add("sortable-item");
+    console.log(item);
+    list.appendChild(li);    
+
+  })
+
+}

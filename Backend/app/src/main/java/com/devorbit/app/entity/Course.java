@@ -2,6 +2,9 @@ package com.devorbit.app.entity;
 
 import java.math.BigDecimal;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,12 +36,18 @@ public class Course {
     @Column
     private boolean status;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "picture_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Picture picture;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "test_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Test test;
+
+
+
+
 
 }

@@ -1,5 +1,6 @@
 const HOST = "http://localhost:8080";
 const TOKEN = localStorage.getItem('jwtToken');
+
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
   const id = parseInt(params.get("videoId"));
@@ -117,6 +118,8 @@ const getVideoById = (id, token) => {
       const date = new Date(data.createdAt).toLocaleDateString();
 
       createdAt.innerHTML = `<strong class='text-black'>Fecha publicación:</strong> ${date}`;
+
+      console.log(videoContent);
 
       videoContent.appendChild(video);
     })
@@ -352,6 +355,7 @@ const loadVideosSortableList = async () => {
     "video_id": 0
   }
 
+
   videos.forEach((item,index)=> {
 
     const li = document.createElement("li");
@@ -359,6 +363,7 @@ const loadVideosSortableList = async () => {
     li.textContent = item.title;
     li.setAttribute("draggable",true);
     li.classList.add("sortable-item");
+    console.log(item);
     list.appendChild(li);    
 
   })

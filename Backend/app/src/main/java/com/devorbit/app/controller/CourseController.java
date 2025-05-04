@@ -70,7 +70,7 @@ public class CourseController {
     @PreAuthorize("hasRole('ADMIN')")
     public Course updateCourse(@PathVariable int id, @RequestBody Course updatedCourse) {
         updatedCourse.setId_course(id);
-        return courseService.save(updatedCourse);
+        return courseService.update(id,updatedCourse);
     }
 
     @DeleteMapping("/{id}")
@@ -88,7 +88,7 @@ public class CourseController {
 
     @PostMapping("/upload")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> uploadVideo(@RequestParam MultipartFile videoFile, @RequestParam String title,@RequestParam int idModule, @RequestParam List<Integer> videoOrder) {
+    public ResponseEntity<?> uploadPicture(@RequestParam MultipartFile videoFile, @RequestParam String title,@RequestParam int idModule, @RequestParam List<Integer> videoOrder) {
 
         File tempFile = new File(System.getProperty("java.io.tmpdir") + "/" + videoFile.getOriginalFilename());
 
@@ -103,7 +103,7 @@ public class CourseController {
         String publicId = UUID.randomUUID().toString();
         
         try {
-            Map<String, Object> uploadResult = cloudinaryService.uploadVideo(tempFile.getAbsolutePath(), publicId);
+            Map<String, Object> uploadResult = cloudinaryService.uploadImage(tempFile.getAbsolutePath(), publicId);
             if (uploadResult != null) {
                 pictureService.savePicture(uploadResult);
                 return ResponseEntity.ok(uploadResult);
