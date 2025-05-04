@@ -36,20 +36,22 @@ public class InscriptionService {
         Course course = repositoryCourse.findById(inscription.getCourse().getId_course())
                 .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
 
-        boolean pagoValido = paymentService.get()
-                .stream()
-                .anyMatch(p -> p.getUser().getIdUser() == user.getIdUser() &&
-                        p.getTotal().compareTo(course.getPrice()) >= 0);
-
-        if (!pagoValido) {
-            throw new RuntimeException("No se encontró un pago válido para este curso.");
-        }
-
         inscription.setUser(user);
         inscription.setCourse(course);
         inscription.setProgress(0);
 
         return repositoryInscription.save(inscription);
+    }
+
+    public Inscription getByUserAndCourse(int userId, int courseId) {
+
+        User user = repositoryUser.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        Course course = repositoryCourse.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+        return repositoryInscription.findByUserAndCourse(user, course).orElse(null);
     }
 
     @Transactional

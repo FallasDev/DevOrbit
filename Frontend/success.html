@@ -1,112 +1,151 @@
 <!DOCTYPE html>
 <html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>¡Pago Exitoso! | DevOrbit</title>
     <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(to bottom right, #f4f0ff, #ece9ff);
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-        }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", sans-serif;
+        background: linear-gradient(to bottom right, #f4f0ff, #ece9ff);
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+      }
 
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            width: 90%;
-        }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        width: 90%;
+      }
 
-        h1 {
-            color: #4a3aff;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
+      h1 {
+        color: #4a3aff;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+      }
 
-        p {
-            font-size: 1.2em;
-            margin: 20px 0;
-        }
+      p {
+        font-size: 1.2em;
+        margin: 20px 0;
+      }
 
-        .btn {
-            background-color: #4a3aff;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 20px;
-        }
+      .btn {
+        background-color: #4a3aff;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 20px;
+      }
 
-        .btn:hover {
-            background-color: #372ed8;
-        }
+      .btn:hover {
+        background-color: #372ed8;
+      }
 
-        .logo {
-            max-width: 150px;
-            margin-bottom: 20px;
-        }
+      .logo {
+        max-width: 150px;
+        margin-bottom: 20px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container">
-        <img class="logo" src="Frontend/assets/icons/devorbitLogo.png" alt="DevOrbit Logo">
-        <h1>¡Pago Exitoso!</h1>
-        <p id="message">Procesando el pago...</p>
-        <a id="redirectLink" class="btn" style="display: none;">Ir al Curso</a>
+      <img
+        class="logo"
+        src="Frontend/assets/icons/devorbitLogo.png"
+        alt="DevOrbit Logo"
+      />
+      <h1>¡Pago Exitoso!</h1>
+      <p id="message">Procesando el pago...</p>
+      <a id="redirectLink" class="btn" style="display: none">Ir al Curso</a>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const paymentId = urlParams.get('paymentId');
-        const payerId = urlParams.get('PayerID');
-        const courseId = urlParams.get('courseId');
+         const urlParams = new URLSearchParams(window.location.search);
+      const HOST = "http://localhost:8080";
+      const TOKEN = urlParams.get("jwt");
 
-        console.log("Course ID:", courseId);
+      const getCurrentUser = async () => {
+        const res = await fetch(`${HOST}/api/user/me`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${TOKEN}`,
+          },
+        });
 
-        const usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
-        const userId = 1;
+        const data = await res.json();
+        return data;
+      };
+
+      const paymentId = urlParams.get("paymentId");
+      const payerId = urlParams.get("PayerID");
+      const courseId = urlParams.get("courseId");
+
+      console.log("Course ID:", courseId);
+
+      const makePayment = async () => {
+        const usuarioActual = await getCurrentUser();
+
+        const userId = usuarioActual.idUser;
+
+        console.log("User ID:", userId);
 
         if (paymentId && payerId && courseId && userId) {
-            fetch(`http://localhost:8080/api/payments/execute?paymentId=${paymentId}&payerId=${payerId}&courseId=${courseId}&userId=${userId}`, {
-                method: 'POST'
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        document.getElementById('message').innerText = "¡El pago fue procesado exitosamente!";
-                        const link = document.getElementById('redirectLink');
-                        link.href = `/Frontend/course.html?courseId=${courseId}`;
-                        link.style.display = 'inline-block';
-                    } else {
-                        document.getElementById('message').innerText = "Error al completar el pago: " + data.message;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al completar el pago:', error);
-                    document.getElementById('message').innerText = "Ocurrió un error al procesar el pago.";
-                });
+          fetch(
+            `${HOST}/api/payments/execute?paymentId=${paymentId}&payerId=${payerId}&courseId=${courseId}&userId=${userId}`,
+            {
+              method: "POST",
+            }
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Response data:", data);
+              if (data.status === "success") {
+                document.getElementById("message").innerText =
+                  "¡El pago fue procesado exitosamente!";
+                const link = document.getElementById("redirectLink");
+                link.href = `/Frontend/course.html?courseId=${courseId}`;
+                link.style.display = "inline-block";
+              } else {
+                document.getElementById("message").innerText =
+                  "Error al completar el pago: " + data.message;
+              }
+            });
+          // .catch(error => {
+          //     console.log("Error:", error);
+          //     console.error('Error al completar el pago:', error);
+          //     document.getElementById('message').innerText = "Ocurrió un error al procesar el pago.";
+          // });
         } else {
-            document.getElementById('message').innerText = "No se pudo completar el pago. Faltan parámetros.";
+          document.getElementById("message").innerText =
+            "No se pudo completar el pago. Faltan parámetros.";
         }
+      };
+
+      makePayment()
+        .then(() => {
+          console.log("Payment executed successfully");
+        })
+        .catch((error) => {
+          console.error("Error executing payment:", error);
+          document.getElementById("message").innerText =
+            "Ocurrió un error al procesar el pago.";
+        });
     </script>
-
-</body>
-
+  </body>
 </html>

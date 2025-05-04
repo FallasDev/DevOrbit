@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/payments")
 public class PayPalController {
 
@@ -37,7 +38,8 @@ public class PayPalController {
     private InscriptionService inscriptionService;
 
     @PostMapping("/create")
-    public Map<String, String> createPayment(@RequestParam int courseId, @RequestParam String currency) {
+    public Map<String, String> createPayment(@RequestParam int courseId, @RequestParam String currency, 
+            @RequestParam String jwt) {
         Map<String, String> response = new HashMap<>();
 
         try {
@@ -72,7 +74,7 @@ public class PayPalController {
             // Configurar las URLs de redirección
             RedirectUrls redirectUrls = new RedirectUrls();
             redirectUrls.setCancelUrl("http://localhost:5500/Frontend/error.html");
-            redirectUrls.setReturnUrl("http://localhost:5500/Frontend/success.html?courseId=" + courseId);
+            redirectUrls.setReturnUrl("http://localhost:5500/Frontend/success.html?courseId=" + courseId + "&jwt=" + jwt);
             payment.setRedirectUrls(redirectUrls);
 
             // Crear el pago en PayPal
@@ -96,6 +98,8 @@ public class PayPalController {
             @RequestParam int courseId, @RequestParam int userId) {
         Map<String, String> response = new HashMap<>();
         System.out.println("Course ID recibido: " + courseId);
+        System.out.println("User ID recibido: " + userId);
+        System.out.println("Payment ID recibido: " + paymentId);
         try {
 
             Payment payment = new Payment();
@@ -112,20 +116,27 @@ public class PayPalController {
             User user = repositoryUser.findById(userId)
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+
+            System.out.println(user);
+            System.out.println(course);
+
             Inscription inscription = new Inscription();
+            System.out.println(inscription);
             inscription.setUser(user);
             inscription.setCourse(course);
             inscription.setCreateAt(LocalDateTime.now());
             inscription.setProgress(0);
-            Inscription createdInscription = inscriptionService.add(inscription);
+            inscriptionService.add(inscription);
 
             com.devorbit.app.entity.Payment paymentEntity = new com.devorbit.app.entity.Payment();
             paymentEntity.setUser(user);
             paymentEntity.setCreateAt(LocalDateTime.now());
             paymentEntity.setTotal(course.getPrice());
             paymentEntity.setMethodPayment("PayPal");
-            paymentEntity.setInscription(createdInscription);
+            paymentEntity.setInscription(inscription);
             paymentService.add(paymentEntity);
+
+            System.out.println("Pago registrado: " + paymentEntity);
 
             // Responder con éxito
             response.put("status", "success");
@@ -135,6 +146,7 @@ public class PayPalController {
             response.put("message", e.getMessage());
             response.put("redirect_url", "/Frontend/error.html");
         }
+        System.out.println("Response: " + response);
         return response;
     }
 }

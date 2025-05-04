@@ -261,6 +261,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
         body: new URLSearchParams({
           courseId: courseId,
+          jwt: TOKEN,
           currency: "USD",
         }),
       });
@@ -323,7 +324,7 @@ confirmDelete.addEventListener("click", async () => {
     alert("Curso eliminado correctamente");
     window.location.href = "/Frontend/generalCursesStudent.html"; // Cambia esto por la URL de la página que desees redirigir
   } else {
-    courseModalMessage.textContent = "El curso no se puede eliminar porque tiene modulos asociados";
+    courseModalMessage.textContent = "El curso no se puede eliminar porque tiene usuarios inscritos.";
   }
   // Ocultar el modal después de confirmar la eliminación
   

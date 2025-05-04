@@ -30,5 +30,17 @@ public class Payment {
     private BigDecimal total;
     private String methodPayment;
 
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "idPayment=" + idPayment +
+                ", user=" + user +
+                ", inscription=" + inscription +
+                ", createAt=" + createAt +
+                ", total=" + total +
+                ", methodPayment='" + methodPayment + '\'' +
+                '}';
+    }
+
 
 }

@@ -68,6 +68,17 @@ public class InscriptionController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/user/{userId}/{courseId}")
+    public ResponseEntity<Inscription> getInscriptionsByUserIdAndCourseId(@PathVariable int userId, @PathVariable int courseId) {
+        Inscription inscriptions = inscriptionService.getByUserAndCourse(userId, courseId);
+
+        if (inscriptions == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(inscriptions);
+    }
+
     public static class InscriptionRequest {
         private int userId;
         private int courseId;
