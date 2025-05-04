@@ -121,12 +121,12 @@
                 data-bs-toggle="modal"
                 data-bs-target="#profileModal"
               >
-                <i class="bi bi-person"></i> Perfil
+                Mi Perfil
               </a>
             </li>
             <li class="nav-item fw-semibold">
               <a class="nav-link" href="library.html">
-                <i class="bi bi-person"></i> Mi Biblioteca
+                <i class="bi bi-book"></i> Mi Biblioteca
               </a>
             </li>
             <li class="nav-item fw-semibold">
@@ -137,14 +137,58 @@
           </ul>
         </div>
       </nav>
+
       <div class="container">
         <h1>Biblioteca</h1>
         <p>Bienvenido a tu biblioteca de cursos.</p>
         <div id="courses-list">
-          <!-- Aquí se mostrarán los cursos -->
         </div>
       </div>
     </main>
+
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="profileModalLabel">Mi Perfil</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="profileForm">
+              <div class="mb-3">
+                <label for="username" class="form-label">Nombre de usuario</label>
+                <input type="text" class="form-control" id="username" required />
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" required />
+              </div>
+            </form>
+            <div class="alert alert-success d-none" id="successAlert"></div>
+            <div class="alert alert-danger d-none" id="errorAlert"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger me-auto" id="deleteAccountBtn">
+              Eliminar Cuenta
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Cerrar
+            </button>
+            <button type="button" class="btn btn-primary" id="saveProfileBtn">
+              Guardar Cambios
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
       const HOST = "http://localhost:8080";
       const TOKEN = localStorage.getItem("jwtToken");
@@ -231,6 +275,250 @@
           return null;
         }
       };
+
+      function configurarCerrarSesion() {
+    const enlaceCerrarSesion = document.getElementById('logoutLink');
+    if (enlaceCerrarSesion) {
+        enlaceCerrarSesion.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('jwtToken');
+            window.location.href = '/Frontend/components/login.html';
+        });
+    }
+}
+configurarCerrarSesion(); 
+
+const URL_API = 'http://localhost:8080/api/user/me';
+
+
+const elementos = {
+    modalPerfil: document.getElementById('profileModal'),
+    formularioPerfil: document.getElementById('profileForm'),
+    campoUsuario: document.getElementById('username'),
+    campoCorreo: document.getElementById('email'),
+    campoPasswordActual: document.getElementById('currentPassword'),
+    campoNuevoPassword: document.getElementById('newPassword'),
+    campoConfirmarPassword: document.getElementById('confirmPassword'),
+    botonGuardar: document.getElementById('saveProfileBtn'),
+    botonEliminar: document.getElementById('deleteAccountBtn'),
+    alertaExito: document.getElementById('successAlert'),
+    alertaError: document.getElementById('errorAlert')
+};
+
+let modalBootstrapPerfil;
+
+function iniciarAplicacion() {
+    verificarAutenticacion();
+    inicializarModal();
+    configurarEventos();
+}
+
+function verificarAutenticacion() {
+    if (!TOKEN) {
+        alert("No estás autenticado. Serás redirigido al login.");
+        window.location.href = "/Frontend/components/login.html";
+    }
+}
+
+function inicializarModal() {
+    if (elementos.modalPerfil) {
+        modalBootstrapPerfil = new bootstrap.Modal(elementos.modalPerfil);
+    }
+}
+
+function configurarEventos() {
+    if (elementos.botonGuardar) {
+        elementos.botonGuardar.addEventListener('click', guardarPerfil);
+    }
+
+    if (elementos.formularioPerfil) {
+        elementos.formularioPerfil.addEventListener('submit', (e) => {
+            e.preventDefault();
+            guardarPerfil();
+        });
+    }
+
+    if (elementos.botonEliminar) {
+        elementos.botonEliminar.addEventListener('click', eliminarCuenta);
+    }
+
+    if (elementos.modalPerfil) {
+        elementos.modalPerfil.addEventListener('shown.bs.modal', cargarPerfil);
+        elementos.modalPerfil.addEventListener('hidden.bs.modal', () => {
+            if (elementos.alertaExito) elementos.alertaExito.classList.add('d-none');
+            if (elementos.alertaError) elementos.alertaError.classList.add('d-none');
+        });
+    }
+
+    configurarCerrarSesion();
+}
+
+function configurarCerrarSesion() {
+    const enlaceCerrarSesion = document.getElementById('logoutLink');
+    if (enlaceCerrarSesion) {
+        enlaceCerrarSesion.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('jwtToken');
+            window.location.href = '/Frontend/components/login.html';
+        });
+    }
+}
+
+function mostrarAlerta(alerta, mensaje, esError = false) {
+    if (!alerta) return;
+
+    alerta.textContent = mensaje;
+    alerta.className = `alert ${esError ? 'alert-danger' : 'alert-success'}`;
+    alerta.classList.remove('d-none');
+    setTimeout(() => alerta.classList.add('d-none'), 3000);
+}
+
+function tokenInvalido() {
+    localStorage.removeItem('jwtToken');
+    window.location.href = "/Frontend/components/login.html";
+}
+
+function errorDeRed(error) {
+    console.error("Error de red:", error);
+    mostrarAlerta(elementos.alertaError, "Error de conexión. Intenta nuevamente.", true);
+}
+
+function cambiarEstadoBoton(boton, cargando, texto) {
+    if (!boton) return;
+    boton.disabled = cargando;
+    boton.innerHTML = cargando
+        ? '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ' + texto
+        : texto;
+}
+
+async function cargarPerfil() {
+    try {
+        const respuesta = await fetch(URL_API, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${TOKEN}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!respuesta.ok) {
+            if (respuesta.status === 401 || respuesta.status === 403) {
+                tokenInvalido();
+                return;
+            }
+            const mensajeError = await respuesta.text();
+            throw new Error(mensajeError || `Error HTTP: ${respuesta.status}`);
+        }
+
+        const datosUsuario = await respuesta.json();
+        elementos.campoUsuario.value = datosUsuario.username || '';
+        elementos.campoCorreo.value = datosUsuario.email || '';
+
+    } catch (error) {
+        console.error("Error al cargar perfil:", error);
+        if (error.name === 'TypeError' && error.message.includes('network')) {
+            errorDeRed(error);
+        } else {
+            mostrarAlerta(elementos.alertaError, "Error al cargar el perfil", true);
+        }
+    }
+}
+
+async function guardarPerfil() {
+    if (elementos.formularioPerfil && !elementos.formularioPerfil.checkValidity()) {
+        elementos.formularioPerfil.reportValidity();
+        return;
+    }
+
+    cambiarEstadoBoton(elementos.botonGuardar, true, 'Guardando...');
+
+    try {
+        const respuesta = await fetch(URL_API, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${TOKEN}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: elementos.campoUsuario.value.trim(),
+                email: elementos.campoCorreo.value.trim()
+            })
+        });
+
+        cambiarEstadoBoton(elementos.botonGuardar, false, 'Guardar Cambios');
+
+        if (!respuesta.ok) {
+            if (respuesta.status === 401 || respuesta.status === 403) {
+                tokenInvalido();
+                return;
+            }
+            const mensajeError = await respuesta.text();
+            throw new Error(mensajeError || `Error HTTP: ${respuesta.status}`);
+        }
+
+        const resultado = await respuesta.json();
+
+        if (resultado.token) {
+            localStorage.setItem('jwtToken', resultado.token);
+        }
+
+        mostrarAlerta(elementos.alertaExito, "Perfil actualizado correctamente. Por seguridad, vuelve a iniciar sesión.");
+        setTimeout(() => {
+            localStorage.removeItem('jwtToken');
+            window.location.href = "/Frontend/components/login.html";
+        }, 3000);
+
+    } catch (error) {
+        cambiarEstadoBoton(elementos.botonGuardar, false, 'Guardar Cambios');
+        if (error.name === 'TypeError' && error.message.includes('network')) {
+            errorDeRed(error);
+        } else {
+            mostrarAlerta(elementos.alertaError, "Error al actualizar el perfil", true);
+        }
+    }
+}
+
+async function eliminarCuenta() {
+    if (!confirm("¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no es reversible.")) return;
+
+    cambiarEstadoBoton(elementos.botonEliminar, true, 'Eliminando...');
+
+    try {
+        const respuesta = await fetch(URL_API, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${TOKEN}`
+            }
+        });
+
+        if (!respuesta.ok) {
+            cambiarEstadoBoton(elementos.botonEliminar, false, 'Eliminar Cuenta');
+            if (respuesta.status === 401 || respuesta.status === 403) {
+                tokenInvalido();
+                return;
+            }
+            const mensajeError = await respuesta.text();
+            throw new Error(mensajeError || `Error HTTP: ${respuesta.status}`);
+        }
+
+        localStorage.removeItem('jwtToken');
+        window.location.href = "/Frontend/components/login.html";
+
+    } catch (error) {
+        cambiarEstadoBoton(elementos.botonEliminar, false, 'Eliminar Cuenta');
+        if (error.name === 'TypeError' && error.message.includes('network')) {
+            errorDeRed(error);
+        } else {
+            mostrarAlerta(elementos.alertaError, "Error al eliminar la cuenta", true);
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', iniciarAplicacion);
+
+
+
+
     </script>
   </body>
 </html>
