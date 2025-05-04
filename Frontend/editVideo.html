@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      #form-edit-video {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+      }
+
+      input[type="text"],
+      textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      textarea {
+        resize: none;
+        height: 100px;
+      }
+
+      button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Editar Video</h1>
+    <form id="form-edit-video">
+      <label for="video-title">Título del Video:</label>
+      <input type="text" id="video-title" name="video-title" required />
+
+      <button type="submit">Guardar Cambios</button>
+    </form>
+
+    <script>
+      const TOKEN = localStorage.getItem("jwtToken");
+      const HOST = "http://localhost:8080"; // Cambia esto a la URL de tu API
+      const videoId = new URLSearchParams(window.location.search).get(
+        "videoId"
+      );
+      const courseId = new URLSearchParams(window.location.search).get(
+        "courseId"
+      );
+
+      const getVideoById = async () => {
+        const video = fetch(`${HOST}/api/videos/${videoId}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${TOKEN}`,
+          },
+        });
+        const response = await video;
+        const data = await response.json();
+        if (response.ok) {
+          return data;
+        } else {
+          console.error("Error al obtener el video:", data);
+          throw new Error("Error al obtener el video");
+        }
+      };
+
+      const updateVideo = async (videoData) => {
+        const response = await fetch(`${HOST}/api/videos/${videoId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${TOKEN}`,
+          },
+          body: JSON.stringify(videoData),
+        });
+        console.log(response);
+        if (response.ok) {
+          console.log("Video actualizado con éxito");
+        } else {
+          const errorData = await response.json();
+          console.log("Error al actualizar el video:", errorData);
+          console.error("Error al actualizar el video:", errorData);
+        }
+      };
+
+      document.addEventListener("DOMContentLoaded", async function () {
+        const form = document.getElementById("form-edit-video");
+        const videoTitleInput = document.getElementById("video-title");
+
+        const video = await getVideoById();
+
+        const videoData = {
+          title: video.title,
+        };
+
+        // Rellenar el formulario con los datos existentes
+        videoTitleInput.value = videoData.title;
+
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const updatedVideoData = {
+            title: videoTitleInput.value,
+          };
+
+          updateVideo(updatedVideoData)
+            .then(() => {
+              alert("Video actualizado con éxito");
+              window.location.href = `/Frontend/course.html?courseId=${courseId}`;
+            })
+            .catch((error) => {
+              console.error("Error al actualizar el video:", error);
+              alert("Error al actualizar el video");
+            });
+        });
+      });
+    </script>
+  </body>
+</html>

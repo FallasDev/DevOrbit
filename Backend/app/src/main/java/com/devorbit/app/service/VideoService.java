@@ -75,9 +75,10 @@ public class VideoService {
     }
 
     public Video updateVideo(int id, Video video) {
+        Video existingVideo = videoRepository.findById(id).orElse(null);
         if (videoRepository.existsById(id)) {
-            video.setVideo_id(id);
-            return videoRepository.save(video);
+            existingVideo.setTitle(video.getTitle());
+            return videoRepository.save(existingVideo);
         }
         return null;
     }

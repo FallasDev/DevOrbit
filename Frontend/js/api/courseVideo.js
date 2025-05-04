@@ -95,10 +95,9 @@ const getCourse = (id, token) => {
         
     })
     .catch((err) => {
-      console.error(err);
-      // if (err.message === "No autorizado") {
-      //   window.location.href = "login.html";
-      // }
+      if (err.message === "No autorizado") {
+        window.location.href = "login.html";
+      }
     });
 };
 

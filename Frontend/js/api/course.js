@@ -221,7 +221,7 @@ const loadModules = async (data) => {
                               ).padStart(2, "0")}
                                   </p>
                                 </div>
-                                <h3 class="h6 d-flex align-items-center gap-2 fw-bold mt-2">
+                                <h3 class="h6 d-flex align-items-center gap-3 fw-bold mt-2">
                                 ${video.title}
                                 ${
                                   !(await getUserInscription(
@@ -239,8 +239,21 @@ const loadModules = async (data) => {
                                     </svg>`
                                 }
                                 </h3>
-                              </div>
-                            </a>
+                                </div>
+                                </a>
+                                <div class='my-3'>
+                                  ${
+                                    (await checkUserIsAdmin(TOKEN))
+                                      ? ` <button style='min-width: 110px; background-color: rgb(255, 127, 14); color: white;' class="btn btn-light btn-sm fw-semibold" onclick="editVideo(${video.video_id})">Editar Video</button>`
+                                      : ""
+                                    }
+                                  ${
+                                    (await checkUserIsAdmin(TOKEN))
+                                      ? ` <button style='min-width: 110px' class="btn btn-danger btn-sm fw-semibold" onclick="deleteVideo(${item.id_module})">Eliminar Video</button>`
+                                      : ""
+                                  }
+                                  
+                                </div>
                           `
                             )
                           )
@@ -614,3 +627,27 @@ const getUserInscription = async (idCourse) => {
     return null;
   }
 };
+
+const editVideo = async (videoId) => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const courseId = urlParams.get("courseId");
+
+  window.location.href = `/Frontend/editVideo.html?videoId=${videoId}&courseId=${courseId}`;
+};
+
+const deleteVideo = async (videoId) => {
+  const res = await fetch(`${HOST}/api/videos/${videoId}/delete`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
+
+  console.log(res);
+
+  if (res.ok) {
+    alert("Video eliminado correctamente");
+  } else {
+    alert("Error al eliminar el video");
+  }
+}
