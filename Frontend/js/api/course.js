@@ -29,6 +29,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const courseData = await getCourse(courseId);
   const testData = await getTestByCourse(courseId);
+  if (!testData) {
+    btnFinalTest.style.display = "none";
+  } else {
+    btnFinalTest.style.display = "block";
+  }
   const modulesData = await getModulesByCourse(courseId);
   loadHeader(courseData);
   loadModules(modulesData);
@@ -48,6 +53,9 @@ const getTestByCourse = async (id) => {
     },
   });
   console.log(res);
+  if (!res.ok && res.status === 403) {
+    return false;
+  }
   const data = await res.json();
   return data;
 };
@@ -74,10 +82,12 @@ const loadHeader = async (data) => {
   const title = document.getElementById("course-title");
   const description = document.getElementById("course-description");
   const price = document.getElementById("course-price");
+  const coursePicture = document.getElementById("course-picture");
 
   title.textContent = data.title;
   description.textContent = data.description;
   price.textContent = `$${data.price}`;
+  coursePicture.src = data.picture.url;
 
   const currentUser = await getCurrentUser();
 

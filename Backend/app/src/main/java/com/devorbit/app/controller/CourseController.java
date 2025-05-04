@@ -29,11 +29,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@CrossOrigin(origins = "*") // Permitir acceso desde cualquier origen
 // @Tag(name = "Curses", description = "API para gestionar cursos") // Grupo en
 // Swagger
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/courses")
 public class CourseController {
 
