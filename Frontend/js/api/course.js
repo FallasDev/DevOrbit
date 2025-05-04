@@ -275,7 +275,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (data.status === "success") {
         console.log("Pago creado exitosamente. Redirigiendo a PayPal...");
-        // Redirige al usuario a la página de PayPal para aprobar el pago
         window.location.href = data.redirect_url;
       } else {
         console.error(`Error al crear el pago: ${data.message}`);

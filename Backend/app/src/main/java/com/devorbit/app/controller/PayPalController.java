@@ -1,8 +1,10 @@
 package com.devorbit.app.controller;
 
 import com.devorbit.app.entity.Course;
+import com.devorbit.app.entity.Inscription;
 import com.devorbit.app.entity.User;
 import com.devorbit.app.service.CourseService;
+import com.devorbit.app.service.InscriptionService;
 import com.devorbit.app.service.PaymentService;
 import com.devorbit.app.repository.RepositoryUser;
 import com.paypal.api.payments.*;
@@ -30,6 +32,9 @@ public class PayPalController {
 
     @Autowired
     private PaymentService paymentService;
+
+    @Autowired
+    private InscriptionService inscriptionService;
 
     @PostMapping("/create")
     public Map<String, String> createPayment(@RequestParam int courseId, @RequestParam String currency) {
@@ -87,46 +92,49 @@ public class PayPalController {
     }
 
     @PostMapping("/execute")
-public Map<String, String> executePayment(@RequestParam String paymentId, @RequestParam String payerId,
-                                          @RequestParam int courseId, @RequestParam int userId) {
-    Map<String, String> response = new HashMap<>();
-    Payment payment = new Payment();
-    payment.setId(paymentId);
+    public Map<String, String> executePayment(@RequestParam String paymentId, @RequestParam String payerId,
+            @RequestParam int courseId, @RequestParam int userId) {
+        Map<String, String> response = new HashMap<>();
+        System.out.println("Course ID recibido: " + courseId);
+        try {
 
-    PaymentExecution paymentExecution = new PaymentExecution();
-    paymentExecution.setPayerId(payerId);
+            Payment payment = new Payment();
+            payment.setId(paymentId);
 
-    try {
-        // Ejecutar el pago en PayPal
-        Payment executedPayment = payment.execute(apiContext, paymentExecution);
+            PaymentExecution paymentExecution = new PaymentExecution();
+            paymentExecution.setPayerId(payerId);
 
-        // Validar el curso
-        Course course = courseService.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+            Payment executedPayment = payment.execute(apiContext, paymentExecution);
 
-        // Buscar al usuario por ID
-        User user = repositoryUser.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            Course course = courseService.findById(courseId)
+                    .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
 
-        // Crear y guardar el pago en la base de datos
-        com.devorbit.app.entity.Payment paymentEntity = new com.devorbit.app.entity.Payment();
-        paymentEntity.setUser(user);
-        paymentEntity.setCreateAt(LocalDateTime.now());
-        paymentEntity.setTotal(course.getPrice());
-        paymentEntity.setMethodPayment("PayPal");
-        paymentService.add(paymentEntity);
+            User user = repositoryUser.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Redirigir al curso comprado
-        String courseUrl = "/Frontend/course.html?courseId=" + courseId;
-        response.put("status", "success");
-        response.put("redirect_url", courseUrl);
-    } catch (Exception e) {
-        // Redirigir a la página de error
-        response.put("status", "error");
-        response.put("redirect_url", "/Frontend/error.html");
-        response.put("message", e.getMessage());
+            Inscription inscription = new Inscription();
+            inscription.setUser(user);
+            inscription.setCourse(course);
+            inscription.setCreateAt(LocalDateTime.now());
+            inscription.setProgress(0);
+            Inscription createdInscription = inscriptionService.add(inscription);
+
+            com.devorbit.app.entity.Payment paymentEntity = new com.devorbit.app.entity.Payment();
+            paymentEntity.setUser(user);
+            paymentEntity.setCreateAt(LocalDateTime.now());
+            paymentEntity.setTotal(course.getPrice());
+            paymentEntity.setMethodPayment("PayPal");
+            paymentEntity.setInscription(createdInscription);
+            paymentService.add(paymentEntity);
+
+            // Responder con éxito
+            response.put("status", "success");
+            response.put("redirect_url", "/Frontend/course.html?courseId=" + courseId);
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", e.getMessage());
+            response.put("redirect_url", "/Frontend/error.html");
+        }
+        return response;
     }
-
-    return response;
-}
 }
