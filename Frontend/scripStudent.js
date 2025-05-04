@@ -6,6 +6,7 @@ const carouselInner = document.getElementById('carousel-inner');
 const carouselIndicators = document.getElementById('carousel-indicators');
 
 // muestra los cursos
+console.log("container:", container);
 fetch(apiUrl, {
   method: 'GET',
   headers: {

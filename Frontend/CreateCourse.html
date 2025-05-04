@@ -128,16 +128,6 @@
         </div>
 
         <div>
-          <label for="course-video-url">URL del Video</label>
-          <input
-            type="url"
-            id="course-video-url"
-            name="videoUrl"
-            placeholder="URL del video"
-          />
-        </div>
-
-        <div>
           <label for="course-status">Estado del Curso</label>
           <select id="course-status" name="status" required>
             <option value="true">Activo</option>
@@ -166,39 +156,47 @@
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        const formData = new FormData(form);
+        const formData = new FormData(form); 
 
-        const courseData = {
-          title: formData.get("title"),
-          description: formData.get("description"),
-          price: formData.get("price"),
-          videoUrl: formData.get("videoUrl"),
-          status: formData.get("status") === "true",
-          picture: formData.get("picture"),
-        };
+        const token = localStorage.getItem("jwtToken"); 
 
-        const token = localStorage.getItem("jwtToken");
+        if (!token) {
+          alert("No se ha encontrado un token de autenticación. Por favor, inicie sesión.");
+          return;
+        }
 
-        const response = await fetch("http://localhost:8080/api/courses", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        });
+        try {
+          const response = await fetch("http://localhost:8080/api/courses", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+            body: formData, 
+          });
+          console.log("Respuesta completa:", response);
 
-        const result = await response.json();
+          const resultText = await response.text(); 
+          let result;
+          try {
+            result = JSON.parse(resultText); 
+          } catch (e) {
+            console.error('Error al analizar JSON:', e);
+            result = { message: 'Respuesta no válida del servidor' }; 
+          }
+          console.log(localStorage.getItem("jwtToken"));
 
-        if (response.ok) {
-          alert("Curso creado exitosamente");
-        } else {
-          alert("Error al crear el curso: " + result.message);
+
+          if (response.ok) {
+            console.log("Respuesta exitosa:", result);
+            alert("Curso creado exitosamente");
+          } else {
+            console.log("Error al crear el curso:", result); 
+            alert("Error al crear el curso: " + result.message);
+          }
+        } catch (error) {
+          alert("Error de red: " + error.message);
         }
       });
     </script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      crossorigin="anonymous"
-    ></script>
   </body>
 </html>
