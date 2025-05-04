@@ -94,3 +94,15 @@ Content-Type: application/json
   "methodPayment": "efectivo",
   "createAt": "2025-04-27T12:00:00"
 }
+
+### Crear un pago
+POST http://localhost:8080/api/payments/create
+Content-Type: application/x-www-form-urlencoded
+
+courseId=1&currency=USD
+
+### Ejecutar un pago
+POST http://localhost:8080/api/payments/execute
+Content-Type: application/x-www-form-urlencoded
+
+paymentId=PAYID-NAK3JUA6YS76541UB8462940&PayerID=QJ4X6WM9H44D8
