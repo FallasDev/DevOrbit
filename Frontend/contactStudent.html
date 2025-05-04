@@ -1,11 +1,269 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contacto | DevOrbit</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #0a0388;
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .contact-hero {
+            background: linear-gradient(45deg, #6f42c1, #4e2a84);
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+
+        .contact-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: .5rem;
+        }
+
+        .contact-hero p {
+            font-size: 1.1rem;
+        }
+
+        .story-section {
+            background: #fff;
+            color: #0f1c64;
+            padding: 2rem;
+            border-radius: .5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .story-section h2 {
+            margin-bottom: 1rem;
+        }
+
+        .info-card {
+            background: #130f5e;
+            border-radius: .5rem;
+            padding: 1.5rem;
+        }
+
+        .info-card h5 {
+            color: #00aaff;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 300px;
+            border: 0;
+            border-radius: .5rem;
+        }
+
+        .faq-button {
+            background-color: #120d52;
+            color: #fff;
+        }
+
+        .testimonial {
+            background: #121349;
+            padding: 1rem;
+            border-radius: .5rem;
+            color: #eee;
+        }
+
+        @media (max-width: 576px) {
+            .contact-hero h1 {
+                font-size: 2rem;
+            }
+
+            .contact-hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <h1>INFO DE CONTACTO</h1>
+
+    <!-- Hero -->
+    <div class="contact-hero">
+        <h1>Contacto DevOrbit</h1>
+        <p>¡Estamos aquí para ayudarte! Elige tu forma preferida de contactarnos.</p>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+
+            <h2 class="brand-logo">
+                <a href="generalCursesStudent.html" style="text-decoration: none; color: inherit;">
+                    Dev<span>Orbit</span>
+                </a>
+            </h2>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent"
+                aria-controls="navContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navContent">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="generalCursesStudent.html"><i class="bi bi-curso"></i>Cursos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#profileModal"><i class="bi bi-person"></i>Perfil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" id="logoutLink"><i
+                                class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Nuestra Historia -->
+    <div class="container my-5">
+        <div class="story-section">
+            <h2>Nuestra Historia</h2>
+            <p>
+                Todo comenzó en <strong>2025</strong>, cuando cuatro amigos de la Facultad de Informática —<em>Grimaldi,
+                    Sebastian,
+                    Dixon y Andrew</em>— se unieron para un proyecto universitario. Cada uno aportó su toque mágico:
+            </p>
+            <ul>
+                <li><strong>Dixon</strong> creó portales visuales con un mix de psicología del color y futurismo, ¡su
+                    diseño parecía del año 3025!</li>
+                <li><strong>Sebastian</strong> domó bugs con su “JavaScript encantado”, haciendo que cada click
+                    pareciera un truco de magia.</li>
+                <li><strong>Grimaldi</strong> optimizó el backend al punto de que hasta la NASA habría contratado su API
+                    sin duda.</li>
+                <li><strong>Andrew</strong> llenó todo de partículas animadas y transiciones suaves, convirtiendo
+                    códigos en poesía visual.</li>
+            </ul>
+            <p>Después de <em>200 cafés</em> y varias madrugadas, nació <strong>DevOrbit</strong>, hoy una comunidad
+                global de aprendizaje.</p>
+        </div>
+    </div>
+
+    <!-- Contacto e Info -->
+    <div class="container mb-5">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="info-card text-center">
+                    <h5><i class="bi bi-geo-alt-fill"></i> Nuestra Oficina</h5>
+                    <p>Calle Falsa 123, Edif. Innovación,<br>San José, Costa Rica</p>
+                    <small>Lun–Vie: 8:00–18:00</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card text-center">
+                    <h5><i class="bi bi-envelope-fill"></i> Email</h5>
+                    <p>soporte@devorbit.com<br>info@devorbit.com</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card text-center">
+                    <h5><i class="bi bi-telephone-fill"></i> Teléfono</h5>
+                    <p>+506 2222‑3333<br>+506 8888‑7777</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mapa -->
+        <div class="map-container my-4">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.1234567890123!2d-84.081234567890!3d9.9345678901234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fa0e2fbcdef1234%3A0xabcdef1234567890!2sUCR!5e0!3m2!1ses!2scr!4v1700000000000"
+                allowfullscreen loading="lazy"></iframe>
+        </div>
+
+        <!-- FAQs -->
+        <div class="accordion mb-5" id="faqAccordion">
+            <div class="accordion-item bg-dark text-white">
+                <h2 class="accordion-header" id="faq1">
+                    <button class="accordion-button faq-button text-white" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne">¿Cómo me registro en un curso?</button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body bg-secondary">
+                        <ol>
+                            <li>Ve a “Cursos Disponibles”.</li>
+                            <li>Haz clic en "Ver curso".</li>
+                            <li>Paga y confirma tu inscripción.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item bg-dark text-white">
+                <h2 class="accordion-header" id="faq2">
+                    <button class="accordion-button faq-button text-white collapsed" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#collapseTwo">¿Cómo obtengo mi certificado?</button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body bg-secondary">
+                        <ol>
+                            <li>Completa todas las lecciones y tests.</li>
+                            <li>Espera validación de nuestro equipo.</li>
+                            <li>Recibirás un PDF descargable.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testimonios -->
+        <h5 class="text-center text-info mb-4">Lo que dicen nuestros usuarios</h5>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="testimonial h-100 d-flex flex-column justify-content-between">
+                    <p>“La interfaz es súper intuitiva y los ejemplos prácticos me ayudaron a dominar Spring Boot en
+                        semanas.”</p>
+                    <p class="text-end"><strong>— María G.</strong></p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial h-100 d-flex flex-column justify-content-between">
+                    <p>“¡Increíble atención! Resolvieron mis dudas en menos de una hora y avancé rapidísimo.”</p>
+                    <p class="text-end"><strong>— José R.</strong></p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial h-100 d-flex flex-column justify-content-between">
+                    <p>“Los proyectos finales me retaron y me prepararon para mi primer trabajo como dev.”</p>
+                    <p class="text-end"><strong>— Andrea L.</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row gy-3">
+                <div class="col-md-4">
+                    <h5>Sobre DevOrbit</h5>
+                    <p>Plataforma educativa para aprender desarrollo y más. Únete a nuestra comunidad global.</p>
+                </div>
+                <div class="col-md-2">
+                    <h5 class="text-uppercase mb-4 font-weight-bold text-info">Enlaces</h5>
+                    <p><a href="generalCursesStudent.html" class="text-white text-decoration-none">Cursos</a></p>
+                    <p><a href="contactStudent.html" class="text-white text-decoration-none">Contacto</a></p>
+                    <p><a href="contactStudent.html" class="text-white text-decoration-none">Sobre nosotros</a></p>
+                    <p><a href="terminosCondiciones.html" class="text-white text-decoration-none">Términos y condiciones</a></p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Últimas noticias</h5>
+                    <ul class="list-unstyled">
+                        <li>🔹 Nuevo curso de IA</li>
+                        <li>🔹 Entrevista con un dev senior</li>
+                        <li>🔹 Cómo dominar Java</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Síguenos</h5>
+                    <a href="#" class="btn btn-outline-light btn-sm me-1">Facebook</a>
+                    <a href="#" class="btn btn-outline-light btn-sm me-1">Twitter</a>
+                    <a href="#" class="btn btn-outline-light btn-sm">Instagram</a>
+                </div>
+            </div>
+            <hr class="bg-light my-3">
+            <p class="text-center mb-0">&copy; 2025 <strong>DevOrbit</strong>. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
