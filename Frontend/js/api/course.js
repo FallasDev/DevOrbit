@@ -10,8 +10,21 @@ const addModule = document.getElementById("btn-add-module");
 let memoryList = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
-  memoryList = await getVideosByModuleId(TOKEN,sessionStorage.getItem("idModule")) || [];
-})
+  memoryList =
+    (await getVideosByModuleId(TOKEN, sessionStorage.getItem("idModule"))) ||
+    [];
+  const urlParams = new URLSearchParams(window.location.search);
+  const courseId = urlParams.get("courseId");
+  console.log(courseId);
+  const userInscription = await getUserInscription(courseId);
+
+  console.log(userInscription);
+
+  if (userInscription) {
+    const btnBuyCourse = document.getElementById("btn-buy-course-or-");
+    btnBuyCourse.textContent = "Ver en la biblioteca";
+  }
+});
 
 document.addEventListener("submit", (ev) => {
   ev.preventDefault();
@@ -126,7 +139,6 @@ const loadModules = async (data) => {
     "accordionFlushExample"
   );
 
-
   for (const item of data) {
     const videos = await getVideosByModuleId(TOKEN, item.id_module);
     if (JSON.parse(sessionStorage.getItem("videos")) === null) {
@@ -146,7 +158,6 @@ const loadModules = async (data) => {
         JSON.stringify([...JSON.parse(sessionStorage.getItem("videos")), video])
       );
     }
-
 
     accordionFlushExample.innerHTML += `
               <div class="accordion-item border-0 mb-2 rounded shadow-sm">
@@ -184,38 +195,58 @@ const loadModules = async (data) => {
                 }" class="accordion-collapse collapse"
                     data-bs-parent="#accordionFlushExample">
                   <div class="accordion-body text-muted">
-                    ${
-                      videos && videos.length > 0
-                        ? videos
-                            .map(
-                              (video) => `
-                          <a class='text-reset text-decoration-none' href='/Frontend/video.html?videoId=${
-                            video.video_id
-                          }&courseId=${item.course.id_course}'>
-                            <div class="mb-3 d-flex align-items-center gap-3 p-2 border rounded bg-light shadow-sm">
-                            <div class="d-flex align-items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24" fill="None">
-                                <path d="M16.6582 9.28638C18.098 10.1862 18.8178 10.6361 19.0647 11.2122C19.2803 11.7152 19.2803 12.2847 19.0647 12.7878C18.8178 13.3638 18.098 13.8137 16.6582 14.7136L9.896 18.94C8.29805 19.9387 7.49907 20.4381 6.83973 20.385C6.26501 20.3388 5.73818 20.0469 5.3944 19.584C5 19.053 5 18.1108 5 16.2264V7.77357C5 5.88919 5 4.94701 5.3944 4.41598C5.73818 3.9531 6.26501 3.66111 6.83973 3.6149C7.49907 3.5619 8.29805 4.06126 9.896 5.05998L16.6582 9.28638Z" stroke="#808080" stroke-width="2" stroke-linejoin="round"/>
-                            </svg>
-                            <p class="text-muted mb-0">
-                            ${String(
-                              Math.floor(video.duration_seg / 60)
-                            ).padStart(2, "0")}:${String(
+                  ${
+                    videos && videos.length > 0
+                      ? (
+                          await Promise.all(
+                            videos.map(
+                              async (video) => `
+                            <a class='text-reset text-decoration-none ${
+                              (await getUserInscription(item.course.id_course))
+                                ? ""
+                                : "not-course-access"
+                            }' href='/Frontend/video.html?videoId=${
+                                video.video_id
+                              }&courseId=${item.course.id_course}'>
+                              <div class="mb-3 d-flex align-items-center gap-3 p-2 border rounded bg-light shadow-sm">
+                                <div class="d-flex align-items-center gap-2">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24" fill="None">
+                                    <path d="M16.6582 9.28638C18.098 10.1862 18.8178 10.6361 19.0647 11.2122C19.2803 11.7152 19.2803 12.2847 19.0647 12.7878C18.8178 13.3638 18.098 13.8137 16.6582 14.7136L9.896 18.94C8.29805 19.9387 7.49907 20.4381 6.83973 20.385C6.26501 20.3388 5.73818 20.0469 5.3944 19.584C5 19.053 5 18.1108 5 16.2264V7.77357C5 5.88919 5 4.94701 5.3944 4.41598C5.73818 3.9531 6.26501 3.66111 6.83973 3.6149C7.49907 3.5619 8.29805 4.06126 9.896 5.05998L16.6582 9.28638Z" stroke="#808080" stroke-width="2" stroke-linejoin="round"/>
+                                  </svg>
+                                  <p class="text-muted mb-0">
+                                    ${String(
+                                      Math.floor(video.duration_seg / 60)
+                                    ).padStart(2, "0")}:${String(
                                 video.duration_seg % 60
                               ).padStart(2, "0")}
-                            </p>
-                            </div>
-                            <h3 class="h6 fw-bold mt-2">${video.title}</h3>
-                               
-                            
-                              
-                            </div>
-                          </a>
-                        `
+                                  </p>
+                                </div>
+                                <h3 class="h6 d-flex align-items-center gap-2 fw-bold mt-2">
+                                ${video.title}
+                                ${
+                                  !(await getUserInscription(
+                                    item.course.id_course
+                                  ))
+                                    ? `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#808080" height="15px" width="15px" version="1.1" id="Layer_1" viewBox="0 0 330 330" xml:space="preserve">
+                                    <g id="XMLID_509_">
+                                      <path id="XMLID_510_" d="M65,330h200c8.284,0,15-6.716,15-15V145c0-8.284-6.716-15-15-15h-15V85c0-46.869-38.131-85-85-85   S80,38.131,80,85v45H65c-8.284,0-15,6.716-15,15v170C50,323.284,56.716,330,65,330z M180,234.986V255c0,8.284-6.716,15-15,15   s-15-6.716-15-15v-20.014c-6.068-4.565-10-11.824-10-19.986c0-13.785,11.215-25,25-25s25,11.215,25,25   C190,223.162,186.068,230.421,180,234.986z M110,85c0-30.327,24.673-55,55-55s55,24.673,55,55v45H110V85z"/>
+                                    </g>
+                                    </svg>`
+                                    : `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#808080" height="15px" width="15px" version="1.1" id="Layer_1" viewBox="0 0 330 330" xml:space="preserve">
+                                    <g id="XMLID_516_">
+                                      <path id="XMLID_517_" d="M15,160c8.284,0,15-6.716,15-15V85c0-30.327,24.673-55,55-55c30.327,0,55,24.673,55,55v45h-25   c-8.284,0-15,6.716-15,15v170c0,8.284,6.716,15,15,15h200c8.284,0,15-6.716,15-15V145c0-8.284-6.716-15-15-15H170V85   c0-46.869-38.131-85-85-85S0,38.131,0,85v60C0,153.284,6.716,160,15,160z"/>
+                                    </g>
+                                    </svg>`
+                                }
+                                </h3>
+                              </div>
+                            </a>
+                          `
                             )
-                            .join("")
-                        : "No hay videos"
-                    }
+                          )
+                        ).join("")
+                      : "No hay videos"
+                  }
                   </div>
                 
                 </div>
@@ -260,41 +291,59 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const btnBuyCourse = document.getElementById("btn-buy-course-or-");
 
+  const inscription = await getUserInscription(courseId);
+  if (!inscription) {
+    btnBuyCourse.addEventListener("click", async () => {
+      try {
+        console.log(
+          `Intentando crear un pago para el curso con ID: ${courseId}`
+        );
+
+        const response = await fetch(`${HOST}/api/payments/create`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({
+            courseId: courseId,
+            jwt: TOKEN,
+            currency: "USD",
+          }),
+        });
+
+        if (!response.ok) {
+          console.error(
+            `Error en la respuesta del servidor: ${response.status}`
+          );
+          alert(
+            "Error al intentar crear el pago. Por favor, inténtalo nuevamente."
+          );
+          return;
+        }
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+          console.log("Pago creado exitosamente. Redirigiendo a PayPal...");
+          window.location.href = data.redirect_url;
+        } else {
+          console.error(`Error al crear el pago: ${data.message}`);
+          alert("Error al crear el pago: " + data.message);
+        }
+      } catch (error) {
+        console.error("Error al intentar crear el pago:", error);
+        alert(
+          "Ocurrió un error al intentar realizar el pago. Por favor, verifica tu conexión e inténtalo nuevamente."
+        );
+      }
+    });
+
+    return;
+  }
+
   btnBuyCourse.addEventListener("click", async () => {
-    try {
-      console.log(`Intentando crear un pago para el curso con ID: ${courseId}`);
-      
-      const response = await fetch(`${HOST}/api/payments/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          courseId: courseId,
-          jwt: TOKEN,
-          currency: "USD",
-        }),
-      });
-
-      if (!response.ok) {
-        console.error(`Error en la respuesta del servidor: ${response.status}`);
-        alert("Error al intentar crear el pago. Por favor, inténtalo nuevamente.");
-        return;
-      }
-
-      const data = await response.json();
-
-      if (data.status === "success") {
-        console.log("Pago creado exitosamente. Redirigiendo a PayPal...");
-        window.location.href = data.redirect_url;
-      } else {
-        console.error(`Error al crear el pago: ${data.message}`);
-        alert("Error al crear el pago: " + data.message);
-      }
-    } catch (error) {
-      console.error("Error al intentar crear el pago:", error);
-      alert("Ocurrió un error al intentar realizar el pago. Por favor, verifica tu conexión e inténtalo nuevamente.");
-    }
+    const courseId = urlParams.get("courseId");
+    window.location.href = `/Frontend/library.html?courseId=${courseId}`;
   });
 });
 
@@ -334,12 +383,11 @@ confirmDelete.addEventListener("click", async () => {
     alert("Curso eliminado correctamente");
     window.location.href = "/Frontend/generalCursesStudent.html"; // Cambia esto por la URL de la página que desees redirigir
   } else {
-    courseModalMessage.textContent = "El curso no se puede eliminar porque tiene usuarios inscritos.";
+    courseModalMessage.textContent =
+      "El curso no se puede eliminar porque tiene usuarios inscritos.";
   }
   // Ocultar el modal después de confirmar la eliminación
-  
 });
-
 
 addModule.addEventListener("click", async () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -356,16 +404,16 @@ function upload_video(title, video, idModule) {
   formData.append(
     "videoOrder",
     memoryList.map((item) => item.video_id)
-    );
+  );
 
-    const xhr = new XMLHttpRequest();
-    
-    const progressContainer = document.getElementById("progressContainer");
-    const progressBar = document.getElementById("progressBar");
-    progressContainer.style.display = "block";
-    progressBar.style.width = "0%";
+  const xhr = new XMLHttpRequest();
+
+  const progressContainer = document.getElementById("progressContainer");
+  const progressBar = document.getElementById("progressBar");
+  progressContainer.style.display = "block";
+  progressBar.style.width = "0%";
   progressBar.innerText = "Subiendo...";
-  
+
   xhr.upload.addEventListener("progress", (event) => {
     if (event.lengthComputable) {
       const percent = Math.round((event.loaded / event.total) * 100);
@@ -373,7 +421,7 @@ function upload_video(title, video, idModule) {
       changeProgressPercent(percent, progressBar);
     }
   });
-  
+
   xhr.addEventListener("load", () => {
     if (xhr.status >= 200 && xhr.status < 300) {
       videoUploadSuccesfully(progressBar);
@@ -381,7 +429,7 @@ function upload_video(title, video, idModule) {
       videoUploadFailed(progressBar);
     }
   });
-  
+
   xhr.addEventListener("error", () => {
     progressBar.classList.add("bg-danger");
     progressBar.innerText = "Error de red";
@@ -389,12 +437,10 @@ function upload_video(title, video, idModule) {
   });
 
   xhr.open("POST", `${HOST}/api/videos/upload`);
-  
-  xhr.setRequestHeader("Authorization", `Bearer ${TOKEN}`);
-  
-  xhr.send(formData);
 
-  
+  xhr.setRequestHeader("Authorization", `Bearer ${TOKEN}`);
+
+  xhr.send(formData);
 }
 
 const videoUploadSuccesfully = (progressBar) => {
@@ -431,7 +477,6 @@ const changeProgressPercent = (percent, progressBar) => {
 };
 
 const loadVideosSortableList = async () => {
-
   const list = document.getElementById("sortable-list-videos");
   let draggingItem = null;
   list.innerHTML = ""; // Limpiar la lista antes de cargar los videos
@@ -439,27 +484,28 @@ const loadVideosSortableList = async () => {
   const nowVideo = document.createElement("li");
 
   nowVideo.classList.add("sortable-item");
-  nowVideo.setAttribute("draggable",true);
+  nowVideo.setAttribute("draggable", true);
   nowVideo.textContent = "Video actual";
 
-  const videos = await getVideosByModuleId(TOKEN,sessionStorage.getItem("idModule"));
-  
+  const videos = await getVideosByModuleId(
+    TOKEN,
+    sessionStorage.getItem("idModule")
+  );
+
   nowVideo.item = {
-    "video_id": 0
-  }
+    video_id: 0,
+  };
 
   list.appendChild(nowVideo);
 
-  videos.forEach((item,index)=> {
-
+  videos.forEach((item, index) => {
     const li = document.createElement("li");
     li.item = item;
     li.textContent = item.title;
-    li.setAttribute("draggable",true);
+    li.setAttribute("draggable", true);
     li.classList.add("sortable-item");
-    list.appendChild(li);    
-
-  })
+    list.appendChild(li);
+  });
 
   list.addEventListener("dragstart", (e) => {
     draggingItem = e.target;
@@ -519,14 +565,13 @@ const loadVideosSortableList = async () => {
       memoryList.push(element.item);
     });
   }
-}
+};
 
-const updateModule = async (idCourse,idModule) => {
+const updateModule = async (idCourse, idModule) => {
   window.location.href = `/Frontend/editModule.html?idCourse=${idCourse}&idModule=${idModule}`;
-}
+};
 
 const deleteModule = async (idModule) => {
-
   const res = await fetch(`${HOST}/api/modules/${idModule}`, {
     method: "DELETE",
     headers: {
@@ -540,5 +585,32 @@ const deleteModule = async (idModule) => {
   } else {
     alert("Error al eliminar el modulo");
   }
-}
+};
 
+const getUserInscription = async (idCourse) => {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    alert("Error al obtener el usuario");
+    return null;
+  }
+
+  const res = await fetch(
+    `${HOST}/api/inscriptions/user/${user.idUser}/${idCourse}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    }
+  );
+
+  console.log(res);
+
+  if (res.ok) {
+    const data = await res.json();
+    return data;
+  } else {
+    return null;
+  }
+};

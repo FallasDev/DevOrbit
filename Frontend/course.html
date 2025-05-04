@@ -14,26 +14,40 @@
 <body>
     <header id="header">
       <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="generalCursesStudent.html">
-                <img src="assets/icons/devorbitLogo.png" alt="DevOrbit Logo" width="180"
-                    class="d-inline-block align-text-top">
-            </a>
+        <div class="container d-flex">
+          <a class="navbar-brand" href="generalCursesStudent.html">
+            <img
+              src="assets/icons/devorbitLogo.png"
+              alt="DevOrbit Logo"
+              width="180"
+              class="d-inline-block align-text-top"
+            />
+          </a>
 
           <ul class="navbar-nav ms-auto">
-              <li class="nav-item">
-                  <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#profileModal">
-                      <i class="bi bi-person"></i> Perfil
-                  </a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="#" id="logoutLink">
-                      <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-                  </a>
-              </li>
+            <li class="nav-item fw-semibold">
+              <a
+                class="nav-link"
+                href="#"
+                data-bs-toggle="modal"
+                data-bs-target="#profileModal"
+              >
+                <i class="bi bi-person"></i> Perfil
+              </a>
+            </li>
+            <li class="nav-item fw-semibold">
+              <a class="nav-link" href="library.html">
+                <i class="bi bi-person"></i> Mi Biblioteca
+              </a>
+            </li>
+            <li class="nav-item fw-semibold">
+              <a class="nav-link" href="#" id="logoutLink">
+                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+              </a>
+            </li>
           </ul>
         </div>
-    </nav>
+      </nav>
       <script>
         fetch("components/uploadVideo.html")
           .then((res) => res.text())
@@ -67,6 +81,21 @@
       <p id="course-modal-message" class="mt-2"></p>
     </div>
   </div>
+        <a class="navbar-brand d-flex align-items-center gap-2 mb-4" href="generalCursesStudent.html">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30px"
+            height="30px"
+            viewBox="0 0 16 16"
+            fill="none"
+          >
+            <path
+              d="M5 1H4L0 5L4 9H5V6H11C12.6569 6 14 7.34315 14 9C14 10.6569 12.6569 12 11 12H4V14H11C13.7614 14 16 11.7614 16 9C16 6.23858 13.7614 4 11 4H5V1Z"
+              fill="#4b4a58"
+            />
+          </svg>
+          <span class="link-back">Volver</span>
+        </a>
         <div class="d-flex gap-5">
             <img src="https://i.ytimg.com/vi/L1oMLsiMusQ/maxresdefault.jpg" width="400" height="200" id="course-picture" alt="">
             <div>

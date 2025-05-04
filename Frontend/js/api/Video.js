@@ -161,14 +161,12 @@ const makeControls = (video) => {
   });
 
   document.addEventListener("keydown", (ev) => {
-    const IS_VISIBLE =
-      document.getElementById("upload-video-box").style.visibility == "visible";
 
-    if (ev.code == "Space" && !IS_VISIBLE) {
+    if (ev.code == "Space") {
       playAndPause(video, playPause);
     }
 
-    if (ev.code == "f" || (ev.code == "KeyF" && !IS_VISIBLE)) {
+    if (ev.code == "f" || (ev.code == "KeyF")) {
       const container = document.getElementById("video-container");
       if (!document.fullscreenElement) {
         container.requestFullscreen();
@@ -177,7 +175,7 @@ const makeControls = (video) => {
       }
     }
 
-    if (ev.code == "m" || (ev.code == "KeyM" && !IS_VISIBLE)) {
+    if (ev.code == "m" || (ev.code == "KeyM")) {
       if (video.muted) {
         video.muted = false;
         mute.innerHTML = `
@@ -358,11 +356,10 @@ const nextVideo = () => {
   }
 };
 
-window.addEventListener("keydown", function (e) {
-  const isVisible =
-    document.getElementById("upload-video-box").style.visibility == "visible";
+const linkBackCourse = document.getElementById("link-back-course");
 
-  if ((e.code === "Space" || e.keyCode === 32) && !isVisible) {
-    e.preventDefault();
-  }
+
+linkBackCourse.addEventListener("click", () => {
+  const courseId = new URLSearchParams(window.location.search).get("courseId");
+  window.location.href = `/Frontend/course.html?courseId=${courseId}`;
 });

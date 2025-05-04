@@ -1,5 +1,6 @@
 package com.devorbit.app.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,5 +13,7 @@ public interface RepositoryInscription extends JpaRepository<Inscription, Intege
 
     boolean existsByUserAndCourse(User user, Course course);
     Optional<Inscription> findByUserAndCourse(User user, Course course);
+
+    List<Inscription> findByUser(User user);
     
 }

@@ -41,3 +41,9 @@
     font-size: 16px;
     margin: 5px;
 }
+
+.not-course-access {
+    pointer-events: none;
+    color: #6c757d; /* Color gris para indicar que está deshabilitado */
+    text-decoration: none;
+ }

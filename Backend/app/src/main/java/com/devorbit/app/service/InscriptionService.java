@@ -54,6 +54,13 @@ public class InscriptionService {
         return repositoryInscription.findByUserAndCourse(user, course).orElse(null);
     }
 
+    public List<Inscription> getUseInscriptions(int userId) {
+        User user = repositoryUser.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        return repositoryInscription.findByUser(user);
+    }
+
     @Transactional
     public Inscription update(int id, Inscription inscription) {
         Inscription existing = repositoryInscription.findById(id)
