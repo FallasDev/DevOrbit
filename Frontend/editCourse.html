@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Course</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Contenedor del formulario */
+        .form-container {
+            width: 100%;
+            max-width: 500px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Título */
+        .form-container h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Estilos de los labels */
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        /* Inputs y textarea */
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        /* Botón */
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Editar curso</h1>
+        <form id="form-edit-course">
+            <label for="title">Titulo del curso</label>
+            <input type="text" id="title" name="title" placeholder="Enter course title">
+
+            <label for="description">Descripcion</label>
+            <textarea id="description" name="description" rows="3" placeholder="Enter course description"></textarea>
+
+            <label for="price">Precio</label>
+            <input type="number" name="price" id="price" placeholder="Enter course price">
+
+            <input type="number" name="testId" id="testId" hidden>
+
+            <button type="submit">Guardar Cambios</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const HOST = "http://localhost:8080"; 
+            const courseId = new URLSearchParams(window.location.search).get("courseId");
+            const response = await fetch(HOST + "/api/courses/" + courseId, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("jwtToken"),
+                },
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                document.getElementById("title").value = data.title;
+                document.getElementById("description").value = data.description;
+                document.getElementById("price").value = data.price;
+                document.getElementById("testId").value = data.test.test_id;
+            } else {
+                console.error("Error fetching course data:", data);
+            }
+        });
+    </script>
+    <script src="/Frontend/js/scripts/editCourse.js"></script>
+</body>
+</html>

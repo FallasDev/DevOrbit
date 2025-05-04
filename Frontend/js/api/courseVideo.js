@@ -61,7 +61,7 @@ const getCourse = (id, token) => {
                       style='font-family: "JetBrains Mono", monospace;'>
                     ${item.title}
                   </button>
-                  ${await checkUserIsAdmin(token) && `<button onclick='addVideoEvent(${item.id_module})' class='btn-add-video fw-semibold' style='max-height: 40px;'>Agregar</button>`}
+        
                 </h2>
                 <div id="flush-collapse-${item.id_module}" class="accordion-collapse collapse"
                     data-bs-parent="#accordionFlushExample">

@@ -28,14 +28,17 @@
       <script>
         fetch("components/uploadVideo.html")
           .then((res) => res.text())
-          .then((data) => {
+          .then(async (data) => {
             document.getElementById("header").innerHTML += data;
             
-            const script = document.createElement('script');
-            script.src = "/Frontend/js/scripts/DragAndDrop.js";
-            script.type = "text/javascript";
-            document.body.appendChild(script); 
-            // loadVideosSortableList();
+            
+            loadVideosSortableList()
+
+            const script = document.createElement("script");
+            script.src = "/Frontend/js/scripts/DragAndDropV2.js";
+            document.body.appendChild(script);
+
+            
           });
       </script>
     </header>
@@ -46,6 +49,7 @@
           id="video-container"
         >
           <video id="video" class="not-full-screen" preload="metadata">
+            <source id="video-source" src="" type="video/mp4" />
             Tu navegador no soporta HTML5 video.
           </video>
 

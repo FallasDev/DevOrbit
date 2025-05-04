@@ -21,10 +21,10 @@ public class Picture {
     @Column(name = "url", nullable = false, length = 200)
     private String url;
 
-     //Añadir relacion con modulos cuando esten
-     @OneToOne
-     @JoinColumn(name = "id_course")
-     @JsonIgnore
-     private Course course;
-     
+    // Añadir relacion con modulos cuando esten
+ 
+    @OneToOne(mappedBy = "picture")
+    @JsonIgnore
+    private Course course;
+
 }

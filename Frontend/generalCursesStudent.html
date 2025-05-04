@@ -40,6 +40,19 @@
                     <input class="form-control me-2" type="search" placeholder="Buscar cursos..." aria-label="Buscar">
                 </form>
             </div>
+
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#profileModal">
+                        <i class="bi bi-person"></i> Perfil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="logoutLink">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                    </a>
+                </li>
+            </ul>
         </div>
 
         <ul class="navbar-nav ms-auto">
@@ -49,6 +62,53 @@
         </ul>
     </nav>
 
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="profileModalLabel">Mi Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="profileForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Nombre de usuario</label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <!-- <div class="mb-3">
+                            <label for="currentPassword" class="form-label">Contraseña actual</label>
+                            <input type="password" class="form-control" id="currentPassword">
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Nueva contraseña</label>
+                            <input type="password" class="form-control" id="newPassword">
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirmar nueva contraseña</label>
+                            <input type="password" class="form-control" id="confirmPassword">
+                        </div> -->
+                    </form>
+                    <div class="alert alert-success d-none" id="successAlert"></div>
+                    <div class="alert alert-danger d-none" id="errorAlert"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger me-auto" id="deleteAccountBtn">
+                        Eliminar Cuenta
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="saveProfileBtn">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="course-title-container gap-2 ms-3 me-2">
+        <h2 class="text-left" style="font-size: 2rem; color: #00aaff; font-weight: bold;">Cursos Disponibles</h2>
     <!-- Título -->
     <div class="course-title-container gap-2 ms-3 me-2 mt-4">
         <h2 class="text-left" style="font-size: 2rem; color: #2a2a72; font-weight: bold;">Cursos Disponibles</h2>
@@ -80,17 +140,15 @@
         </button>
     </div>
 
-    <!-- Footer -->
     <footer class="bg-dark text-white py-4 mt-5">
         <div class="container">
             <div class="row">
-                <!-- Columna 1 -->
                 <div class="col-md-4 mb-4">
                     <h5>Sobre DevOrbit</h5>
-                    <p>DevOrbit es una plataforma donde puedes encontrar los mejores cursos para mejorar tus habilidades tecnológicas.</p>
+                    <p>DevOrbit es una plataforma donde puedes encontrar los mejores cursos para mejorar tus habilidades
+                        tecnológicas.</p>
                 </div>
 
-                <!-- Columna 2 -->
                 <div class="col-md-4 mb-4">
                     <h5>Enlaces rápidos</h5>
                     <ul class="list-unstyled">
@@ -99,7 +157,6 @@
                     </ul>
                 </div>
 
-                <!-- Columna 3 -->
                 <div class="col-md-4 mb-4">
                     <h5>Síguenos</h5>
                     <ul class="list-unstyled">
@@ -110,15 +167,20 @@
                 </div>
             </div>
 
+
             <hr class="bg-white">
+
+
             <div class="text-center">
                 <p>&copy; 2025 DevOrbit. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Scripts -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
     <script src="scripStudent.js"></script>
 </body>
 

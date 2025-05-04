@@ -31,17 +31,18 @@ public class CourseService {
         curseRepository.deleteById(id);
     }
 
-    public Course update(int id, Course curse){
+  public Course update(int id, Course curse){
         Optional<Course> existCurse = curseRepository.findById(id);
         if (existCurse.isPresent()) {
             Course updaCurse = existCurse.get();
             updaCurse.setDescription(curse.getDescription());
+            updaCurse.setTitle(curse.getTitle());
+            updaCurse.setPrice(curse.getPrice());
             return curseRepository.save(updaCurse);
-
         }else{
             throw new RuntimeException("Curso no encontrada con ID: " + id);
         }
-    }
+    }  
 
 
 }

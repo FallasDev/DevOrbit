@@ -3,6 +3,11 @@ package com.devorbit.app.entity;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,15 +39,18 @@ public class Course {
     @Column
     private boolean status;
 
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "picture_id")
     private Picture picture;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "test_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Test test;
 
-    @OneToOne(mappedBy = "course")
-    private Picture pictures;
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private List<Module> modules;
 
 }
