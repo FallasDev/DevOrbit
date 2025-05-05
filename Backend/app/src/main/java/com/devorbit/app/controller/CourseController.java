@@ -61,9 +61,13 @@ public class CourseController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public Course updateCourse(@PathVariable int id, @RequestBody Course updatedCourse) {
-        updatedCourse.setId_course(id);
-        return courseService.update(id,updatedCourse);
+    public Course updateCourse(
+            @PathVariable int id,
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam BigDecimal price
+    ) {
+        return courseService.update(id,title,description,price);
     }
 
     @DeleteMapping("/{id}")

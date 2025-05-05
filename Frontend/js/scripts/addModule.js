@@ -31,9 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
       method: "POST",
       headers: {
         Authorization: `Bearer ${TOKEN}`,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify(sendData),
+      body: sendData,
     });
     console.log(res);
     if (res.ok) {

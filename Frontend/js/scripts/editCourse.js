@@ -7,9 +7,10 @@ const HOST = "http://localhost:8080";
  formUpdateCourse.addEventListener("submit", async (e) => {
    e.preventDefault();
    const formData = new FormData(e.target);
- 
+   const sendData = new FormData();
+
+
    const courseId = new URLSearchParams(window.location.search).get("courseId");
- 
  
    const course = {
      title: formData.get("title"),
@@ -20,19 +21,23 @@ const HOST = "http://localhost:8080";
      }
    };
  
-   console.log(course);
+   sendData.append("title", course.title);
+    sendData.append("description", course.description);
+    sendData.append("price", course.price);
+    sendData.append("testId", course.test.test_id);
+
  
-   editCourse(courseId, course);
+   editCourse(courseId, sendData);
  });
  
- const editCourse = async (courseId, course) => {
+ const editCourse = async (courseId, sendData) => {
+
    const res = await fetch(`${HOST}/api/courses/${courseId}`, {
      method: "PUT",
      headers: {
        Authorization: `Bearer ${TOKEN}`,
-       "Content-Type": "application/json",
      },
-     body: JSON.stringify(course),
+     body: sendData,
    });
    console.log(res);
    if (res.ok) {

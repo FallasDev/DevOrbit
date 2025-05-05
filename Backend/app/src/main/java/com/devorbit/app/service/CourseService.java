@@ -1,5 +1,6 @@
 package com.devorbit.app.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,13 +32,13 @@ public class CourseService {
         curseRepository.deleteById(id);
     }
 
-    public Course update(int id, Course curse){
+    public Course update(int id, String title, String description, BigDecimal price) {
         Optional<Course> existCurse = curseRepository.findById(id);
         if (existCurse.isPresent()) {
             Course updaCurse = existCurse.get();
-            updaCurse.setDescription(curse.getDescription());
-            updaCurse.setTitle(curse.getTitle());
-            updaCurse.setPrice(curse.getPrice());
+            updaCurse.setDescription(description);
+            updaCurse.setTitle(title);
+            updaCurse.setPrice(price);
             return curseRepository.save(updaCurse);
         }else{
             throw new RuntimeException("Curso no encontrada con ID: " + id);

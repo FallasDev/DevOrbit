@@ -192,28 +192,30 @@ const saveTestAttemp = async (score) => {
   const data = await res.json();
   console.log(data);
 }
-document.getElementById("btn-certificate").addEventListener("click", async () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const testId = urlParams.get("id");
-  const score = document.getElementById("box-result").textContent.split(": ")[1]; // Extraer la nota
 
-  const res = await fetch(`${HOST}/api/tests/${testId}/certificate?score=${score}`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-    },
-  });
+// document.getElementById("btn-certificate").addEventListener("click", async () => {
+//   const urlParams = new URLSearchParams(window.location.search);
+//   const testId = urlParams.get("id");
+//   const score = document.getElementById("box-result").textContent.split(": ")[1]; // Extraer la nota
 
-  if (res.ok) {
-    const blob = await res.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "Certificado.pdf";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  } else {
-    console.error("Error al generar el certificado");
-  }
-});
+
+//   const res = await fetch(`${HOST}/api/tests/${testId}/certificate/${user.idUser}?score=${score}`, {
+//     method: "GET",
+//     headers: {
+//       Authorization: `Bearer ${TOKEN}`,
+//     },
+//   });
+
+//   if (res.ok) {
+//     const blob = await res.blob();
+//     const url = window.URL.createObjectURL(blob);
+//     const a = document.createElement("a");
+//     a.href = url;
+//     a.download = "Certificado.pdf";
+//     document.body.appendChild(a);
+//     a.click();
+//     a.remove();
+//   } else {
+//     console.error("Error al generar el certificado");
+//   }
+// });
