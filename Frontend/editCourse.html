@@ -102,7 +102,7 @@
  
      <script>
          document.addEventListener("DOMContentLoaded", async () => {
-             const HOST = "https://devorbit-vk2z.onrender.com/"; 
+             const HOST = "https://devorbit-vk2z.onrender.com"; 
              const courseId = new URLSearchParams(window.location.search).get("courseId");
              const response = await fetch(HOST + "/api/courses/" + courseId, {
                  method: "GET",
