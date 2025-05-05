@@ -35,7 +35,7 @@ fetch(apiUrl, {
       const col = document.createElement('div');
       col.className = 'col-md-4 mb-4';
       col.innerHTML = `
-            <div class="card h-100 shadow-sm">
+            <div class="card  shadow-sm">
                 <img src="${imgSrc}" class="card-img-top" alt="${course.title}">
                 <div class="card-body">
                     <h5 class="card-title">${course.title}</h5>
@@ -53,7 +53,7 @@ fetch(apiUrl, {
       carouselItem.className = `carousel-item ${index === 0 ? 'active' : ''}`;
       carouselItem.innerHTML = `
 
-      <img src="${imgSrc}" class="d-block w-100" alt="${course.title}">
+      <img src="${imgSrc}" class="d-block w-100 carousel-image" alt="${course.title}">
 
 
             <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
@@ -323,5 +323,3 @@ async function eliminarCuenta() {
 }
 
 document.addEventListener('DOMContentLoaded', iniciarAplicacion);
-
-

@@ -15,23 +15,23 @@ public class CourseService {
     @Autowired
     private CourseRepository curseRepository;
 
-    public List<Course> findAll() {//buscar la lista
+    public List<Course> findAll() {// buscar la lista
         return curseRepository.findAll();
     }
 
-    public Optional<Course> findById(int id){//buscar por id
+    public Optional<Course> findById(int id) {// buscar por id
         return curseRepository.findById(id);
     }
-    
-    public Course save(Course curse){//agregar guardar
+
+    public Course save(Course curse) {// agregar guardar
         return curseRepository.save(curse);
     }
 
-    public void deleteById(int id) {//borrar por id
+    public void deleteById(int id) {// borrar por id
         curseRepository.deleteById(id);
     }
 
-  public Course update(int id, Course curse){
+    public Course update(int id, Course curse) {
         Optional<Course> existCurse = curseRepository.findById(id);
         if (existCurse.isPresent()) {
             Course updaCurse = existCurse.get();
@@ -39,10 +39,9 @@ public class CourseService {
             updaCurse.setTitle(curse.getTitle());
             updaCurse.setPrice(curse.getPrice());
             return curseRepository.save(updaCurse);
-        }else{
+        } else {
             throw new RuntimeException("Curso no encontrada con ID: " + id);
         }
-    }  
-
+    }
 
 }

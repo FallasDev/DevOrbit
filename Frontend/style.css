@@ -1,54 +1,64 @@
 .nav-link {
-    position: relative; /* Esto es necesario para que el ::after se posicione correctamente */
-  }
-  
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    width: 0%;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: black;
-    transition: width 0.3s;
-  }
-  
-  .nav-link:hover::after {
-    width: 100%;
-  }
-  
-  .carousel-item img {
-    height: 400px;
-    object-fit: cover;
-  }
-  
-  body {
-    background: linear-gradient(to bottom, #5252a5, #0b0b83);
+  position: relative; /* Esto es necesario para que el ::after se posicione correctamente */
 }
 
-.carousel-inner img {
-    max-height: 300px; 
-    object-fit: cover;
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: black;
+  transition: width 0.3s;
 }
 
-/* Tarjetas en una columna */
-#course-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.nav-link:hover::after {
+  width: 100%;
 }
 
-.card {
-    width: 100%;
-    max-width: 400px;
+.carousel-item img {
+  height: 400px;
+  object-fit: cover;
 }
 
 body {
-  background: linear-gradient(to bottom, #f4f4f9, #d3d3e3) !important;
+  background: linear-gradient(to bottom, #5252a5, #0b0b83);
+}
+
+/* .carousel-inner img {
+  max-height: 100px; 
+  object-fit: cover;
+} */
+
+.card img {
+  height: 150px; /* Ajusta la altura de la imagen */
+  object-fit: cover; /* Mantiene la proporción de la imagen */
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
 }
 
 
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  /* Para que esté detrás de otros elementos */
+}
 
+body {
+background: linear-gradient(to bottom, #f4f4f9, #d3d3e3) !important;
+}
 
-
-
+.carousel-image {
+  width: 100%;
+  height: auto;
+  background-color: #5252a5;
+  max-height: 600px; /* Ajusta la altura máxima según tus necesidades */
+}

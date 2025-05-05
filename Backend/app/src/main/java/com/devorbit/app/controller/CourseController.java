@@ -19,10 +19,14 @@ import com.devorbit.app.entity.Picture;
 import com.devorbit.app.service.CloudinaryService;
 import com.devorbit.app.service.CourseService;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,7 +48,8 @@ public class CourseController {
     @GetMapping
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<Course> getAllCurses() {
-        return courseService.findAll();
+        List<Course> courses = courseService.findAll();
+        return courses;
     }
 
     @GetMapping("/{id}")
@@ -53,6 +58,26 @@ public class CourseController {
         return courseService.findById(id);
     }
 
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Course updateCourse(@PathVariable int id, @RequestBody Course updatedCourse) {
+        updatedCourse.setId_course(id);
+        return courseService.update(id,updatedCourse);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deletedCourse(@PathVariable int id) {
+        courseService.deleteById(id);
+    }
+
+    @PutMapping("/{id}/status")//estado de activo o no
+    public Course updateStatus(@PathVariable int id, @RequestParam boolean status) {
+        Course course = courseService.findById(id).orElseThrow();
+        course.setStatus(status);
+        return courseService.save(course);
+    }
 
     @PostMapping(consumes = "multipart/form-data")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

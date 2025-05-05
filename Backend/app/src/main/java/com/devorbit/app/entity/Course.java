@@ -53,4 +53,18 @@ public class Course {
     @JsonIgnore
     private List<Module> modules;
 
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id_course=" + id_course +
+                ", title='" + title + '\'' +
+                ", videoUrl='" + videoUrl + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", status=" + status +
+                ", picture=" + picture +
+                ", test=" + test +
+                '}';
+    }
+
 }
