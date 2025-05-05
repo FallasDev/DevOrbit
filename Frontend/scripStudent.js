@@ -4,6 +4,9 @@ const token = localStorage.getItem('jwtToken');
 const container = document.getElementById('course-container');
 const carouselInner = document.getElementById('carousel-inner');
 const carouselIndicators = document.getElementById('carousel-indicators');
+const createCourseButton = document.getElementById('createcurse');
+
+const HOST = 'http://localhost:8080';
 
 // muestra los cursos
 console.log("container:", container);
@@ -115,10 +118,37 @@ const elementos = {
 
 let modalBootstrapPerfil;
 
-function iniciarAplicacion() {
+async function iniciarAplicacion() {
+    await desabilitarBotonCursos();
     verificarAutenticacion();
     inicializarModal();
     configurarEventos();
+}
+
+
+const checkUserIsAdmin = async (token) => {
+    try {
+      const response = await fetch(`${HOST}/api/videos/user/data`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return await response.json();
+    } catch (error) {
+      console.log(error);
+      return "";
+    }
+  };
+  
+
+async function desabilitarBotonCursos() {
+    const isAdmin = await checkUserIsAdmin(token);
+
+    if (!isAdmin) {
+        createCourseButton.style.display = "none";
+    }
+
 }
 
 function verificarAutenticacion() {
@@ -321,5 +351,8 @@ async function eliminarCuenta() {
         }
     }
 }
+
+
+
 
 document.addEventListener('DOMContentLoaded', iniciarAplicacion);

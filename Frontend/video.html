@@ -24,8 +24,10 @@
   </head>
   <body>
     <header id="header">
-      <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-        <div class="container d-flex">
+      <nav
+        class="navbar navbar-expand-md navbar-light sticky-top bg-white shadow-sm"
+      >
+        <div class="container-fluid">
           <a class="navbar-brand" href="generalCursesStudent.html">
             <img
               src="assets/icons/devorbitLogo.png"
@@ -34,30 +36,43 @@
               class="d-inline-block align-text-top"
             />
           </a>
-
-         
-
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item fw-semibold">
-              <a
-                class="nav-link"
-                href="#"
-                data-bs-toggle="modal"
-                data-bs-target="#profileModal"
-              >
-                <i class="bi bi-person"></i> Perfil
-              </a>
-            </li>
-            <li class="nav-item fw-semibold">
-              <a class="nav-link" href="#" id="logoutLink">
-                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-              </a>
-            </li>
-          </ul>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item fw-semibold">
+                <a
+                  class="nav-link"
+                  href="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#profileModal"
+                >
+                  <i class="bi bi-person"></i> Perfil
+                </a>
+              </li>
+              <li class="nav-item fw-semibold">
+                <a class="nav-link" href="library.html">
+                  <i class="bi bi-book"></i> Mi Biblioteca
+                </a>
+              </li>
+              <li class="nav-item fw-semibold">
+                <a class="nav-link" href="#" id="logoutLink">
+                  <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </nav>
     </header>
-    <main class="p-5" id="main-content">
+
+    <main class="container my-5 px-3 px-md-0" id="main-content">
       <div class="video-section container d-flex flex-column text-white">
         <div
           class="video-container bg-black rounded shadow"
@@ -200,8 +215,15 @@
         </div>
       </div>
 
-      <div id="accordion-module" class="accordion-module container d-flex flex-column gap-4">
-        <a class="navbar-brand d-flex align-items-center gap-2" id="link-back-course">
+      <div
+        id="accordion-module"
+        class="accordion-module container d-flex flex-column gap-4"
+      >
+        <a
+          class="navbar-brand d-flex align-items-center gap-2"
+          style="cursor: pointer"
+          id="link-back-course"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="30px"
@@ -218,7 +240,7 @@
         </a>
         <div>
           <h2 class="h2-module-course">Contenido del curso</h2>
-  
+
           <div
             class="accordion accordion-flush shadow-sm rounded"
             id="accordionFlushExample"
@@ -226,6 +248,111 @@
         </div>
       </div>
     </main>
+
+    <footer class="bg-dark text-white pt-5 pb-4" style="margin-top: 200px">
+      <div class="container text-md-left">
+        <div class="row text-md-left">
+          <!-- Sobre DevOrbit -->
+          <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+            <h5 class="text-uppercase mb-4 font-weight-bold text-info">
+              DevOrbit
+            </h5>
+            <p>
+              Plataforma educativa para aprender desarrollo, tecnología y más.
+              Únete a nuestra comunidad y expande tus habilidades con contenido
+              actualizado y expertos en la industria.
+            </p>
+          </div>
+
+          <!-- Enlaces útiles -->
+          <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+            <h5 class="text-uppercase mb-4 font-weight-bold text-info">
+              Enlaces
+            </h5>
+            <p>
+              <a
+                href="contactStudent.html"
+                class="text-white text-decoration-none"
+                >Contacto</a
+              >
+            </p>
+            <p>
+              <a
+                href="contactStudent.html"
+                class="text-white text-decoration-none"
+                >Sobre nosotros</a
+              >
+            </p>
+            <p>
+              <a
+                href="terminosCondiciones.html"
+                class="text-white text-decoration-none"
+                >Términos y condiciones</a
+              >
+            </p>
+          </div>
+
+          <!-- Noticias / Blog -->
+          <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+            <h5 class="text-uppercase mb-4 font-weight-bold text-info">
+              Últimas noticias
+            </h5>
+            <p>🔹 Nuevo curso de IA disponible</p>
+            <p>🔹 Entrevista con desarrollador senior</p>
+            <p>🔹 Cómo dominar Java en 30 días</p>
+          </div>
+
+          <!-- Redes Sociales -->
+          <div class="col-md-4 col-lg-4 col-xl-3 mx-auto mt-3">
+            <h5 class="text-uppercase mb-4 font-weight-bold text-info">
+              Síguenos
+            </h5>
+            <a
+              href="#"
+              class="btn btn-outline-light btn-floating m-1"
+              role="button"
+              >Facebook</a
+            ><br />
+            <a
+              href="#"
+              class="btn btn-outline-light btn-floating m-1"
+              role="button"
+              >Twitter</a
+            ><br />
+            <a
+              href="#"
+              class="btn btn-outline-light btn-floating m-1"
+              role="button"
+              >Instagram</a
+            ><br /><br />
+
+            <h6 class="text-uppercase">Suscríbete al boletín</h6>
+            <form>
+              <div class="input-group">
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="Tu correo"
+                  aria-label="Email"
+                />
+                <button class="btn btn-info" type="submit">Enviar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <hr class="my-3 bg-light" />
+
+        <div class="row d-flex justify-content-center">
+          <div class="col-md-7 col-lg-8">
+            <p class="text-center text-white">
+              &copy; 2025 <strong>DevOrbit</strong>. Todos los derechos
+              reservados.
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
 
     <script src="/Frontend/js/api/Video.js"></script>
     <script src="/Frontend/js/api/courseVideo.js"></script>

@@ -249,7 +249,7 @@ const loadModules = async (data) => {
                                     }
                                   ${
                                     (await checkUserIsAdmin(TOKEN))
-                                      ? ` <button style='min-width: 110px' class="btn btn-danger btn-sm fw-semibold" onclick="deleteVideo(${item.id_module})">Eliminar Video</button>`
+                                      ? ` <button style='min-width: 110px' class="btn btn-danger btn-sm fw-semibold" onclick="deleteVideo(${video.video_id})">Eliminar Video</button>`
                                       : ""
                                   }
                                   
@@ -647,6 +647,7 @@ const deleteVideo = async (videoId) => {
 
   if (res.ok) {
     alert("Video eliminado correctamente");
+    location.reload();
   } else {
     alert("Error al eliminar el video");
   }

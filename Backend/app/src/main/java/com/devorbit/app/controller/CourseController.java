@@ -62,12 +62,7 @@ public class CourseController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public Course updateCourse(@PathVariable int id, @RequestBody Course updatedCourse) {
-        System.out.println("Updating course with ID: " + id);
-        System.out.println("Updated course details: " + updatedCourse);
         updatedCourse.setId_course(id);
-
-        updatedCourse.setDescription("auisfaonifafio");
-
         return courseService.update(id,updatedCourse);
     }
 
