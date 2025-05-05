@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    const REGISTER_API_URL = 'http://localhost:8080/auth/register';
+    const REGISTER_API_URL = 'https://devorbit-vk2z.onrender.com/auth/register';
     const LOGIN_URL = '../components/login.html';
     const DEFAULT_ROLE = "ROLE_USER";
 

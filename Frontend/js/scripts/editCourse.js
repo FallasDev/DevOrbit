@@ -42,7 +42,7 @@ const HOST = "https://devorbit-vk2z.onrender.com/";
    console.log(res);
    if (res.ok) {
      console.log("Curso editado correctamente");
-     location.href = `/Frontend/course.html?courseId=${courseId}`;
+     location.href = `./course.html?courseId=${courseId}`;
    } else {
      console.log("Error al editar el curso");
    }

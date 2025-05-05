@@ -218,7 +218,7 @@
       const redirectToCourse = async (courseId) => {
         if (!TOKEN) {
           alert("Por favor, inicia sesión para acceder al curso.");
-          window.location.href = "login.html";
+          window.location.href = "./login.html";
           return;
         }
 
@@ -234,16 +234,16 @@
             alert(
               "Tu sesión ha expirado. Por favor, inicia sesión nuevamente."
             );
-            window.location.href = "login.html";
+            window.location.href = "./login.html";
           } else {
-            window.location.href = `course.html?courseId=${courseId}`;
+            window.location.href = `./course.html?courseId=${courseId}`;
           }
         } catch (error) {
           console.error("Error al verificar la autenticación:", error);
           alert(
             "Hubo un problema al verificar tu sesión. Por favor, intenta nuevamente."
           );
-          window.location.href = "login.html";
+          window.location.href = "./login.html";
         }
       };
 
@@ -282,7 +282,7 @@
         enlaceCerrarSesion.addEventListener('click', (e) => {
             e.preventDefault();
             localStorage.removeItem('jwtToken');
-            window.location.href = '/Frontend/components/login.html';
+            window.location.href = './components/login.html';
         });
     }
 }
@@ -316,7 +316,7 @@ function iniciarAplicacion() {
 function verificarAutenticacion() {
     if (!TOKEN) {
         alert("No estás autenticado. Serás redirigido al login.");
-        window.location.href = "/Frontend/components/login.html";
+        window.location.href = "./components/login.html";
     }
 }
 
@@ -359,7 +359,7 @@ function configurarCerrarSesion() {
         enlaceCerrarSesion.addEventListener('click', (e) => {
             e.preventDefault();
             localStorage.removeItem('jwtToken');
-            window.location.href = '/Frontend/components/login.html';
+            window.location.href = './components/login.html';
         });
     }
 }
@@ -375,7 +375,7 @@ function mostrarAlerta(alerta, mensaje, esError = false) {
 
 function tokenInvalido() {
     localStorage.removeItem('jwtToken');
-    window.location.href = "/Frontend/components/login.html";
+    window.location.href = "./components/login.html";
 }
 
 function errorDeRed(error) {
@@ -465,7 +465,7 @@ async function guardarPerfil() {
         mostrarAlerta(elementos.alertaExito, "Perfil actualizado correctamente. Por seguridad, vuelve a iniciar sesión.");
         setTimeout(() => {
             localStorage.removeItem('jwtToken');
-            window.location.href = "/Frontend/components/login.html";
+            window.location.href = "./components/login.html";
         }, 3000);
 
     } catch (error) {
@@ -502,7 +502,7 @@ async function eliminarCuenta() {
         }
 
         localStorage.removeItem('jwtToken');
-        window.location.href = "/Frontend/components/login.html";
+        window.location.href = "./Frontend/components/login.html";
 
     } catch (error) {
         cambiarEstadoBoton(elementos.botonEliminar, false, 'Eliminar Cuenta');

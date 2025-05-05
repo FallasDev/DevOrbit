@@ -147,7 +147,7 @@
           updateVideo(updatedVideoData)
             .then(() => {
               alert("Video actualizado con éxito");
-              window.location.href = `/Frontend/course.html?courseId=${courseId}`;
+              window.location.href = `./course.html?courseId=${courseId}`;
             })
             .catch((error) => {
               console.error("Error al actualizar el video:", error);

@@ -84,7 +84,7 @@ const getCourse = async (id) => {
   if (!res.ok && res.status === 403) {
     // Token expirado o no válido
     localStorage.removeItem("jwtToken");
-    window.location.href = "/Frontend/components/login.html";
+    window.location.href = "./components/login.html";
   }
 
   const data = await res.json();
@@ -205,7 +205,7 @@ const loadModules = async (data) => {
                               (await getUserInscription(item.course.id_course))
                                 ? ""
                                 : "not-course-access"
-                            }' href='/Frontend/video.html?videoId=${
+                            }' href='./video.html?videoId=${
                                 video.video_id
                               }&courseId=${item.course.id_course}'>
                               <div class="mb-3 d-flex align-items-center gap-3 p-2 border rounded bg-light shadow-sm">
@@ -356,7 +356,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   btnBuyCourse.addEventListener("click", async () => {
     const courseId = urlParams.get("courseId");
-    window.location.href = `/Frontend/library.html?courseId=${courseId}`;
+    window.location.href = `./library.html?courseId=${courseId}`;
   });
 });
 
@@ -366,7 +366,7 @@ btnEditCourse.addEventListener("click", async () => {
 
   const course = await getCourse(courseId);
 
-  window.location.href = `/Frontend/editCourse.html?courseId=${course.id_course}`;
+  window.location.href = `./editCourse.html?courseId=${course.id_course}`;
 });
 
 btnDeleteCourse.addEventListener("click", () => {
@@ -394,7 +394,7 @@ confirmDelete.addEventListener("click", async () => {
 
   if (res.ok) {
     alert("Curso eliminado correctamente");
-    window.location.href = "/Frontend/generalCursesStudent.html"; // Cambia esto por la URL de la página que desees redirigir
+    window.location.href = "./generalCursesStudent.html"; // Cambia esto por la URL de la página que desees redirigir
   } else {
     courseModalMessage.textContent =
       "El curso no se puede eliminar porque tiene usuarios inscritos.";
@@ -406,7 +406,7 @@ addModule.addEventListener("click", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const courseId = urlParams.get("courseId");
 
-  window.location.href = `/Frontend/addModule.html?courseId=${courseId}`;
+  window.location.href = `./addModule.html?courseId=${courseId}`;
 });
 
 function upload_video(title, video, idModule) {
@@ -581,7 +581,7 @@ const loadVideosSortableList = async () => {
 };
 
 const updateModule = async (idCourse, idModule) => {
-  window.location.href = `/Frontend/editModule.html?idCourse=${idCourse}&idModule=${idModule}`;
+  window.location.href = `./editModule.html?idCourse=${idCourse}&idModule=${idModule}`;
 };
 
 const deleteModule = async (idModule) => {
@@ -632,7 +632,7 @@ const editVideo = async (videoId) => {
   const urlParams = new URLSearchParams(window.location.search);
   const courseId = urlParams.get("courseId");
 
-  window.location.href = `/Frontend/editVideo.html?videoId=${videoId}&courseId=${courseId}`;
+  window.location.href = `./editVideo.html?videoId=${videoId}&courseId=${courseId}`;
 };
 
 const deleteVideo = async (videoId) => {

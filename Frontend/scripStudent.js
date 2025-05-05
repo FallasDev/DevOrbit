@@ -80,7 +80,7 @@ fetch(apiUrl, {
     console.log(error);
     if (error.message === 'Error autorizando el token') {
       localStorage.removeItem('jwtToken');
-      window.location.href = '/Frontend/components/login.html';
+      window.location.href = './components/login.html';
     }
     container.innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
   });
@@ -91,7 +91,7 @@ fetch(apiUrl, {
         enlaceCerrarSesion.addEventListener('click', (e) => {
             e.preventDefault();
             localStorage.removeItem('jwtToken');
-            window.location.href = '/Frontend/components/login.html';
+            window.location.href = './components/login.html';
         });
     }
 }
@@ -154,7 +154,7 @@ async function desabilitarBotonCursos() {
 function verificarAutenticacion() {
     if (!token) {
         alert("No estás autenticado. Serás redirigido al login.");
-        window.location.href = "/Frontend/components/login.html";
+        window.location.href = "./components/login.html";
     }
 }
 
@@ -197,7 +197,7 @@ function configurarCerrarSesion() {
         enlaceCerrarSesion.addEventListener('click', (e) => {
             e.preventDefault();
             localStorage.removeItem('jwtToken');
-            window.location.href = '/Frontend/components/login.html';
+            window.location.href = './components/login.html';
         });
     }
 }
@@ -213,7 +213,7 @@ function mostrarAlerta(alerta, mensaje, esError = false) {
 
 function tokenInvalido() {
     localStorage.removeItem('jwtToken');
-    window.location.href = "/Frontend/components/login.html";
+    window.location.href = "./components/login.html";
 }
 
 function errorDeRed(error) {
@@ -303,7 +303,7 @@ async function guardarPerfil() {
         mostrarAlerta(elementos.alertaExito, "Perfil actualizado correctamente. Por seguridad, vuelve a iniciar sesión.");
         setTimeout(() => {
             localStorage.removeItem('jwtToken');
-            window.location.href = "/Frontend/components/login.html";
+            window.location.href = "./components/login.html";
         }, 3000);
 
     } catch (error) {
@@ -340,7 +340,7 @@ async function eliminarCuenta() {
         }
 
         localStorage.removeItem('jwtToken');
-        window.location.href = "/Frontend/components/login.html";
+        window.location.href = "./components/login.html";
 
     } catch (error) {
         cambiarEstadoBoton(elementos.botonEliminar, false, 'Eliminar Cuenta');

@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (videos)
 
   if (!id) {
-    window.location.href = "video.html?videoId=1";
+    window.location.href = "./video.html?videoId=1";
   }
 
   getVideoById(id, TOKEN);
@@ -331,7 +331,7 @@ const previousVideo = () => {
   console.log(previousVideo);
 
   if (previousVideo) {
-    window.location.href = `video.html?videoId=${previousVideo.video_id}&courseId=${courseId}`;
+    window.location.href = `./video.html?videoId=${previousVideo.video_id}&courseId=${courseId}`;
   } else {
     const previousVideoButton = document.getElementById("btn-previous-video");
     previousVideoButton.disabled = true;
@@ -349,7 +349,7 @@ const nextVideo = () => {
   const nextVideo = videos[videos.indexOf(nowVideo) + 1];
   
   if (nextVideo) {
-    window.location.href = `video.html?videoId=${nextVideo.video_id}&courseId=${courseId}`;
+    window.location.href = `./video.html?videoId=${nextVideo.video_id}&courseId=${courseId}`;
   } else {
     const nextVideoButton = document.getElementById("btn-next-video");
     nextVideoButton.disabled = true;
@@ -361,5 +361,5 @@ const linkBackCourse = document.getElementById("link-back-course");
 
 linkBackCourse.addEventListener("click", () => {
   const courseId = new URLSearchParams(window.location.search).get("courseId");
-  window.location.href = `/Frontend/course.html?courseId=${courseId}`;
+  window.location.href = `./course.html?courseId=${courseId}`;
 });

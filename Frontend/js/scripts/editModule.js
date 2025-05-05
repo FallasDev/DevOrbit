@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log(res);
       if (res.ok) {
         console.log("Modulo creado correctamente");
-        location.href = `/Frontend/course.html?courseId=${courseId}`;
+        location.href = `./course.html?courseId=${courseId}`;
       } else {
         console.log("Error al crear el modulo");
       }
