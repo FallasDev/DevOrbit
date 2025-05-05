@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.devorbit.app.entity.User;
 import com.devorbit.app.repository.RepositoryUser;
-
+import org.springframework.security.core.Authentication;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -88,5 +89,11 @@ public class UserService implements UserDetailsService {
         repositoryUser.delete(user);
     }
     
+    public User getCurrentUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication.getName();
+    return repositoryUser.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+}
 
 }

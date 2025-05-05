@@ -21,7 +21,6 @@ btnAnswers.addEventListener("click", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const testId = urlParams.get("id");
   const data = await sendAnswers(testId);
-  showResult(data);
 });
 
 const getTestById = async (id) => {
@@ -87,13 +86,13 @@ const loadQuestions = async (data) => {
         answer.innerHTML += `
                     <label>
                         <input type="radio" name='answer' value='${JSON.stringify(
-                          {
-                            answer_id: answerItem.answer_id,
-                            question: {
-                              question_id: questionId,
-                            },
-                          }
-                        )}'> ${answerItem.title}
+          {
+            answer_id: answerItem.answer_id,
+            question: {
+              question_id: questionId,
+            },
+          }
+        )}'> ${answerItem.title}
                     </label><br>
                 `;
       }
@@ -109,7 +108,6 @@ const loadQuestions = async (data) => {
 
 const sendAnswers = async (id) => {
   const selected = document.querySelectorAll('input[name="answer"]:checked');
-
   const userAnswers = [];
 
   selected.forEach((e) => {
@@ -117,21 +115,33 @@ const sendAnswers = async (id) => {
     userAnswers.push(answer);
   });
 
-  console.log(id);
-
   const res = await fetch(`${HOST}/api/tests/${id}/getScore`, {
     method: "POST",
-
     headers: {
       Authorization: `Bearer ${TOKEN}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(userAnswers),
   });
-  console.log(res);
-  const data = await res.json();
-  saveTestAttemp(data);
-  return data;
+
+  if (!res.ok) {
+    console.error("Error al enviar respuestas:", await res.text());
+    return;
+  }
+
+  const score = await res.json();
+  console.log("Nota recibida del backend:", score);
+  showResult(score);
+
+  if (score > 67.5) {
+    const btnCertificate = document.getElementById("btn-certificate");
+    btnCertificate.style.display = "block";
+  }
+};
+
+const showResult = (score) => {
+  const result = document.getElementById("box-result");
+  result.textContent = `Su nota: ${score}`;
 };
 
 const getCurrentUser = async () => {
@@ -142,10 +152,10 @@ const getCurrentUser = async () => {
       Authorization: `Bearer ${TOKEN}`,
     }
   })
- 
+
   const data = await res.json();
   return data;
-} 
+}
 
 const saveTestAttemp = async (score) => {
 
@@ -170,10 +180,10 @@ const saveTestAttemp = async (score) => {
     body: JSON.stringify(testAttemp)
   })
 
-  if(!res.ok){
+  if (!res.ok) {
     const errorText = await res.text();
     console.log(errorText);
-    if (errorText == "Max attemps reached"){
+    if (errorText == "Max attemps reached") {
       alert("Has alcanzado el maximo de intentos para este test");
       location.href = `/Frontend/course.html?courseId=${new URLSearchParams(window.location.search).get("courseId")}`;
     }
@@ -182,9 +192,28 @@ const saveTestAttemp = async (score) => {
   const data = await res.json();
   console.log(data);
 }
+document.getElementById("btn-certificate").addEventListener("click", async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const testId = urlParams.get("id");
+  const score = document.getElementById("box-result").textContent.split(": ")[1]; // Extraer la nota
 
+  const res = await fetch(`${HOST}/api/tests/${testId}/certificate?score=${score}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
 
-const showResult = (data) => {
-  const result = document.getElementById("box-result");
-  result.textContent = `Su nota: ${data}`;
-};
+  if (res.ok) {
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Certificado.pdf";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  } else {
+    console.error("Error al generar el certificado");
+  }
+});

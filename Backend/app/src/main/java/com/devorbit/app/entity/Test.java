@@ -34,7 +34,6 @@ public class Test {
     @Column(name = "max_attemps", nullable = false)
     private int maxAttemps;
 
-    // Relacion con el curso cuando se añada
     @OneToOne(mappedBy = "test")
     @JsonIgnore
     private Course course;

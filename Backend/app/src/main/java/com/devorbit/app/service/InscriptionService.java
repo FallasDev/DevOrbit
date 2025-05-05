@@ -15,7 +15,6 @@ public class InscriptionService {
     private final RepositoryInscription repositoryInscription;
     private final RepositoryUser repositoryUser; 
     private final CourseRepository repositoryCourse;
-    private final PaymentService paymentService;
 
     public List<Inscription> get() {
         return repositoryInscription.findAll();
