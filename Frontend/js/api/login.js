@@ -1,7 +1,7 @@
 $(document).ready(inicializarLogin);
 
 const URL_AUTENTICACION = 'https://devorbit-vk2z.onrender.com/auth/login';
-const URL_PANEL = '/Frontend/generalCursesStudent.html';
+const URL_PANEL = '/generalCursesStudent.html';
 
 function inicializarLogin() {
     verificarTokenExistente();
