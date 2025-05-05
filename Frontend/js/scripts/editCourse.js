@@ -11,7 +11,6 @@ formUpdateCourse.addEventListener("submit", async (e) => {
 
   const courseId = new URLSearchParams(window.location.search).get("courseId");
 
-
   const course = {
     title: formData.get("title"),
     description: formData.get("description"),
@@ -20,6 +19,8 @@ formUpdateCourse.addEventListener("submit", async (e) => {
         test_id: formData.get("testId"),
     }
   };
+
+  console.log(courseId);
 
   console.log(course);
 
@@ -35,7 +36,6 @@ const editCourse = async (courseId, course) => {
     },
     body: JSON.stringify(course),
   });
-  console.log(res);
   if (res.ok) {
     console.log("Curso editado correctamente");
     location.href = `/Frontend/course.html?courseId=${courseId}`;
