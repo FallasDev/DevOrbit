@@ -1,12 +1,12 @@
 // url api cursos
-const apiUrl = 'http://localhost:8080/api/courses';
+const apiUrl = 'https://devorbit-vk2z.onrender.com/api/courses';
 const token = localStorage.getItem('jwtToken');
 const container = document.getElementById('course-container');
 const carouselInner = document.getElementById('carousel-inner');
 const carouselIndicators = document.getElementById('carousel-indicators');
 const createCourseButton = document.getElementById('createcurse');
 
-const HOST = 'http://localhost:8080';
+const HOST = 'https://devorbit-vk2z.onrender.com/';
 
 // muestra los cursos
 console.log("container:", container);
@@ -99,7 +99,7 @@ configurarCerrarSesion();
 
 //Frontend para crud de usuario
 
-const URL_API = 'http://localhost:8080/api/user/me';
+const URL_API = 'https://devorbit-vk2z.onrender.com/api/user/me';
 
 
 const elementos = {

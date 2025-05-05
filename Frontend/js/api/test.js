@@ -1,5 +1,5 @@
 const TOKEN = localStorage.getItem("jwtToken");
-const HOST = "http://localhost:8080";
+const HOST = "https://devorbit-vk2z.onrender.com/";
 
 const btnAnswers = document.getElementById("btn-answers");
 

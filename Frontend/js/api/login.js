@@ -1,6 +1,6 @@
 $(document).ready(inicializarLogin);
 
-const URL_AUTENTICACION = 'http://localhost:8080/auth/login';
+const URL_AUTENTICACION = 'https://devorbit-vk2z.onrender.com/auth/login';
 const URL_PANEL = '/Frontend/generalCursesStudent.html';
 
 function inicializarLogin() {

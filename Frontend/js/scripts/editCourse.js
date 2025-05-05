@@ -1,4 +1,4 @@
-const HOST = "http://localhost:8080";
+const HOST = "https://devorbit-vk2z.onrender.com/";
  const TOKEN = localStorage.getItem("jwtToken");
  
  const formUpdateCourse = document.getElementById("form-edit-course");
