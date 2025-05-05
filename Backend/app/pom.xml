@@ -100,6 +100,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itext7-core</artifactId>
+            <version>7.1.17</version>
+        </dependency>
+
         <!-- Validation -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
@@ -132,7 +138,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 
     <build>
         <plugins>
