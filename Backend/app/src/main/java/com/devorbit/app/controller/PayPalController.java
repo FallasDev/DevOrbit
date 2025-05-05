@@ -73,8 +73,8 @@ public class PayPalController {
 
             // Configurar las URLs de redirección
             RedirectUrls redirectUrls = new RedirectUrls();
-            redirectUrls.setCancelUrl("http://localhost:5500/Frontend/error.html");
-            redirectUrls.setReturnUrl("http://localhost:5500/Frontend/success.html?courseId=" + courseId + "&jwt=" + jwt);
+            redirectUrls.setCancelUrl("https://devorbit-vk2z.onrender.com/error.html");
+            redirectUrls.setReturnUrl("https://devorbit-vk2z.onrender.com/success.html?courseId=" + courseId + "&jwt=" + jwt);
             payment.setRedirectUrls(redirectUrls);
 
             // Crear el pago en PayPal
@@ -140,11 +140,11 @@ public class PayPalController {
 
             // Responder con éxito
             response.put("status", "success");
-            response.put("redirect_url", "/Frontend/course.html?courseId=" + courseId);
+            response.put("redirect_url", "https://devorbit-vk2z.onrender.com/course.html?courseId=" + courseId);
         } catch (Exception e) {
             response.put("status", "error");
             response.put("message", e.getMessage());
-            response.put("redirect_url", "/Frontend/error.html");
+            response.put("redirect_url", "https://devorbit-vk2z.onrender.com/error.html");
         }
         System.out.println("Response: " + response);
         return response;
