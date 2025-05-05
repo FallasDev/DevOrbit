@@ -166,8 +166,7 @@
         }
 
         try {
-          const HOST = "https://devorbit-vk2z.onrender.com"
-          const response = await fetch(`${HOST}/api/courses`, {
+          const response = await fetch("http://localhost:8080/api/courses", {
             method: "POST",
             headers: {
               Authorization: `Bearer ${token}`, 
