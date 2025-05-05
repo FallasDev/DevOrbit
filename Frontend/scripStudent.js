@@ -44,7 +44,7 @@ fetch(apiUrl, {
                     <h5 class="card-title">${course.title}</h5>
                     <p class="card-text">${course.description}</p>
                     <p class="text-muted">Precio: $${course.price}</p>
-                    <a href="/Frontend/course.html?courseId=${course.id_course}" class="btn btn-primary">Ver curso</a>
+                    <a href="./course.html?courseId=${course.id_course}" class="btn btn-primary">Ver curso</a>
                 </div>
             </div>
         `;
