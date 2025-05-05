@@ -1,11 +1,12 @@
 package com.devorbit.app.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,22 +17,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devorbit.app.entity.Answer;
 import com.devorbit.app.entity.Test;
-import com.devorbit.app.entity.User;
 import com.devorbit.app.service.TestService;
 import com.devorbit.app.service.UserService;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.properties.TextAlignment;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
 import java.io.ByteArrayOutputStream;
 
 @RestController
@@ -99,32 +96,35 @@ public class TestController {
 
     @GetMapping("/{testId}/certificate")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<byte[]> generateCertificate(@PathVariable int testId, @RequestParam double score) {
+    public ResponseEntity<byte[]> generateCertificate(@PathVariable int testId) {
         try {
+            // Crear un documento PDF
+            PDDocument document = new PDDocument();
+            PDPage page = new PDPage();
+            document.addPage(page);
 
-            User currentUser = userService.getCurrentUser();
-            Test test = testService.getTestById(testId);
+            // Escribir contenido en el PDF
+            PDPageContentStream contentStream = new PDPageContentStream(document, page);
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 20);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(100, 700);
+            contentStream.showText("Certificado de Finalización");
+            contentStream.endText();
 
+            contentStream.setFont(PDType1Font.HELVETICA, 12);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(100, 650);
+            contentStream.showText("Este certificado es otorgado a: [Nombre del Usuario]");
+            contentStream.endText();
+
+            contentStream.close();
+
+            // Guardar el PDF en un ByteArrayOutputStream
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            PdfWriter writer = new PdfWriter(out);
-            PdfDocument pdf = new PdfDocument(writer);
-            Document document = new Document(pdf);
-
-            document.add(new Paragraph("Certificado de Finalización").setFontSize(20).setBold()
-                    .setTextAlignment(TextAlignment.CENTER));
-            document.add(new Paragraph("\nEste certificado es otorgado a:").setTextAlignment(TextAlignment.CENTER));
-            document.add(new Paragraph(currentUser.getUsername()).setFontSize(16).setBold()
-                    .setTextAlignment(TextAlignment.CENTER));
-            document.add(new Paragraph("\nPor haber completado satisfactoriamente el curso:")
-                    .setTextAlignment(TextAlignment.CENTER));
-            document.add(new Paragraph(test.getInstruction()).setFontSize(14).setBold()
-                    .setTextAlignment(TextAlignment.CENTER));
-            document.add(new Paragraph("\nCon una nota de: " + score).setTextAlignment(TextAlignment.CENTER));
-            document.add(new Paragraph("\nEmitido por: DevOrbit").setTextAlignment(TextAlignment.CENTER));
-            document.add(new Paragraph("Fecha de emisión: " + LocalDate.now()).setTextAlignment(TextAlignment.CENTER));
-
+            document.save(out);
             document.close();
 
+            // Configurar la respuesta HTTP
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDisposition(ContentDisposition.builder("attachment").filename("Certificado.pdf").build());
