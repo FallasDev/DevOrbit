@@ -6,7 +6,7 @@ services:
     depends_on:
       - db
     environment:
-      - SPRING_DATASOURCE_URL=mysql.railway.internal://db:3306/railway
+      - SPRING_DATASOURCE_URL=jdbc:mysql://trolley.proxy.rlwy.net:35698/railway
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=XZbADUNQAYrNjMJrAgAwgLrtrEAWDIkZ
     dns:
