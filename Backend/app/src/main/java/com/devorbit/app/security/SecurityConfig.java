@@ -34,12 +34,12 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
             .requestMatchers("/auth/**", "/api/payments/**").permitAll()
-                .anyRequest().authenticated()            
+                .anyRequest().authenticated()   
             )
             .sessionManagement(sess -> sess
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             );
-
+            
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

@@ -17,3 +17,38 @@
     width: 100%;
   }
   
+  .carousel-item img {
+    height: 400px;
+    object-fit: cover;
+  }
+  
+  body {
+    background: linear-gradient(to bottom, #5252a5, #0b0b83);
+}
+
+.carousel-inner img {
+    max-height: 300px; 
+    object-fit: cover;
+}
+
+/* Tarjetas en una columna */
+#course-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card {
+    width: 100%;
+    max-width: 400px;
+}
+
+body {
+  background: linear-gradient(to bottom, #f4f4f9, #d3d3e3) !important;
+}
+
+
+
+
+
+

@@ -39,9 +39,8 @@ public class Course {
     @Column
     private boolean status;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "picture_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Picture picture;
 
     @OneToOne(cascade = CascadeType.ALL)

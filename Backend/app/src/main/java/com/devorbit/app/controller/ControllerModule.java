@@ -66,7 +66,7 @@ public class ControllerModule {
             @RequestParam String descripcion,
             @RequestParam int courseId,
             @RequestParam List<Integer> moduleOrder) {
-                
+        
         return moduleService.update(id,title, descripcion, courseId, moduleOrder);
     }
 
