@@ -119,6 +119,7 @@
                  document.getElementById("description").value = data.description;
                  document.getElementById("price").value = data.price;
                  document.getElementById("testId").value = data.test.test_id;
+                 location.href = './course?courseId=' + courseId;
              } else {
                  console.error("Error fetching course data:", data);
              }
