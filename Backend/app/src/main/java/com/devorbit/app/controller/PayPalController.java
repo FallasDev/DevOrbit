@@ -93,7 +93,7 @@ public class PayPalController {
         return response;
     }
 
-    @PostMapping("/execute")
+    @GetMapping("/execute")
     public Map<String, String> executePayment(@RequestParam String paymentId, @RequestParam String payerId,
             @RequestParam int courseId, @RequestParam int userId) {
         Map<String, String> response = new HashMap<>();
