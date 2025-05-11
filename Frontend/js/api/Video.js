@@ -124,7 +124,6 @@ const getVideoById = (id, token) => {
       console.log(data);
 
       video.src = data.url;
-      videoContainer.style.width = window.innerWidth / 1.8 + "px";
       video.classList.add("rounded-2");
       title.innerText = data.title;
 

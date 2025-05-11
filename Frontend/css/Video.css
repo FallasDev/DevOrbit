@@ -3,22 +3,24 @@ main {
     font-family: "JetBrains Mono", monospace;
     display: flex;
     gap: 20px;
-    zoom: 90%;
+    width: 100%;
 }
 
 video {
-    width: 100%;
     border-radius: 10px;
     filter: brightness(0.9);
 }
 
 .controls {
+    width: auto;
+    width: 100%;
+    max-width: 100%;
     background-color: #a5b3aa;
     padding: 10px 15px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: 12px;
 }
 
 .controls button {
@@ -55,10 +57,19 @@ video::-webkit-media-controls {
     display: none !important;
 }
 
+.video-container {
+    width: 100%;
+    /* max-width: 600px; */
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .video-section {
-    height: 100vh;
+    min-height: 100vh;
     position: relative;
-    width: 70%;
+    width: 80%;
 }
 
 .accordion-module {
@@ -89,21 +100,13 @@ video::-webkit-media-controls {
 .not-full-screen {
     height: 60vh;
 }
-
 .custom-nav-btn {
-    background: linear-gradient(135deg, #0ca5b0, #107a84);
-    color: #fefeeb;
-    border: none;
-    padding: 0.8rem 1.6rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(12, 165, 176, 0.4);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
+    width: 90%;
+    max-width: 280px;
+    font-size: 1rem;
+    padding: 8px 12px;
 }
+
 
 .custom-nav-btn:hover {
     background: linear-gradient(135deg, #0ca5b0, #0b8e99);
@@ -238,18 +241,64 @@ video::-webkit-media-controls {
 
 
 
-@media (max-width: 792px) {
+@media (max-width: 768px) {
+
     main {
         flex-direction: column;
+        gap: 10px;
+        box-sizing: border-box;
+        padding: 0 10px;
     }
 
     .video-section {
         width: 100%;
-        height: 60vh;
-        background-color: #a5b3aa;
+        padding: 0 5px;
+        align-items: center;
+        text-align: center;
     }
 
-    video {
+
+    .video-section video {
+        max-width: 92vw;
+        height: auto;
+        object-fit: contain;
+        /* o 'cover' si querés que recorte */
+    }
+
+    .accordion-module {
         width: 100%;
+    }
+
+    .popup-finish-video {
+        width: 90%;
+        left: 5%;
+    }
+
+
+    /* .controls {
+        width: 100%;
+        max-width: 100%;
+    } */
+    
+
+}
+
+@media (max-width: 480px) {
+    .h2-module-course {
+        word-break: break-word;
+        text-align: center;
+    }
+
+    .accordion-header {
+        font-size: 0.9rem;
+    }
+
+    .accordion-button {
+        font-size: 0.85rem;
+        padding: 8px;
+    }
+
+    .link-back {
+        font-size: 1rem;
     }
 }
