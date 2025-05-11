@@ -305,6 +305,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const btnBuyCourse = document.getElementById("btn-buy-course-or-");
 
   const inscription = await getUserInscription(courseId);
+  console.log(inscription);
   if (!inscription) {
     btnBuyCourse.addEventListener("click", async () => {
       try {
