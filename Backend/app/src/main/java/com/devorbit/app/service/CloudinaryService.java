@@ -27,6 +27,10 @@ public class CloudinaryService {
                     "public_id", publicId
                 )
             );
+            if (uploadResult != null) {
+                String secureUrl = (String) uploadResult.get("secure_url");
+                uploadResult.put("url", secureUrl);
+            }
             return uploadResult;
         } catch (Exception e) {
             e.printStackTrace(); 
