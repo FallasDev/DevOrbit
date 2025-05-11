@@ -13,6 +13,7 @@ public interface RepositoryInscription extends JpaRepository<Inscription, Intege
 
     boolean existsByUserAndCourse(User user, Course course);
     Optional<Inscription> findByUserAndCourse(User user, Course course);
+    
 
     List<Inscription> findByUser(User user);
     

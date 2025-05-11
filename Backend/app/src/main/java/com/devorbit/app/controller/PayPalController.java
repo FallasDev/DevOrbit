@@ -11,6 +11,7 @@ import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,7 +135,7 @@ public class PayPalController {
             // Crear el objeto de pago
             
             boolean alreadyExists = paymentService.existsByPaypalPaymentId(paymentId);
-
+            
             if (alreadyExists) {
                 response.put("status", "already_executed");
                 response.put("redirect_url", "https://dev-orbit-eta.vercel.app/success.html?paymentId=" + paymentId
@@ -156,15 +157,21 @@ public class PayPalController {
             Course course = courseService.findById(courseId)
                     .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
             User user = repositoryUser.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            
+            Optional<Inscription> existingInscription = Optional.ofNullable(inscriptionService.getByUserAndCourse(userId, courseId));
+            Inscription inscription;
+            if (existingInscription.isPresent()) {
+                inscription = existingInscription.get();
+            } else {
+                inscription = new Inscription();
+                inscription.setUser(user);
+                inscription.setCourse(course);
+                inscription.setCreateAt(LocalDateTime.now());
+                inscription.setProgress(0);
+                inscriptionService.add(inscription);
+            }
 
-            // Crear la inscripción
-            Inscription inscription = new Inscription();
-            inscription.setUser(user);
-            inscription.setCourse(course);
-            inscription.setCreateAt(LocalDateTime.now());
-            inscription.setProgress(0);
-            inscriptionService.add(inscription);
 
             // Crear el registro de pago
             com.devorbit.app.entity.Payment paymentEntity = new com.devorbit.app.entity.Payment();
