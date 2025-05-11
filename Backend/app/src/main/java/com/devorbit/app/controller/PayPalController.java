@@ -10,9 +10,13 @@ import com.devorbit.app.repository.RepositoryUser;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
+
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -38,7 +42,7 @@ public class PayPalController {
     private InscriptionService inscriptionService;
 
     @PostMapping("/create")
-    public Map<String, String> createPayment(@RequestParam int courseId, @RequestParam String currency, 
+    public Map<String, String> createPayment(@RequestParam int courseId, @RequestParam String currency,
             @RequestParam String jwt) {
         Map<String, String> response = new HashMap<>();
 
@@ -73,8 +77,8 @@ public class PayPalController {
 
             // Configurar las URLs de redirección
             RedirectUrls redirectUrls = new RedirectUrls();
-            redirectUrls.setCancelUrl("https://devorbit-vk2z.onrender.com/error.html");
-            redirectUrls.setReturnUrl("https://devorbit-vk2z.onrender.com/success.html?courseId=" + courseId + "&jwt=" + jwt);
+            redirectUrls.setCancelUrl("https://devorbit-vk2z.onrender.com/api/payments/cancel");
+            redirectUrls.setReturnUrl("https://devorbit-vk2z.onrender.com/api/payments/success");
             payment.setRedirectUrls(redirectUrls);
 
             // Crear el pago en PayPal
@@ -90,6 +94,27 @@ public class PayPalController {
             response.put("message", e.getMessage());
         }
 
+        return response;
+    }
+
+    @GetMapping("/success")
+    public void successRedirect(
+            @RequestParam String paymentId,
+            @RequestParam String token,
+            @RequestParam String PayerID,
+            HttpServletResponse httpResponse) throws IOException {
+        // Redirigí directamente al frontend
+        String redirectUrl = "https://dev-orbit-eta.vercel.app/success.html"
+                + "?paymentId=" + paymentId
+                + "&token=" + token
+                + "&PayerID=" + PayerID;
+        httpResponse.sendRedirect(redirectUrl);
+    }
+
+    @GetMapping("/cancel")
+    public Map<String, String> cancelPayment() {
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "cancel");
         return response;
     }
 
@@ -116,7 +141,6 @@ public class PayPalController {
             User user = repositoryUser.findById(userId)
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-
             System.out.println(user);
             System.out.println(course);
 
@@ -138,15 +162,17 @@ public class PayPalController {
 
             System.out.println("Pago registrado: " + paymentEntity);
 
-            // Responder con éxito
+            // ✅ Redirige al frontend de Vercel
             response.put("status", "success");
-            response.put("redirect_url", "https://devorbit-vk2z.onrender.com/course.html?courseId=" + courseId);
+            response.put("redirect_url", "https://dev-orbit-eta.vercel.app/success.html");
         } catch (Exception e) {
             response.put("status", "error");
             response.put("message", e.getMessage());
-            response.put("redirect_url", "https://devorbit-vk2z.onrender.com/error.html");
+            // ✅ También corregido aquí
+            response.put("redirect_url", "https://dev-orbit-eta.vercel.app/error.html");
         }
         System.out.println("Response: " + response);
         return response;
     }
+
 }
