@@ -3,26 +3,13 @@ services:
     build: ./app
     ports:
       - "8080:8080"
-    depends_on:
-      - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://trolley.proxy.rlwy.net:35698/railway
+      - SPRING_DATASOURCE_URL=jdbc:mysql://switchyard.proxy.rlwy.net:53618/railway
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=XZbADUNQAYrNjMJrAgAwgLrtrEAWDIkZ
+      - SPRING_DATASOURCE_PASSWORD=SFNIvOuZOPDNzyoFBODmgsFibmkuaMyg
     dns:
       - 8.8.8.8
       - 1.1.1.1
-
-  db:
-    image: mysql:8
-    restart: always
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_DATABASE: railway
-      MYSQL_ROOT_PASSWORD: XZbADUNQAYrNjMJrAgAwgLrtrEAWDIkZ
-    volumes:
-      - db_data:/var/lib/mysql
 
 volumes:
   db_data:
