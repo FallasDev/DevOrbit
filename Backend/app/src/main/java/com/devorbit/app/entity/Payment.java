@@ -30,6 +30,10 @@ public class Payment {
     private BigDecimal total;
     private String methodPayment;
 
+    @Column(unique = true)
+    private String paypalPaymentId;
+
+
     @Override
     public String toString() {
         return "Payment{" +

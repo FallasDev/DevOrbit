@@ -9,5 +9,6 @@ import com.devorbit.app.entity.User;
 public interface RepositoryPayment extends JpaRepository<Payment, Integer> {
 
     List<Payment> findByUser(User user);
+    boolean existsByPaypalPaymentId(String paypalPaymentId);
     
 }

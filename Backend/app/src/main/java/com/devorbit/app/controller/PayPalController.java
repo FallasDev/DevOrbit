@@ -132,6 +132,16 @@ public class PayPalController {
         System.out.println("Payment ID recibido: " + paymentId);
         try {
             // Crear el objeto de pago
+            
+            boolean alreadyExists = paymentService.existsByPaypalPaymentId(paymentId);
+
+            if (alreadyExists) {
+                response.put("status", "already_executed");
+                response.put("redirect_url", "https://dev-orbit-eta.vercel.app/success.html?paymentId=" + paymentId
+                        + "&PayerID=" + payerId + "&courseId=" + courseId);
+                return response;
+            }
+
             Payment payment = new Payment();
             payment.setId(paymentId);
 
@@ -162,6 +172,7 @@ public class PayPalController {
             paymentEntity.setCreateAt(LocalDateTime.now());
             paymentEntity.setTotal(course.getPrice());
             paymentEntity.setMethodPayment("PayPal");
+            paymentEntity.setPaypalPaymentId(paymentId);
             paymentEntity.setInscription(inscription);
             paymentService.add(paymentEntity);
 

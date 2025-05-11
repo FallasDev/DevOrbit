@@ -103,22 +103,7 @@
 
         const userId = usuarioActual.idUser;
 
-        alert(
-          "¡El pago fue procesado exitosamente! \n\n" +
-            "ID de usuario: " +
-            userId +
-            "\nID de pago: " +
-            paymentId +
-            "\nID del pagador: " +
-            payerId +
-            "\nID del curso: " +
-            courseId
-        );
 
-        console.log("User ID:", userId);
-        console.log("Payment ID:", paymentId);
-        console.log("Payer ID:", payerId);
-        console.log("Course ID:", courseId);
         if (paymentId && payerId && courseId && userId) {
           fetch(
             `${HOST}/api/payments/execute?paymentId=${paymentId}&payerId=${payerId}&courseId=${courseId}&userId=${userId}`,

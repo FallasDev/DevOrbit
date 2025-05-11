@@ -41,6 +41,10 @@ public class PaymentService {
         repositoryPayment.deleteById(id);
     }
 
+    public boolean existsByPaypalPaymentId(String paypalPaymentId) {
+        return repositoryPayment.existsByPaypalPaymentId(paypalPaymentId);
+    }
+
     public Payment update(int id, Payment payment) {
         Optional<Payment> existingPayment = repositoryPayment.findById(id);
         if (existingPayment.isPresent()) {
