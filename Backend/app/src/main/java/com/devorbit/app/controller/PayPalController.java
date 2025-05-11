@@ -78,7 +78,8 @@ public class PayPalController {
             // Configurar las URLs de redirección
             RedirectUrls redirectUrls = new RedirectUrls();
             redirectUrls.setCancelUrl("https://devorbit-vk2z.onrender.com/api/payments/cancel");
-            redirectUrls.setReturnUrl("https://devorbit-vk2z.onrender.com/api/payments/success");
+            redirectUrls.setReturnUrl("https://devorbit-vk2z.onrender.com/api/payments/success?jwt=" + jwt
+                    + "&courseId=" + courseId);
             payment.setRedirectUrls(redirectUrls);
 
             // Crear el pago en PayPal
