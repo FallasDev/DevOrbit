@@ -13,6 +13,10 @@
   transition: width 0.3s;
 }
 
+.course-title-container {
+  margin-top: 40px;
+}
+
 .nav-link:hover::after {
   width: 100%;
 }
@@ -24,6 +28,7 @@
 
 body {
   background: linear-gradient(to bottom, #5252a5, #0b0b83);
+  /* text-align: center; */
 }
 
 /* .carousel-inner img {
@@ -32,15 +37,28 @@ body {
 } */
 
 .card img {
-  height: 150px; /* Ajusta la altura de la imagen */
+  height: 200px; /* Ajusta la altura de la imagen */
   object-fit: cover; /* Mantiene la proporción de la imagen */
 }
 
 .card {
   width: 100%;
-  max-width: 400px;
 }
 
+.card h5 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #0b0b83;
+}
+
+.card p {
+  font-size: 1rem;
+}
+
+.course-title-container {
+  margin-top: 40px;
+  text-align: center;
+}
 
 #particles-js {
   position: fixed;
@@ -61,4 +79,16 @@ background: linear-gradient(to bottom, #f4f4f9, #d3d3e3) !important;
   height: auto;
   background-color: #5252a5;
   max-height: 600px; /* Ajusta la altura máxima según tus necesidades */
+}
+
+@media (max-width: 768px) {
+
+  #carousel{
+    display: none;
+  }
+
+  #course-container {
+    padding: 0 12px;
+  }
+  
 }
