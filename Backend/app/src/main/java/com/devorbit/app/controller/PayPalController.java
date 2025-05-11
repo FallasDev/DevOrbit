@@ -99,6 +99,8 @@ public class PayPalController {
 
     @GetMapping("/success")
     public void successRedirect(
+            @RequestParam String jwt,
+            @RequestParam int courseId,
             @RequestParam String paymentId,
             @RequestParam String token,
             @RequestParam String PayerID,
@@ -106,6 +108,8 @@ public class PayPalController {
         // Redirigí directamente al frontend
         String redirectUrl = "https://dev-orbit-eta.vercel.app/success.html"
                 + "?paymentId=" + paymentId
+                + "&courseId=" + courseId
+                + "&jwt=" + jwt
                 + "&token=" + token
                 + "&PayerID=" + PayerID;
         httpResponse.sendRedirect(redirectUrl);
