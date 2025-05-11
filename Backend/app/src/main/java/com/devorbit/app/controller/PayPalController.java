@@ -130,32 +130,32 @@ public class PayPalController {
         System.out.println("User ID recibido: " + userId);
         System.out.println("Payment ID recibido: " + paymentId);
         try {
-
+            // Crear el objeto de pago
             Payment payment = new Payment();
             payment.setId(paymentId);
 
+            // Crear la ejecución del pago
             PaymentExecution paymentExecution = new PaymentExecution();
             paymentExecution.setPayerId(payerId);
 
+            // Ejecutar el pago
             Payment executedPayment = payment.execute(apiContext, paymentExecution);
 
+            // Obtener curso y usuario
             Course course = courseService.findById(courseId)
                     .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
-
             User user = repositoryUser.findById(userId)
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-            System.out.println(user);
-            System.out.println(course);
-
+            // Crear la inscripción
             Inscription inscription = new Inscription();
-            System.out.println(inscription);
             inscription.setUser(user);
             inscription.setCourse(course);
             inscription.setCreateAt(LocalDateTime.now());
             inscription.setProgress(0);
             inscriptionService.add(inscription);
 
+            // Crear el registro de pago
             com.devorbit.app.entity.Payment paymentEntity = new com.devorbit.app.entity.Payment();
             paymentEntity.setUser(user);
             paymentEntity.setCreateAt(LocalDateTime.now());
@@ -166,13 +166,13 @@ public class PayPalController {
 
             System.out.println("Pago registrado: " + paymentEntity);
 
-            // ✅ Redirige al frontend de Vercel
+            // Responder con éxito
             response.put("status", "success");
-            response.put("redirect_url", "https://dev-orbit-eta.vercel.app/success.html");
+            response.put("redirect_url", "https://dev-orbit-eta.vercel.app/success.html?paymentId=" + paymentId
+                    + "&PayerID=" + payerId + "&courseId=" + courseId);
         } catch (Exception e) {
             response.put("status", "error");
             response.put("message", e.getMessage());
-            // ✅ También corregido aquí
             response.put("redirect_url", "https://dev-orbit-eta.vercel.app/error.html");
         }
         System.out.println("Response: " + response);
