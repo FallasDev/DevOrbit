@@ -77,7 +77,7 @@
 
     <script>
          const urlParams = new URLSearchParams(window.location.search);
-      const HOST = "https://devorbit-vk2z.onrender.com/";
+      const HOST = "https://devorbit-vk2z.onrender.com";
       const TOKEN = urlParams.get("jwt");
 
       const getCurrentUser = async () => {
@@ -103,8 +103,22 @@
 
         const userId = usuarioActual.idUser;
 
-        console.log("User ID:", userId);
+        alert(
+          "¡El pago fue procesado exitosamente! \n\n" +
+            "ID de usuario: " +
+            userId +
+            "\nID de pago: " +
+            paymentId +
+            "\nID del pagador: " +
+            payerId +
+            "\nID del curso: " +
+            courseId
+        );
 
+        console.log("User ID:", userId);
+        console.log("Payment ID:", paymentId);
+        console.log("Payer ID:", payerId);
+        console.log("Course ID:", courseId);
         if (paymentId && payerId && courseId && userId) {
           fetch(
             `${HOST}/api/payments/execute?paymentId=${paymentId}&payerId=${payerId}&courseId=${courseId}&userId=${userId}`,
