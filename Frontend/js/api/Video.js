@@ -362,3 +362,21 @@ linkBackCourse.addEventListener("click", () => {
   const courseId = new URLSearchParams(window.location.search).get("courseId");
   window.location.href = `./course.html?courseId=${courseId}`;
 });
+
+document.getElementById("full-screen").addEventListener("click", () => {
+  if (document.fullscreenElement || document.webkitFullscreenElement) {
+      document.exitFullscreen();
+      screen.orientation.unlock();
+  } else {
+      const videoContainer = document.getElementById("video-container");
+      if (videoContainer.requestFullscreen) {
+          videoContainer.requestFullscreen();
+      } else if (videoContainer.webkitRequestFullscreen) {
+          videoContainer.webkitRequestFullscreen();
+      }
+
+      if (screen.orientation && screen.orientation.lock) {
+          screen.orientation.lock("landscape").catch(err => console.log(err));
+      }
+  }
+});
