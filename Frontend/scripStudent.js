@@ -145,6 +145,7 @@ const checkUserIsAdmin = async (token) => {
 
 async function desabilitarBotonCursos() {
     const isAdmin = await checkUserIsAdmin(token);
+    console.log(isAdmin)
 
     if (!isAdmin) {
         createCourseButton.style.display = "none";
