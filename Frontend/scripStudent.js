@@ -18,11 +18,9 @@ fetch(apiUrl, {
   },
 })
   .then(response => {
-      console.log(response);
-
-    // if (!response.ok) {
-    //   throw new Error('Error autorizando el token');
-    // }
+    if (!response.ok) {
+      throw new Error('Error autorizando el token');
+    }
 
 
     return response.json()
@@ -134,7 +132,6 @@ const checkUserIsAdmin = async (token) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      alert(await response)
       return await response.json();
     } catch (error) {
       console.log(error);
@@ -145,7 +142,6 @@ const checkUserIsAdmin = async (token) => {
 
 async function desabilitarBotonCursos() {
     const isAdmin = await checkUserIsAdmin(token);
-    console.log(isAdmin)
 
     if (!isAdmin) {
         createCourseButton.style.display = "none";
