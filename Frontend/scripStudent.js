@@ -134,6 +134,7 @@ const checkUserIsAdmin = async (token) => {
           Authorization: `Bearer ${token}`,
         },
       });
+      alert(response)
       return await response.json();
     } catch (error) {
       console.log(error);
