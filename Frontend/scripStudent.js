@@ -128,7 +128,7 @@ async function iniciarAplicacion() {
 
 const checkUserIsAdmin = async (token) => {
     try {
-      const response = await fetch(`${HOST}/api/videos/user/data`, {
+      const response = await fetch(`${HOST}api/videos/user/data`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
